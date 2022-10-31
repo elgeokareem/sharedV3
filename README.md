@@ -1,10 +1,6 @@
 # create-nodejs-app
 
 Starter to create new npm packages
-
-# Template for Typescript projects on Cobuild Lab
-
-
 Creates a boilerplate for start creating a nodejs application with typescript.
 
 It includes:
