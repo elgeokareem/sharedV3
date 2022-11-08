@@ -50,14 +50,17 @@ export enum CASE_ORDER_TYPES {
 
 export const VOLUNTARY_ORDER_TYPES = [
     CASE_ORDER_TYPES.condReport,
-    CASE_ORDER_TYPES.investigate,
-    CASE_ORDER_TYPES.investigateRepo,
     CASE_ORDER_TYPES.pictures,
     CASE_ORDER_TYPES.voluntary,
     CASE_ORDER_TYPES.fieldVisit,
 ];
 
-const INVOLUNTARY_ORDER_TYPES = [CASE_ORDER_TYPES.lprStaging, CASE_ORDER_TYPES.involuntary];
+const INVOLUNTARY_ORDER_TYPES = [
+    CASE_ORDER_TYPES.investigate,
+    CASE_ORDER_TYPES.investigateRepo,
+    CASE_ORDER_TYPES.lprStaging, 
+    CASE_ORDER_TYPES.involuntary
+];
 
 const IMPOUND_ORDER_TYPES = [CASE_ORDER_TYPES.impoundRepo, CASE_ORDER_TYPES.impoundVoluntary];
 
