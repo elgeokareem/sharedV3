@@ -55,14 +55,20 @@ export const VOLUNTARY_ORDER_TYPES = [
     CASE_ORDER_TYPES.fieldVisit,
 ];
 
-const INVOLUNTARY_ORDER_TYPES = [
+export const INVOLUNTARY_ORDER_TYPES = [
     CASE_ORDER_TYPES.investigate,
     CASE_ORDER_TYPES.investigateRepo,
     CASE_ORDER_TYPES.lprStaging, 
     CASE_ORDER_TYPES.involuntary
 ];
 
-const IMPOUND_ORDER_TYPES = [CASE_ORDER_TYPES.impoundRepo, CASE_ORDER_TYPES.impoundVoluntary];
+export const IMPOUND_ORDER_TYPES = [CASE_ORDER_TYPES.impoundRepo, CASE_ORDER_TYPES.impoundVoluntary];
+
+export const ORDER_TYPE = {
+    inVoluntary : 'InVoluntary',
+    voluntary : 'Voluntary',
+    impound : 'Impound',
+  };
 
 export enum EVENT_TYPES {
     // Event Types References
