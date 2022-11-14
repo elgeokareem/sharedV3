@@ -23,6 +23,17 @@ export enum CASE_STATUSES_RDN_MATCH {
     repossessed = 'Repossessed',
 };
 
+export const ACCEPTED_RDN_STATUSES = [
+    CASE_STATUSES_RDN_MATCH.open,
+    CASE_STATUSES_RDN_MATCH.need_info,
+    CASE_STATUSES_RDN_MATCH.pending_close,
+    CASE_STATUSES_RDN_MATCH.pending,
+    CASE_STATUSES_RDN_MATCH.pending_on_hold,
+    CASE_STATUSES_RDN_MATCH.closed,
+    CASE_STATUSES_RDN_MATCH.onHold,
+    CASE_STATUSES_RDN_MATCH.repossessed
+]
+
 export const MISSED_REPOSSESSED_STATUSES = [
     CASE_STATUSES.pending_close,
     CASE_STATUSES.pending_on_hold,
