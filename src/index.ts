@@ -1,5 +1,7 @@
 export const RDN_SERVER_TIME_ZONE_OFFSET = -7;
 
+export const RDN_TIME_ZONE = 'America/Phoenix';
+
 export enum CASE_STATUSES {
   open = 'Open',
   need_info = 'Need Info',
