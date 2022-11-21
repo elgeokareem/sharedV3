@@ -15,7 +15,11 @@
   },
   "author": "insightt/alacret",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.24.0",
+    "@apollo/client": "^3.6.9",
+    "@cobuildlab/react-simple-state": "^0.7.2"
+  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "prettier --write",
