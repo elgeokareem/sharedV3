@@ -131,3 +131,52 @@ export enum EVENT_TYPES {
   // 201501	DRN INFO ADDED
   // 201502	RECOVERED CASE MODIFIED
 }
+
+export type CameraHitType = {
+  lpr: number;
+  lpr_vins: string;
+  direct_hits_vins: string;
+  drnId: string;
+  count: number;
+};
+
+export type UserType = {
+  id: number;
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  password: string;
+  phone_number: string;
+  avatarUrl?: string;
+  roleId: number;
+  status: string;
+  drnId: string;
+  branchId: number;
+  count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type RdnCaseType = {
+  vinLastEight: string;
+  lenderClientName: string;
+  lender_client_id: number;
+};
+
+export type CameraScanType = {
+  count: number;
+  status: number;
+  drnId: string;
+};
+
+export type HitType = {
+  count: number;
+  drnId: string;
+  status: number;
+  lenderClientCount: {
+    [key: string]: {
+      previousValue: number;
+      value: number;
+    };
+  };
+};

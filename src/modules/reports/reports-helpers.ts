@@ -1,11 +1,20 @@
-export const formatVinsByUser = (cameraHits) => {
-  const vinsByUser = {};
+import {
+  CameraHitType,
+  CameraScanType,
+  HitType,
+  RdnCaseType,
+  UserType,
+} from 'shared/types';
+
+export const formatVinsByUser = (cameraHits: CameraHitType[]) => {
+  const vinsByUser: any = {};
 
   cameraHits.forEach((cameraHit) => {
     let vinsJson = [];
     let vinsLrpJson = [];
 
     cameraHit.lpr_vins ? (vinsLrpJson = JSON.parse(cameraHit.lpr_vins)) : null;
+
     if (vinsByUser[cameraHit.drnId] === undefined) {
       vinsByUser[cameraHit.drnId] = { vins: vinsLrpJson, count: 0 };
     } else {
@@ -33,9 +42,11 @@ export const formatVinsByUser = (cameraHits) => {
   return vinsByUser;
 };
 
-export const mapVinsToUserAndAllVins = (vinsByUser) => {
-  let allVins = [];
-  const mapVinsToUser = {};
+export const mapVinsToUserAndAllVins = (vinsByUser: {
+  [key: string]: { vins: string[] };
+}) => {
+  let allVins: string[] = [];
+  const mapVinsToUser: { [key: string]: string } = {};
 
   Object.keys(vinsByUser).forEach((userId) => {
     const vins = vinsByUser[userId].vins;
@@ -48,10 +59,14 @@ export const mapVinsToUserAndAllVins = (vinsByUser) => {
   return { allVins, mapVinsToUser };
 };
 
-export const formatSecuredByUserList = (securedByUser, users, idToBranch) => {
+export const formatSecuredByUserList = (
+  securedByUser: { [key: string]: UserType },
+  users: UserType[],
+  idToBranch: { [key: number]: string },
+) => {
   // getList of users with their cases
   const securedByUserKeys = Object.keys(securedByUser);
-  let securedByUserList = [];
+  let securedByUserList: UserType[] = [];
 
   try {
     securedByUserList = securedByUserKeys.map((userId) => {
@@ -62,7 +77,7 @@ export const formatSecuredByUserList = (securedByUser, users, idToBranch) => {
         return undefined;
       });
       if (user === undefined) {
-        return { userId, ...securedByUser[userId], ...user };
+        return { userId, ...securedByUser[userId] };
       }
       return {
         firstName: user?.firstName,
@@ -77,21 +92,23 @@ export const formatSecuredByUserList = (securedByUser, users, idToBranch) => {
   } catch (err) {
     console.log('SecuredByUserList ', err);
   }
+
   return securedByUserList;
-  // return securedByUserList.filter(user => user.firstName !== undefined)
 };
 
 export const sumCameraHitsByUserAndClientLenderCount = (
-  rDNCases,
-  vinsByUser,
-  users,
-  idToBranch,
+  rDNCases: RdnCaseType[],
+  vinsByUser: {
+    [key: string]: { vins: string[]; count: number };
+  },
+  users: UserType[],
+  idToBranch: { [key: number]: string },
 ) => {
-  const allHits = [];
-  let count = 1;
+  const allHits: HitType[] = [];
+
   users.forEach((user) => {
     const drnLowerCase = user.drnId.toLowerCase();
-    let hitObj = {};
+    let hitObj: any = {};
 
     if (vinsByUser[drnLowerCase] !== undefined) {
       hitObj.lenderClientCount = {};
@@ -102,7 +119,6 @@ export const sumCameraHitsByUserAndClientLenderCount = (
         );
         if (caseVin) {
           const { lenderClientName, lender_client_id } = caseVin;
-          count += 1;
 
           if (hitObj.lenderClientCount[lenderClientName] !== undefined) {
             hitObj.lenderClientCount[lenderClientName] = {
@@ -123,11 +139,15 @@ export const sumCameraHitsByUserAndClientLenderCount = (
       allHits.push(hitObj);
     }
   });
+
   return allHits.sort((a, b) => b.count - a.count);
 };
 
-export const formatSecuredByUser = (rDNCases, mapVinsToUser) => {
-  const securedByUser = {};
+export const formatSecuredByUser = (
+  rDNCases: RdnCaseType[],
+  mapVinsToUser: any,
+) => {
+  const securedByUser: any = {};
 
   rDNCases.forEach((secureCase) => {
     const { vinLastEight, lenderClientName, lender_client_id } = secureCase;
@@ -159,12 +179,16 @@ export const formatSecuredByUser = (rDNCases, mapVinsToUser) => {
   return securedByUser;
 };
 
-export const sumAndGroupScanByUser = (cameraScans, users, idToBranch) => {
+export const sumAndGroupScanByUser = (
+  cameraScans: CameraScanType[],
+  users: UserType[],
+  idToBranch: { [key: number]: string },
+) => {
   // the users are already being passed filtered
   // users = users.filter(userElem => userElem.drnId !== undefined && userElem.firstName)
   const innerCameraScans = cameraScans.filter((cameraScan) => cameraScan.drnId);
 
-  const cameraScansSumObj = {};
+  const cameraScansSumObj: any = {};
   innerCameraScans.forEach((cameraScan) => {
     if (cameraScansSumObj[cameraScan.drnId] === undefined) {
       const user = users.find(
@@ -190,11 +214,14 @@ export const sumAndGroupScanByUser = (cameraScans, users, idToBranch) => {
     .sort((a, b) => b.count - a.count);
 };
 
-export const statusCalc = (securedByUserList, previousSecuredByUserList) => {
-  return securedByUserList.map((caseElem) => {
+export const statusCalc = (
+  securedByUserList: any,
+  previousSecuredByUserList: any,
+) => {
+  return securedByUserList.map((caseElem: any) => {
     const { drnId } = caseElem;
     const pCaseElem = previousSecuredByUserList.find(
-      (pCaseElem) => pCaseElem.drnId === drnId,
+      (pCaseElem: any) => pCaseElem.drnId === drnId,
     );
 
     try {
@@ -215,8 +242,8 @@ export const statusCalc = (securedByUserList, previousSecuredByUserList) => {
             caseElem.count > pCaseElem.count
               ? (caseElem.status = 1)
               : caseElem.count < pCaseElem.count
-              ? (caseElem.status = -1)
-              : (caseElem.status = 0);
+                ? (caseElem.status = -1)
+                : (caseElem.status = 0);
           } else {
             caseElem.status = 1;
           }
@@ -232,7 +259,10 @@ export const statusCalc = (securedByUserList, previousSecuredByUserList) => {
   });
 };
 
-export const statusCalcAllHits = (allHits, previousAllHits) => {
+export const statusCalcAllHits = (
+  allHits: HitType[],
+  previousAllHits: HitType[],
+) => {
   return allHits.map((hit) => {
     let { drnId } = hit;
     let previousAllHit = previousAllHits.find(
@@ -243,18 +273,18 @@ export const statusCalcAllHits = (allHits, previousAllHits) => {
       Object.keys(hit.lenderClientCount).forEach((lenderClient) => {
         if (
           hit.lenderClientCount[lenderClient] &&
-          previousAllHit.lenderClientCount[lenderClient]
+          previousAllHit?.lenderClientCount[lenderClient]
         ) {
           hit.lenderClientCount[lenderClient].previousValue =
-            previousAllHit.lenderClientCount[lenderClient].value;
+            previousAllHit?.lenderClientCount[lenderClient].value;
         }
       });
 
       hit.count > previousAllHit.count
         ? (hit.status = 1)
         : hit.count < previousAllHit.count
-        ? (hit.status = -1)
-        : (hit.status = 0);
+          ? (hit.status = -1)
+          : (hit.status = 0);
     } else {
       hit.status = 1;
     }
@@ -264,8 +294,8 @@ export const statusCalcAllHits = (allHits, previousAllHits) => {
 };
 
 export const statusCalcCameraScans = (
-  cameraScansList,
-  previousCameraScansList,
+  cameraScansList: CameraScanType[],
+  previousCameraScansList: CameraScanType[],
 ) => {
   return cameraScansList.map((cameraScan) => {
     let { drnId } = cameraScan;
@@ -277,8 +307,8 @@ export const statusCalcCameraScans = (
       cameraScan.count > previousCameraScan.count
         ? (cameraScan.status = 1)
         : cameraScan.count < previousCameraScan.count
-        ? (cameraScan.status = -1)
-        : (cameraScan.status = 0);
+          ? (cameraScan.status = -1)
+          : (cameraScan.status = 0);
     } else {
       cameraScan.status = 1;
     }
@@ -286,19 +316,22 @@ export const statusCalcCameraScans = (
   });
 };
 
-export const groupCamerasByBranch = (cameras, idToBranch) => {
-  let CamerasByBranch = {};
+export const groupCamerasByBranch = (
+  cameras: any,
+  idToBranch: { [key: number]: string },
+) => {
+  let CamerasByBranch: any = {};
   try {
-    Object.keys(idToBranch).map((id) => {
+    Object.keys(idToBranch).map((id: any) => {
       CamerasByBranch[idToBranch[id]] = {
         all_hits: cameras.all_hits.filter(
-          (hit) => hit.branchName === idToBranch[id],
+          (hit: any) => hit.branchName === idToBranch[id],
         ),
         scanned: cameras.scanned.filter(
-          (scan) => scan.branchName === idToBranch[id],
+          (scan: any) => scan.branchName === idToBranch[id],
         ),
         secured: cameras.secured.filter(
-          (secure) => secure.branchName === idToBranch[id],
+          (secure: any) => secure.branchName === idToBranch[id],
         ),
       };
     });
@@ -311,13 +344,13 @@ export const groupCamerasByBranch = (cameras, idToBranch) => {
   return CamerasByBranch;
 };
 
-export const groupCamerasByUser = ({ all_hits, secured, scanned }) => {
+export const groupCamerasByUser = ({ all_hits, secured, scanned }: any) => {
   const camerasByUser = [];
 
   // Get the users from scanned
   for (let index = 0; index < scanned.length; index++) {
     const hit = scanned[index];
-    const resultObj = {};
+    const resultObj: any = {};
 
     // Add user data
     resultObj.user = {
@@ -333,14 +366,14 @@ export const groupCamerasByUser = ({ all_hits, secured, scanned }) => {
 
     // Add scanned data
     const allHits = all_hits.find(
-      (scannedItem) =>
+      (scannedItem: any) =>
         scannedItem.drnId.toLowerCase() === hit.drnId.toLowerCase(),
     );
     resultObj.allHits = allHits || {};
 
     // Add secured data
     const securedData = secured.find(
-      (securedItem) =>
+      (securedItem: any) =>
         securedItem.userId.toLowerCase() === hit.drnId.toLowerCase(),
     );
     resultObj.secured = securedData || {};
@@ -351,7 +384,7 @@ export const groupCamerasByUser = ({ all_hits, secured, scanned }) => {
   // Check there are no missing users from secured
   for (let index = 0; index < secured.length; index++) {
     const securedObj = secured[index];
-    const resultObj = {};
+    const resultObj: any = {};
 
     const isUser = camerasByUser.find(
       (user) =>
@@ -374,7 +407,7 @@ export const groupCamerasByUser = ({ all_hits, secured, scanned }) => {
 
       // Add scanned data
       const scannedObj = scanned.find(
-        (scannedItem) =>
+        (scannedItem: any) =>
           scannedItem?.drnId?.toLowerCase() ===
           securedObj?.userId?.toLowerCase(),
       );
