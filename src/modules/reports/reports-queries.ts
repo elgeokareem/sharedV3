@@ -1,4 +1,5 @@
-import { gql } from '@apollo/client';
+import gql from "graphql-tag";
+
 
 export const FETCH_CAMERA_HITS = gql`
   query CameraHits(
