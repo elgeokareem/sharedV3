@@ -1,4 +1,6 @@
 import moment = require('moment');
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+
 import {
   formatVinsByUser,
   mapVinsToUserAndAllVins,
@@ -13,8 +15,12 @@ import {
   groupCamerasByUser,
 } from './reports-helpers';
 import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
+import { CASE_STATUSES } from 'shared/types';
+import { DATE_FORMAT } from 'shared/constants';
 
-export const fetchSecuredCaseBySpotters = (client: any) => {
+export const fetchSecuredCaseBySpotters = (
+  client: ApolloClient<NormalizedCacheObject>,
+) => {
   return async (
     startDate: string,
     endDate: string,
@@ -23,17 +29,25 @@ export const fetchSecuredCaseBySpotters = (client: any) => {
     camerasByUser: any;
     cameraHitsAndUsers: any;
   }> => {
+    if (!moment(startDate, DATE_FORMAT, true).isValid()) {
+      throw new Error('startDate format invalid!');
+    }
+
+    if (!moment(endDate, DATE_FORMAT, true).isValid()) {
+      throw new Error('endDate format invalid!');
+    }
+
     const cameraHitsVariables = {
       where: {
         AND: [
           {
             scanned_at: {
-              gte: moment(startDate).format('YYYY-MM-DD 00:00:00'),
+              gte: moment(startDate).format(DATE_FORMAT),
             },
           },
           {
             scanned_at: {
-              lte: moment(endDate).format('YYYY-MM-DD 23:59:59'),
+              lte: moment(endDate).format(DATE_FORMAT),
             },
           },
         ],
@@ -42,51 +56,40 @@ export const fetchSecuredCaseBySpotters = (client: any) => {
         AND: [
           {
             scanned_at: {
-              gte: moment(startDate)
-                .subtract(1, 'years')
-                .format('YYYY-MM-DD 00:00:00'),
+              gte: moment(startDate).subtract(1, 'years').format(DATE_FORMAT),
             },
           },
           {
             scanned_at: {
-              lte: moment(endDate)
-                .subtract(1, 'years')
-                .format('YYYY-MM-DD 23:59:59'),
+              lte: moment(endDate).subtract(1, 'years').format(DATE_FORMAT),
             },
           },
         ],
       },
       where2: {
-        AND: [],
+        AND: [
+          {
+            scanned_at: {
+              gte: moment(startDate).format(DATE_FORMAT),
+            },
+          },
+          {
+            scanned_at: {
+              lte: moment(endDate).format(DATE_FORMAT),
+            },
+          },
+        ],
       },
       where3: {
         AND: [
           {
             scanned_at: {
-              gte: moment(startDate).format('YYYY-MM-DD 00:00:00'),
+              gte: moment(startDate).subtract(1, 'years').format(DATE_FORMAT),
             },
           },
           {
             scanned_at: {
-              lte: moment(endDate).format('YYYY-MM-DD 23:59:59'),
-            },
-          },
-        ],
-      },
-      where4: {
-        AND: [
-          {
-            scanned_at: {
-              gte: moment(startDate)
-                .subtract(1, 'years')
-                .format('YYYY-MM-DD 00:00:00'),
-            },
-          },
-          {
-            scanned_at: {
-              lte: moment(endDate)
-                .subtract(1, 'years')
-                .format('YYYY-MM-DD 23:59:59'),
+              lte: moment(endDate).subtract(1, 'years').format(DATE_FORMAT),
             },
           },
         ],
@@ -150,11 +153,11 @@ export const fetchSecuredCaseBySpotters = (client: any) => {
     });
 
     const securedRDNCases = rDNCases.filter(
-      (rDNcase: any) => rDNcase.status === 'Repossessed',
+      (rDNcase: any) => rDNcase.status === CASE_STATUSES.repossessed,
     );
 
     const previousSecuredRDNCases = previousRDNCases.filter(
-      (rDNcase: any) => rDNcase.status === 'Repossessed',
+      (rDNcase: any) => rDNcase.status === CASE_STATUSES.repossessed,
     );
 
     const securedByUser = formatSecuredByUser(securedRDNCases, mapVinsToUser);

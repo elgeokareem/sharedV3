@@ -1,13 +1,11 @@
-import gql from "graphql-tag";
-
+import gql from 'graphql-tag';
 
 export const FETCH_CAMERA_HITS = gql`
   query CameraHits(
     $where: CameraHitWhereInput
     $where1: CameraHitWhereInput
-    $where2: UserWhereInput
+    $where2: CameraScanWhereInput
     $where3: CameraScanWhereInput
-    $where4: CameraScanWhereInput
   ) {
     cameraHits(where: $where) {
       lpr
@@ -22,7 +20,7 @@ export const FETCH_CAMERA_HITS = gql`
       drnId
       count
     }
-    users(where: $where2) {
+    users {
       id
       drnId
       rdnId
@@ -35,12 +33,12 @@ export const FETCH_CAMERA_HITS = gql`
       id
       name
     }
-    cameraScans(where: $where3) {
+    cameraScans(where: $where2) {
       scanned_at
       drnId
       count
     }
-    previousCameraScans: cameraScans(where: $where4) {
+    previousCameraScans: cameraScans(where: $where3) {
       scanned_at
       drnId
       count

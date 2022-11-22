@@ -56,3 +56,5 @@ export const RDN_ERRORS = {
   CASE_NOT_FOUND: 'CASE_NOT_FOUND',
   UNKNOWN_AGENT: 'UNKNOWN_AGENT',
 };
+
+export const DATE_FORMAT = 'YYYY-MM-DD';
