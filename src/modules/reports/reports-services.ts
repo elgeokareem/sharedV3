@@ -15,8 +15,8 @@ import {
   groupCamerasByUser,
 } from './reports-helpers';
 import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
-import { CASE_STATUSES } from 'shared/types';
-import { DATE_FORMAT } from 'shared/constants';
+import { CASE_STATUSES } from '../../shared/types';
+import { DATE_FORMAT } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (
   client: ApolloClient<NormalizedCacheObject>,

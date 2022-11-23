@@ -4,7 +4,7 @@ import {
   HitType,
   RdnCaseType,
   UserType,
-} from 'shared/types';
+} from '../../shared/types';
 
 export const formatVinsByUser = (cameraHits: CameraHitType[]) => {
   const vinsByUser: any = {};

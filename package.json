@@ -2,7 +2,7 @@
   "name": "@insightt/insightt-shared",
   "version": "1.1.0",
   "description": "Shared code for Insightt",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
