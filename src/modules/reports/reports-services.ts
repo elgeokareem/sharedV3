@@ -16,7 +16,7 @@ import {
 } from './reports-helpers';
 import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
 import { CASE_STATUSES } from '../../shared/types';
-import { DATE_FORMAT } from '../../shared/constants';
+import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (
   client: ApolloClient<NormalizedCacheObject>,
@@ -30,11 +30,11 @@ export const fetchSecuredCaseBySpotters = (
     cameraHitsAndUsers: any;
   }> => {
     if (!moment(startDate, DATE_FORMAT, true).isValid()) {
-      throw new Error('startDate format invalid!');
+      throw new Error(ERROR_MESSAGES.startDateInvalid);
     }
 
     if (!moment(endDate, DATE_FORMAT, true).isValid()) {
-      throw new Error('endDate format invalid!');
+      throw new Error(ERROR_MESSAGES.endDateInvalid);
     }
 
     const cameraHitsVariables = {
