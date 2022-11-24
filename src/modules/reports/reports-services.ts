@@ -1,5 +1,4 @@
 import moment = require('moment');
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import {
   formatVinsByUser,
@@ -15,11 +14,11 @@ import {
   groupCamerasByUser,
 } from './reports-helpers';
 import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
-import { CASE_STATUSES } from '../../shared/types';
+import {CASE_STATUSES, GraphQLClient} from '../../shared/types';
 import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (
-  client: ApolloClient<NormalizedCacheObject>,
+  client: GraphQLClient,
 ) => {
   return async (
     startDate: string,
