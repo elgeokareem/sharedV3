@@ -58,3 +58,8 @@ export const RDN_ERRORS = {
 };
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
+
+export const ERROR_MESSAGES = {
+  startDateInvalid: 'startDate format invalid!',
+  endDateInvalid: 'endDate format invalid!',
+};
