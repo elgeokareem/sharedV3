@@ -194,10 +194,19 @@ export const sumAndGroupScanByUser = (
       const user = users.find(
         (innerUser) => innerUser.drnId.toLowerCase() === cameraScan.drnId,
       );
-      cameraScansSumObj[cameraScan.drnId] = {
-        count: cameraScan.count,
-        ...user,
-      };
+
+      if (user) {
+        cameraScansSumObj[cameraScan.drnId] = {
+          count: cameraScan.count,
+          ...user,
+        };
+      } else {
+        cameraScansSumObj[cameraScan.drnId] = {
+          branchId: null,
+          count: cameraScan.count,
+          drnId: cameraScan.drnId,
+        };
+      }
     } else {
       cameraScansSumObj[cameraScan.drnId].count += cameraScan.count;
     }
@@ -340,6 +349,13 @@ export const groupCamerasByBranch = (
   }
 
   CamerasByBranch['Company Wide'] = cameras;
+
+  // Unknown branch
+  CamerasByBranch['Unknown'] = {
+    all_hits: CamerasByBranch['Company Wide'].all_hits.filter((hit: any) => hit.branchName === undefined),
+    scanned: CamerasByBranch['Company Wide'].scanned.filter((scan: any) => scan.branchName === undefined),
+    secured: CamerasByBranch['Company Wide'].secured.filter((secure: any) => secure.branchName === undefined),
+  };
 
   return CamerasByBranch;
 };
