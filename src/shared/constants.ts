@@ -8,6 +8,18 @@ export const RDN_SERVER_TIME_ZONE_OFFSET = -7;
 
 export const RDN_TIME_ZONE = 'America/Phoenix';
 
+const TIMEZONES = {
+  /**
+   * @deprecated: Use RDNTimeZone instead
+   */
+  rdnTimeZone: 'America/Phoenix',
+  RDNTimeZone: 'America/Phoenix',
+};
+
+const TIMEFORMATS = {
+  DATETIME: 'YYYY-MM-DD HH:mm:ss',
+};
+
 export const ACCEPTED_RDN_STATUSES = [
   CASE_STATUSES_RDN_MATCH.open,
   CASE_STATUSES_RDN_MATCH.need_info,

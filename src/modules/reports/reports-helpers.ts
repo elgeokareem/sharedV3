@@ -196,8 +196,8 @@ export const sumAndGroupScanByUser = (
       );
 
       if (user) {
+        user.count = cameraScan.count;
         cameraScansSumObj[cameraScan.drnId] = {
-          count: cameraScan.count,
           ...user,
         };
       } else {
