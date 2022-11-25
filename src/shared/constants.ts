@@ -8,7 +8,7 @@ export const RDN_SERVER_TIME_ZONE_OFFSET = -7;
 
 export const RDN_TIME_ZONE = 'America/Phoenix';
 
-const TIMEZONES = {
+export const TIMEZONES = {
   /**
    * @deprecated: Use RDNTimeZone instead
    */
@@ -16,7 +16,7 @@ const TIMEZONES = {
   RDNTimeZone: 'America/Phoenix',
 };
 
-const TIMEFORMATS = {
+export const TIMEFORMATS = {
   DATETIME: 'YYYY-MM-DD HH:mm:ss',
 };
 
