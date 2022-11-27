@@ -197,8 +197,8 @@ export const sumAndGroupScanByUser = (
 
       if (user) {
         cameraScansSumObj[cameraScan.drnId] = {
-          count: cameraScan.count,
           ...user,
+          count: cameraScan.count,
         };
       } else {
         cameraScansSumObj[cameraScan.drnId] = {
@@ -219,7 +219,7 @@ export const sumAndGroupScanByUser = (
   }));
 
   return cameraScansByUser
-    .filter((scan) => scan.firstName)
+    .filter((scan) => scan.drnId)
     .sort((a, b) => b.count - a.count);
 };
 
@@ -251,8 +251,8 @@ export const statusCalc = (
             caseElem.count > pCaseElem.count
               ? (caseElem.status = 1)
               : caseElem.count < pCaseElem.count
-                ? (caseElem.status = -1)
-                : (caseElem.status = 0);
+              ? (caseElem.status = -1)
+              : (caseElem.status = 0);
           } else {
             caseElem.status = 1;
           }
@@ -292,8 +292,8 @@ export const statusCalcAllHits = (
       hit.count > previousAllHit.count
         ? (hit.status = 1)
         : hit.count < previousAllHit.count
-          ? (hit.status = -1)
-          : (hit.status = 0);
+        ? (hit.status = -1)
+        : (hit.status = 0);
     } else {
       hit.status = 1;
     }
@@ -316,8 +316,8 @@ export const statusCalcCameraScans = (
       cameraScan.count > previousCameraScan.count
         ? (cameraScan.status = 1)
         : cameraScan.count < previousCameraScan.count
-          ? (cameraScan.status = -1)
-          : (cameraScan.status = 0);
+        ? (cameraScan.status = -1)
+        : (cameraScan.status = 0);
     } else {
       cameraScan.status = 1;
     }
@@ -352,9 +352,15 @@ export const groupCamerasByBranch = (
 
   // Unknown branch
   CamerasByBranch['Unknown'] = {
-    all_hits: CamerasByBranch['Company Wide'].all_hits.filter((hit: any) => hit.branchName === undefined),
-    scanned: CamerasByBranch['Company Wide'].scanned.filter((scan: any) => scan.branchName === undefined),
-    secured: CamerasByBranch['Company Wide'].secured.filter((secure: any) => secure.branchName === undefined),
+    all_hits: CamerasByBranch['Company Wide'].all_hits.filter(
+      (hit: any) => hit.branchName === undefined,
+    ),
+    scanned: CamerasByBranch['Company Wide'].scanned.filter(
+      (scan: any) => scan.branchName === undefined,
+    ),
+    secured: CamerasByBranch['Company Wide'].secured.filter(
+      (secure: any) => secure.branchName === undefined,
+    ),
   };
 
   return CamerasByBranch;
