@@ -186,14 +186,17 @@ export const sumAndGroupScanByUser = (
 ): CameraScanType[] => {
   // the users are already being passed filtered
   // users = users.filter(userElem => userElem.drnId !== undefined && userElem.firstName)
-  const innerCameraScans = cameraScans.filter((cameraScan) => cameraScan.drnId);
 
   const usersByDrnId: Record<string, UserType> = users.reduce((acc: Record<string, UserType>, user: UserType) => {
     acc[String(user.drnId).toLowerCase()] = user;
     return acc;
   }, {});
+
   const cameraScansSumObj: Record<string, Partial<UserType>> = {};
-  innerCameraScans.forEach((cameraScan) => {
+  cameraScans.forEach((cameraScan) => {
+    if (cameraScan.drnId === undefined) return;
+    if (cameraScan.drnId === "") return;
+
     const drnId = String(cameraScan.drnId).toLowerCase();
     const sumObject = cameraScansSumObj[drnId];
     if (sumObject !== undefined) {
@@ -236,7 +239,10 @@ export const sumAndGroupScanByUser = (
       count: cameraScansByUser[i].count ?? 0,
       drnId: cameraScansByUser[i].drnId,
       // @ts-ignore
-      status: cameraScansByUser[i].status
+      status: cameraScansByUser[i].status,
+      firstName: cameraScansByUser[i].firstName,
+      lastName: cameraScansByUser[i].lastName,
+      email: cameraScansByUser[i].email,
     });
   }
 

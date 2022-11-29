@@ -208,10 +208,12 @@ export const fetchSecuredCaseBySpotters = (
       securedByUserList,
       previousSecuredByUserList,
     );
+
     cameraScansList = statusCalcCameraScans(
       cameraScansList,
       previousCameraScansList,
     );
+
     allHits = statusCalcAllHits(allHits, previousAllHits);
     securedByUserList = securedByUserList.sort((a, b) => b.count - a.count);
 

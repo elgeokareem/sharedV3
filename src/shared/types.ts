@@ -169,6 +169,9 @@ export type CameraScanType = {
     count: number;
     status: number;
     drnId: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
 };
 
 export type HitType = {
