@@ -123,7 +123,7 @@ export const sumCameraHitsByUserAndClientLenderCount = (
   const allHits: HitType[] = [];
 
   users.forEach((user) => {
-    const drnLowerCase = user.drnId.toLowerCase();
+    const drnLowerCase = user.drnId?.toLowerCase();
     let hitObj: any = {};
 
     if (vinsByUser[drnLowerCase] !== undefined) {
@@ -151,7 +151,7 @@ export const sumCameraHitsByUserAndClientLenderCount = (
       });
       hitObj.branchName = idToBranch[user.branchId];
       hitObj.count = vinsByUser[drnLowerCase].count;
-      hitObj = { ...user, ...hitObj, drnId: user.drnId.toLowerCase() };
+      hitObj = { ...user, ...hitObj, drnId: user.drnId?.toLowerCase() };
       allHits.push(hitObj);
     }
   });
@@ -447,14 +447,14 @@ export const groupCamerasByUser = ({ all_hits, secured, scanned }: any) => {
     // Add scanned data
     const allHits = all_hits.find(
       (scannedItem: any) =>
-        scannedItem.drnId.toLowerCase() === hit.drnId.toLowerCase(),
+        scannedItem.drnId?.toLowerCase() === hit.drnId?.toLowerCase(),
     );
     resultObj.allHits = allHits || {};
 
     // Add secured data
     const securedData = secured.find(
       (securedItem: any) =>
-        securedItem.userId.toLowerCase() === hit.drnId.toLowerCase(),
+        securedItem.userId.toLowerCase() === hit.drnId?.toLowerCase(),
     );
     resultObj.secured = securedData || {};
 
