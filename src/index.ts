@@ -10,6 +10,11 @@ export * from './shared/types';
 
 export * from './modules/reports/reports-services';
 
+// tasks
+
+export * from './modules/tasks/types';
+export * from './modules/tasks/utils';
+
 // Utils
 
 export * from './shared/utils';
