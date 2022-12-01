@@ -1,4 +1,4 @@
-import moment = require('moment');
+import moment = require('moment-timezone');
 
 import {
   formatVinsByUser,
@@ -13,13 +13,15 @@ import {
   groupCamerasByBranch,
   groupCamerasByUser,
 } from './reports-helpers';
-import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
-import {CASE_STATUSES, GraphQLClient} from '../../shared/types';
+import {
+  FETCH_ALL_MISSED_REPOSSESSIONS,
+  FETCH_CAMERA_HITS,
+  FETCH_SECURED_CASES,
+} from './reports-queries';
+import { CASE_STATUSES, GraphQLClient, UserType } from '../../shared/types';
 import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
-export const fetchSecuredCaseBySpotters = (
-  client: GraphQLClient,
-) => {
+export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
   return async (
     startDate: string,
     endDate: string,
@@ -108,7 +110,9 @@ export const fetchSecuredCaseBySpotters = (
       variables: cameraHitsVariables,
     });
 
-    const usersFiltered = users.filter((user: any) => user.drnId);
+    const usersFiltered = users.filter(
+      (user: UserType) => user.drnId !== undefined || user.drnId !== null,
+    );
 
     const idToBranch = {};
 
@@ -245,4 +249,57 @@ export const fetchSecuredCaseBySpotters = (
 
     return { camerasByBranch, camerasByUser, cameraHitsAndUsers };
   };
+};
+
+// By default, year is 0 to retrieve the current year's missed repossessions.
+// We can pass in 1 for the year to retrieve the previous year's missed repossessions.
+export const fetchMissedRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+  branchId: number,
+) => {
+  let missedRepossessionsVariables;
+
+  if (branchId === 0) {
+    missedRepossessionsVariables = {
+      where: {
+        missedDate: {
+          lte: endDate,
+          gte: startDate,
+        },
+      },
+    };
+  } else {
+    missedRepossessionsVariables = {
+      where: {
+        AND: [
+          {
+            missedDate: {
+              lte: endDate,
+              gte: startDate,
+            },
+            case: {
+              is: {
+                users: {
+                  is: {
+                    branchId: {
+                      equals: branchId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    };
+  }
+
+  const { data } = await client.query({
+    query: FETCH_ALL_MISSED_REPOSSESSIONS,
+    variables: missedRepossessionsVariables,
+  });
+
+  return data?.aggregateMissedRepossession?._count?.id;
 };

@@ -66,3 +66,13 @@ export const FETCH_SECURED_CASES = gql`
     }
   }
 `;
+
+export const FETCH_ALL_MISSED_REPOSSESSIONS = gql`
+  query AggregateMissedRepossession($where: MissedRepossessionWhereInput) {
+    aggregateMissedRepossession(where: $where) {
+      _count {
+        id
+      }
+    }
+  }
+`;
