@@ -269,6 +269,7 @@ export const sumAndGroupScanByUser = (
     results.push({
       count: cameraScansByUser[i].count ?? 0,
       drnId: cameraScansByUser[i].drnId,
+      branchName: cameraScansByUser[i].branchName,
       // @ts-ignore
       status: cameraScansByUser[i].status,
       firstName: cameraScansByUser[i].firstName,
@@ -308,8 +309,8 @@ export const statusCalc = (
             caseElem.count > pCaseElem.count
               ? (caseElem.status = 1)
               : caseElem.count < pCaseElem.count
-              ? (caseElem.status = -1)
-              : (caseElem.status = 0);
+                ? (caseElem.status = -1)
+                : (caseElem.status = 0);
           } else {
             caseElem.status = 1;
           }
@@ -349,8 +350,8 @@ export const statusCalcAllHits = (
       hit.count > previousAllHit.count
         ? (hit.status = 1)
         : hit.count < previousAllHit.count
-        ? (hit.status = -1)
-        : (hit.status = 0);
+          ? (hit.status = -1)
+          : (hit.status = 0);
     } else {
       hit.status = 1;
     }
@@ -373,8 +374,8 @@ export const statusCalcCameraScans = (
       cameraScan.count > previousCameraScan.count
         ? (cameraScan.status = 1)
         : cameraScan.count < previousCameraScan.count
-        ? (cameraScan.status = -1)
-        : (cameraScan.status = 0);
+          ? (cameraScan.status = -1)
+          : (cameraScan.status = 0);
     } else {
       cameraScan.status = 1;
     }

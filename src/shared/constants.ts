@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/check-tag-names */
 import {
   CASE_STATUSES_RDN_MATCH,
   CASE_STATUSES,
