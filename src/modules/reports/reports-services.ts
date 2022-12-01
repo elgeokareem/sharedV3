@@ -18,8 +18,8 @@ import {
   FETCH_CAMERA_HITS,
   FETCH_SECURED_CASES,
 } from './reports-queries';
-import { CASE_STATUSES, GraphQLClient } from '../../shared/types';
-import { DATE_FORMAT, ERROR_MESSAGES, TIMEZONES } from '../../shared/constants';
+import { CASE_STATUSES, GraphQLClient, UserType } from '../../shared/types';
+import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
   return async (
@@ -110,8 +110,8 @@ export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
       variables: cameraHitsVariables,
     });
 
-    const usersFiltered = users.filter((user: any) =>
-      user.drnId?.toLowerCase(),
+    const usersFiltered = users.filter(
+      (user: UserType) => user.drnId !== undefined || user.drnId !== null,
     );
 
     const idToBranch = {};
@@ -253,67 +253,53 @@ export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
 
 // By default, year is 0 to retrieve the current year's missed repossessions.
 // We can pass in 1 for the year to retrieve the previous year's missed repossessions.
-export const fetchMissedRepossessions = (client: GraphQLClient) => {
-  return async (year = 0, calendarDate: string, branchId: number) => {
-    // Get the start of the month.
-    const startDate = moment
-      .tz(calendarDate, TIMEZONES.RDNTimeZone)
-      .startOf('month')
-      .subtract(year, 'year')
-      .utc()
-      .format(DATE_FORMAT);
+export const fetchMissedRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+  branchId: number,
+) => {
+  let missedRepossessionsVariables;
 
-    // Get the end of the month and add the first week of the next month.
-    const endDate = moment
-      .tz(calendarDate, TIMEZONES.RDNTimeZone)
-      .endOf('month')
-      .subtract(year, 'year')
-      .add(1, 'week')
-      .utc()
-      .format(DATE_FORMAT);
-
-    let missedRepossessionsVariables;
-
-    if (branchId === 0) {
-      missedRepossessionsVariables = {
-        where: {
-          missedDate: {
-            lte: endDate,
-            gte: startDate,
-          },
+  if (branchId === 0) {
+    missedRepossessionsVariables = {
+      where: {
+        missedDate: {
+          lte: endDate,
+          gte: startDate,
         },
-      };
-    } else {
-      missedRepossessionsVariables = {
-        where: {
-          AND: [
-            {
-              missedDate: {
-                lte: endDate,
-                gte: startDate,
-              },
-              case: {
-                is: {
-                  users: {
-                    is: {
-                      branchId: {
-                        equals: branchId,
-                      },
+      },
+    };
+  } else {
+    missedRepossessionsVariables = {
+      where: {
+        AND: [
+          {
+            missedDate: {
+              lte: endDate,
+              gte: startDate,
+            },
+            case: {
+              is: {
+                users: {
+                  is: {
+                    branchId: {
+                      equals: branchId,
                     },
                   },
                 },
               },
             },
-          ],
-        },
-      };
-    }
+          },
+        ],
+      },
+    };
+  }
 
-    const { data } = await client.query({
-      query: FETCH_ALL_MISSED_REPOSSESSIONS,
-      variables: missedRepossessionsVariables,
-    });
+  const { data } = await client.query({
+    query: FETCH_ALL_MISSED_REPOSSESSIONS,
+    variables: missedRepossessionsVariables,
+  });
 
-    return data?.aggregateMissedRepossession?._count?.id;
-  };
+  return data?.aggregateMissedRepossession?._count?.id;
 };
