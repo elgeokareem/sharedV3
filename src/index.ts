@@ -14,6 +14,7 @@ export * from './modules/reports/reports-services';
 
 export * from './modules/tasks/types';
 export * from './modules/tasks/utils';
+export * from './modules/tasks/validators';
 
 // Utils
 
