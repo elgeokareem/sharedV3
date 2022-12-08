@@ -39,10 +39,7 @@ export const MISSED_REPOSSESSED_STATUSES = [
 ];
 
 export const VOLUNTARY_ORDER_TYPES = [
-  CASE_ORDER_TYPES.condReport,
-  CASE_ORDER_TYPES.pictures,
   CASE_ORDER_TYPES.voluntary,
-  CASE_ORDER_TYPES.fieldVisit,
 ];
 
 export const INVOLUNTARY_ORDER_TYPES = [
