@@ -7,8 +7,12 @@ export * from './shared/constants';
 export * from './shared/types';
 
 // Reports
-
 export * from './modules/reports/reports-services';
+
+// Overview
+import { fetchMissedRepossessions } from './modules/overview/overview-services';
+
+export { fetchMissedRepossessions };
 
 // tasks
 

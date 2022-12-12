@@ -197,7 +197,7 @@ export type HitType = {
   };
 };
 
-type GraphQLQuery = {
+export type GraphQLQuery = {
   query: DocumentNode;
   variables?: Record<string, any>;
 };
