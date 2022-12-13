@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/no-types */
-import { DriverType } from './types';
+import { DriverType, UserType } from './types';
 
 /**
  * Sort Drivers.
@@ -27,4 +27,34 @@ export const sortDrivers = (x: DriverType, y: DriverType) => {
   }
 
   return countY - countX;
+};
+
+/**
+ * To filter users by firstname/lastname on dropdown/select.
+ *
+ * @example users.filter(filterUsers);
+ * @param {object} users - The users to filter.
+ * @param {string} search - To filter the users.
+ * @returns The filteredUsers list.
+ */
+export const filterUsers = (users: UserType[], search: string) => {
+  const filteredUsers = users.filter((user) => {
+    if (!search) return true;
+
+    const searchLowercase = search.toLowerCase();
+    const firstName = `${user.firstName}`.toLowerCase();
+    const lastName = `${user.lastName}`.toLowerCase();
+    // replace multiple spaces with a single space
+    const fullName = `${firstName} ${lastName}`
+      .replace(/  +/g, ' ')
+      .toLowerCase();
+
+    if (firstName.includes(searchLowercase)) return true;
+    if (lastName.includes(searchLowercase)) return true;
+    if (fullName.includes(searchLowercase)) return true;
+
+    return false;
+  });
+
+  return filteredUsers;
 };
