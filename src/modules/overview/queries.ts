@@ -16,7 +16,7 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
       spottedDate
       vendorBranchName
       lenderClientId
-
+      lenderClientName
       missedRepossession {
         createdAt
       }
@@ -32,7 +32,7 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
       spottedDate
       vendorBranchName
       lenderClientId
-
+      lenderClientName
       missedRepossession {
         createdAt
       }
