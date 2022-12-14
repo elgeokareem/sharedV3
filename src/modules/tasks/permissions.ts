@@ -1,4 +1,4 @@
-import { UserType } from 'shared/types';
+import { UserType } from '../../shared/types';
 import { TASK_STATUSES, TaskType } from './types';
 
 export const isAssigner = (task: TaskType, user: UserType) =>
