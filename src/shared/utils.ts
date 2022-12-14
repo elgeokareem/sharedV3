@@ -30,31 +30,27 @@ export const sortDrivers = (x: DriverType, y: DriverType) => {
 };
 
 /**
- * To filter users by firstname/lastname on dropdown/select.
+ * To filter user by firstname/lastname for dropdown/select.
  *
- * @example users.filter(filterUsers);
- * @param {object} users - The users to filter.
+ * @example users.filter((user) => filterUser(user, search));
+ * @param {object} user - The user to filter.
  * @param {string} search - To filter the users.
  * @returns The filteredUsers list.
  */
-export const filterUsers = (users: UserType[], search: string) => {
-  const filteredUsers = users.filter((user) => {
-    if (!search) return true;
+export const filterUser = (user: UserType, search: string) => {
+  if (!search) return true;
 
-    const searchLowercase = search.toLowerCase();
-    const firstName = `${user.firstName}`.toLowerCase();
-    const lastName = `${user.lastName}`.toLowerCase();
-    // replace multiple spaces with a single space
-    const fullName = `${firstName} ${lastName}`
-      .replace(/  +/g, ' ')
-      .toLowerCase();
+  const searchLowercase = search.toLowerCase();
+  const firstName = `${user.firstName}`.toLowerCase();
+  const lastName = `${user.lastName}`.toLowerCase();
+  // replace multiple spaces with a single space
+  const fullName = `${firstName} ${lastName}`
+    .replace(/  +/g, ' ')
+    .toLowerCase();
 
-    if (firstName.includes(searchLowercase)) return true;
-    if (lastName.includes(searchLowercase)) return true;
-    if (fullName.includes(searchLowercase)) return true;
+  if (firstName.includes(searchLowercase)) return true;
+  if (lastName.includes(searchLowercase)) return true;
+  if (fullName.includes(searchLowercase)) return true;
 
-    return false;
-  });
-
-  return filteredUsers;
+  return false;
 };

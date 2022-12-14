@@ -19,6 +19,7 @@ export { fetchMissedRepossessions };
 export * from './modules/tasks/types';
 export * from './modules/tasks/utils';
 export * from './modules/tasks/validators';
+export * from './modules/tasks/permissions';
 
 // Utils
 
