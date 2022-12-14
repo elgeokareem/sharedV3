@@ -10,12 +10,12 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
       caseId
       status
       orderType
-      close_date
-      hold_date
+      closeDate
+      holdDate
       originalOrderDate
       spottedDate
       vendorBranchName
-      lender_client_id
+      lenderClientId
 
       missedRepossession {
         createdAt
@@ -26,12 +26,12 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
       caseId
       status
       orderType
-      close_date
-      hold_date
+      closeDate
+      holdDate
       originalOrderDate
       spottedDate
       vendorBranchName
-      lender_client_id
+      lenderClientId
 
       missedRepossession {
         createdAt
