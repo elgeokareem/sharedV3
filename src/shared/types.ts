@@ -26,32 +26,32 @@ export enum CASE_STATUSES_RDN_MATCH {
 }
 
 export enum CASE_ORDER_TYPES {
-    // Voluntary
-    voluntary = 'Vol. Repo',
+  // Voluntary
+  voluntary = 'Vol. Repo',
 
-    // Involuntary
-    investigate = 'Investigate',
-    investigateRepo = 'Investigate/Repo',
-    lprStaging = 'LPR Staging',
-    involuntary = 'Repossess',
+  // Involuntary
+  investigate = 'Investigate',
+  investigateRepo = 'Investigate/Repo',
+  lprStaging = 'LPR Staging',
+  involuntary = 'Repossess',
 
-    // Impound
-    impoundRepo = 'Impound Repo',
-    impoundVoluntary = 'Impound Voluntary',
+  // Impound
+  impoundRepo = 'Impound Repo',
+  impoundVoluntary = 'Impound Voluntary',
 
-    // Not Categorized: Exclude from voluntary, involuntary, and impound
-    condReport = 'Cond. Report',
-    pictures = 'Pictures',
-    fieldVisit = 'Field Visit',
-    invalid = 'Invalid',
-    store = 'Store',
-    transport = 'Transport',
-    declinedOrder = 'Declined Order',
-    none = 'None',
-    tow = 'Tow',
-    convToRepo = 'Conv to Repo',
-    auction = 'Auction',
-    consign = 'Consign',
+  // Not Categorized: Exclude from voluntary, involuntary, and impound
+  condReport = 'Cond. Report',
+  pictures = 'Pictures',
+  fieldVisit = 'Field Visit',
+  invalid = 'Invalid',
+  store = 'Store',
+  transport = 'Transport',
+  declinedOrder = 'Declined Order',
+  none = 'None',
+  tow = 'Tow',
+  convToRepo = 'Conv to Repo',
+  auction = 'Auction',
+  consign = 'Consign',
 }
 
 export enum EVENT_TYPES {
