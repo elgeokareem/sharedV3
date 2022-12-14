@@ -39,9 +39,7 @@ export const MISSED_REPOSSESSED_STATUSES = [
   CASE_STATUSES.onHold,
 ];
 
-export const VOLUNTARY_ORDER_TYPES = [
-  CASE_ORDER_TYPES.voluntary,
-];
+export const VOLUNTARY_ORDER_TYPES = [CASE_ORDER_TYPES.voluntary];
 
 export const INVOLUNTARY_ORDER_TYPES = [
   CASE_ORDER_TYPES.investigate,
@@ -67,7 +65,7 @@ export const RDN_ERRORS = {
   UNKNOWN_AGENT: 'UNKNOWN_AGENT',
 };
 
-export const DATE_FORMAT = 'YYYY-MM-DD';
+export const DATE_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 
 export const ERROR_MESSAGES = {
   startDateInvalid: 'startDate format invalid!',
