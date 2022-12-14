@@ -3,7 +3,6 @@
   "version": "1.4.3",
   "description": "Shared code for Insightt",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

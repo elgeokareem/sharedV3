@@ -65,7 +65,8 @@ export const RDN_ERRORS = {
   UNKNOWN_AGENT: 'UNKNOWN_AGENT',
 };
 
-export const DATE_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+export const DATE_FORMAT = 'YYYY-MM-DD';
+export const DATETIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 
 export const ERROR_MESSAGES = {
   startDateInvalid: 'startDate format invalid!',

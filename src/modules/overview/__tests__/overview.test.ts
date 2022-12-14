@@ -21,21 +21,22 @@ describe('Branch Tests', () => {
       previousEndDate,
     );
 
-    expect(missedRepos?.current?.length).toBe(64);
+    expect(missedRepos?.current?.length).toBe(67);
     expect(missedRepos?.previous?.length).toBe(56);
     expect(true).toBeTruthy();
   });
 
   test('it fetches all the branches, filtered by Insight branch', async () => {
-    // const missedReposWithBranchFiltering = await fetchMissedRepossessions(
-    //   gqlClient,
-    //   startDate,
-    //   endDate,
-    //   previousStartDate,
-    //   previousEndDate,
-    //   1,
-    // );
-    // expect(missedReposWithBranchFiltering.length).toBe(23);
-    // expect(true).toBeTruthy();
+    const missedReposWithBranchFiltering = await fetchMissedRepossessions(
+      gqlClient,
+      startDate,
+      endDate,
+      previousStartDate,
+      previousEndDate,
+      1,
+    );
+    expect(missedReposWithBranchFiltering?.current?.length).toBe(33);
+    expect(missedReposWithBranchFiltering?.previous?.length).toBe(24);
+    expect(true).toBeTruthy();
   });
 });

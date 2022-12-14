@@ -4,7 +4,7 @@ import { fetchBranches } from '../../shared/branch/branch-action';
 import { CASE_STATUSES, GraphQLClient } from '../../shared/types';
 
 import {
-  DATE_FORMAT,
+  DATETIME_FORMAT,
   ERROR_MESSAGES,
   IMPOUND_ORDER_TYPES,
   INVOLUNTARY_ORDER_TYPES,
@@ -22,15 +22,15 @@ export const fetchMissedRepossessions = async (
   branchId = 0,
 ) => {
   if (
-    !moment(startDate, DATE_FORMAT, true).isValid() &&
-    !moment(previousStartDate, DATE_FORMAT, true).isValid()
+    !moment(startDate, DATETIME_FORMAT, true).isValid() &&
+    !moment(previousStartDate, DATETIME_FORMAT, true).isValid()
   ) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
 
   if (
-    !moment(endDate, DATE_FORMAT, true).isValid() &&
-    !moment(previousEndDate, DATE_FORMAT, true).isValid()
+    !moment(endDate, DATETIME_FORMAT, true).isValid() &&
+    !moment(previousEndDate, DATETIME_FORMAT, true).isValid()
   ) {
     throw new Error(ERROR_MESSAGES.endDateInvalid);
   }
