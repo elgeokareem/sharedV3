@@ -209,3 +209,7 @@ export type DriverType = {
   count: number;
   firstName: string;
 };
+
+export type Case = {
+  caseId:string
+}
