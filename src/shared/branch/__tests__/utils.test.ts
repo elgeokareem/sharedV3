@@ -4,23 +4,23 @@ import { UserType } from 'shared/types';
 import { filterUserByFullName, filterUser } from '../../utils';
 
 describe('Utils tests', () => {
-  test('filterByFullName toBeTruthy', async () => {
+  test('expect filterByFullName toBeTruthy', async () => {
     expect(filterUserByFullName('John first', 'John')).toBeTruthy();
   });
 
-  test('filterByFullName toBeFalsy', async () => {
+  test('expect filterByFullName toBeFalsy', async () => {
     expect(filterUserByFullName('John first', 'Johh')).toBeFalsy();
   });
 
-  test('filterByFullName second toBeTruthy', async () => {
+  test('expect filterByFullName second toBeTruthy', async () => {
     expect(filterUserByFullName('John    Second', 'John SeConD')).toBeTruthy();
   });
 
-  test('filterByFullName third toBeTruthy', async () => {
+  test('expect filterByFullName third toBeTruthy', async () => {
     expect(filterUserByFullName('John    ThiRd', 'thIr')).toBeTruthy();
   });
 
-  test('filterUser toBeTruthy', async () => {
+  test('expect filterUser toBeTruthy', async () => {
     expect(
       filterUser(
         { firstName: 'John', lastName: 'first' } as UserType,
@@ -29,7 +29,7 @@ describe('Utils tests', () => {
     ).toBeTruthy();
   });
 
-  test('filterUser second toBeTruthy', async () => {
+  test('expect filterUser second toBeTruthy', async () => {
     expect(
       filterUser(
         { firstName: 'John ', lastName: '  SeconD' } as UserType,
