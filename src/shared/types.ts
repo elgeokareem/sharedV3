@@ -173,7 +173,7 @@ export type UserType = {
 export type RdnCaseType = {
   vinLastEight: string;
   lenderClientName: string;
-  lender_client_id: number;
+  lenderClientId: number;
 };
 
 export type CameraScanType = {

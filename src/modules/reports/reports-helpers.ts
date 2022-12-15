@@ -134,7 +134,7 @@ export const sumCameraHitsByUserAndClientLenderCount = (
           (rDNCase) => rDNCase.vinLastEight === vin,
         );
         if (caseVin) {
-          const { lenderClientName, lender_client_id } = caseVin;
+          const { lenderClientName, lenderClientId } = caseVin;
 
           if (hitObj.lenderClientCount[lenderClientName] !== undefined) {
             hitObj.lenderClientCount[lenderClientName] = {
@@ -144,7 +144,7 @@ export const sumCameraHitsByUserAndClientLenderCount = (
           } else {
             hitObj.lenderClientCount[lenderClientName] = {
               value: 1,
-              id: lender_client_id,
+              id: lenderClientId,
             };
           }
         }
@@ -166,7 +166,7 @@ export const formatSecuredByUser = (
   const securedByUser: any = {};
 
   rDNCases.forEach((secureCase) => {
-    const { vinLastEight, lenderClientName, lender_client_id } = secureCase;
+    const { vinLastEight, lenderClientName, lenderClientId } = secureCase;
     // const userId = mapVinsToUser[vinLastEight];
     const users = mapVinsToUser[vinLastEight];
 
@@ -177,7 +177,7 @@ export const formatSecuredByUser = (
         securedByUser[userId] = {
           count: 1,
           lenderClientCount: {
-            [lenderClientName]: { value: 1, id: lender_client_id },
+            [lenderClientName]: { value: 1, id: lenderClientId },
           },
         };
       } else {
@@ -187,7 +187,7 @@ export const formatSecuredByUser = (
         )
           securedByUser[userId].lenderClientCount[lenderClientName] = {
             value: 1,
-            id: lender_client_id,
+            id: lenderClientId,
           };
         else
           securedByUser[userId].lenderClientCount[lenderClientName].value += 1;
