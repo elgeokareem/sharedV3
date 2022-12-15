@@ -2,6 +2,18 @@
 import { DriverType, UserType } from './types';
 
 /**
+ * Replace multi spaces with single spaces.
+ *
+ * @example const newString = trimMultiSpaces(text);
+ * @param {string} text - The text to replace.
+ * @returns The new string.
+ */
+export const trimMultiSpaces = (text: string) => {
+  if (!text) return '';
+  return text.replace(/  +/g, ' ');
+};
+
+/**
  * Sort Drivers.
  *
  * This function sort the drivers using the count number and the first name
@@ -30,27 +42,37 @@ export const sortDrivers = (x: DriverType, y: DriverType) => {
 };
 
 /**
- * To filter user by firstname/lastname for dropdown/select.
+ * To filter user by fullName for dropdown/select.
+ *
+ * @example users.filter((user) => filterUser(`${user.firstName} ${user.lastName}`, search));
+ * @param {string} fullName - The user to filter.
+ * @param {string} search - To filter the users.
+ * @returns If the user is valid on filter.
+ */
+export const filterUserByFullName = (fullName: string, search: string) => {
+  if (!search) return true;
+
+  const searchLowercase = trimMultiSpaces(search).toLowerCase();
+  const fullNameLowercase = trimMultiSpaces(fullName).toLowerCase();
+
+  if (fullNameLowercase.includes(searchLowercase)) return true;
+
+  return false;
+};
+
+/**
+ * To filter user by firstName/lastName/fullName for dropdown/select.
  *
  * @example users.filter((user) => filterUser(user, search));
  * @param {object} user - The user to filter.
  * @param {string} search - To filter the users.
- * @returns The filteredUsers list.
+ * @returns If the user is valid on filter.
  */
 export const filterUser = (user: UserType, search: string) => {
   if (!search) return true;
 
-  const searchLowercase = search.toLowerCase();
-  const firstName = `${user.firstName}`.toLowerCase();
-  const lastName = `${user.lastName}`.toLowerCase();
-  // replace multiple spaces with a single space
-  const fullName = `${firstName} ${lastName}`
-    .replace(/  +/g, ' ')
-    .toLowerCase();
+  const { firstName, lastName } = user;
+  const fullName = `${firstName} ${lastName}`;
 
-  if (firstName.includes(searchLowercase)) return true;
-  if (lastName.includes(searchLowercase)) return true;
-  if (fullName.includes(searchLowercase)) return true;
-
-  return false;
+  return filterUserByFullName(fullName, search);
 };
