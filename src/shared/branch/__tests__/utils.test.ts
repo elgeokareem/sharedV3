@@ -3,7 +3,7 @@ import { UserType } from 'shared/types';
 
 import { filterUserByFullName, filterUser } from '../../utils';
 
-describe('Branch Tests', () => {
+describe('Utils tests', () => {
   test('filterByFullName toBeTruthy', async () => {
     expect(filterUserByFullName('John first', 'John')).toBeTruthy();
   });
