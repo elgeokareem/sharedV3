@@ -21,7 +21,7 @@ describe('Branch Tests', () => {
       previousEndDate,
     );
 
-    expect(missedRepos?.current?.length).toBe(67);
+    expect(missedRepos?.current?.length).toBe(65);
     expect(missedRepos?.previous?.length).toBe(56);
     expect(true).toBeTruthy();
   });

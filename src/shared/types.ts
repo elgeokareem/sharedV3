@@ -210,6 +210,11 @@ export type DriverType = {
   firstName: string;
 };
 
+export type MissedRepossession = {
+  createdAt: string;
+  case: Case
+}
+
 export type Case = {
-  caseId:string
+  caseId: string
 }
