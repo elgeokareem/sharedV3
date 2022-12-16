@@ -51,10 +51,18 @@ export const FETCH_SECURED_CASES = gql`
     rDNCases(where: $where) {
       caseId
       vinLastEight
-      status
       lenderClientName
       lenderClientId
+      spottedLat
+      spottedLng
+      repoLat
+      repoLng
       status
+      spottedAddress
+      vin
+      vendorBranchName
+      vendor_address
+      yearMakeModel
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
