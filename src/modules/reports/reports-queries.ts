@@ -53,7 +53,7 @@ export const FETCH_SECURED_CASES = gql`
       vinLastEight
       status
       lenderClientName
-      lender_client_id
+      lenderClientId
       status
     }
     previousRDNCases: rDNCases(where: $where1) {
@@ -61,7 +61,7 @@ export const FETCH_SECURED_CASES = gql`
       vinLastEight
       status
       lenderClientName
-      lender_client_id
+      lenderClientId
       status
     }
   }

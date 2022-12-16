@@ -1,6 +1,4 @@
 /* eslint-disable no-unused-vars */
-
-import { number } from 'yargs';
 import { UserType } from '../../shared/types';
 
 export enum TASK_STATUSES {
@@ -36,7 +34,9 @@ export enum TASK_FRIENDLY_STATUSES_COLORS {
   closed = '#006aff',
 }
 
-// TODO add missing fields
+/**
+ * TODO add missing fields.
+ */
 export type TaskType = {
   id: number;
   status: TASK_STATUSES;
