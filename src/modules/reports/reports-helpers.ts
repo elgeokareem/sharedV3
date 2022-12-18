@@ -1,9 +1,11 @@
+import moment = require('moment');
 import {
   Branches,
   BranchTable,
   CameraHitParsed,
   CameraHitType,
   CameraScanType,
+  DuplicatedVins,
   GroupedHits,
   GroupedRDNCases,
   HitType,
@@ -518,6 +520,41 @@ export const groupCamerasByUser = ({ all_hits, secured, scanned }: any) => {
  * New helpers for Top Camera Cars -----------------------------------.
  */
 
+export const removeDuplicatedVins = (rdnCases: DuplicatedVins[]) => {
+  // Group by vinLastEight
+  const groupedBy8Vin: { [vin8: string]: any } = {};
+
+  rdnCases.forEach((rdnCase) => {
+    if (!groupedBy8Vin[rdnCase.vinLastEight]) {
+      groupedBy8Vin[rdnCase.vinLastEight] = [rdnCase];
+    }
+
+    groupedBy8Vin[rdnCase.vinLastEight].push(rdnCase);
+  });
+
+  // Get the most recent vin
+  const mostRecentVins = Object.keys(groupedBy8Vin).map((vin8) => {
+    const cases = groupedBy8Vin[vin8];
+
+    const mostRecentCase = cases.reduce(
+      (prev: DuplicatedVins, current: DuplicatedVins) => {
+        const prevDate = moment(prev.originalOrderDate);
+        const currentDate = moment(current.originalOrderDate);
+
+        if (prevDate.isAfter(currentDate)) {
+          return prev;
+        }
+
+        return current;
+      },
+    );
+
+    return mostRecentCase;
+  });
+
+  return mostRecentVins;
+};
+
 export const getAllVins = (scans: CameraHitType[]) => {
   let allVins: string[] = [];
 
@@ -676,17 +713,9 @@ export const compareLiveHitsByClientLender = (
         details: RdnCurrent[];
       };
     } = {};
-    const repeatedVins: string[] = [];
+    // const repeatedVins: string[] = [];
     for (let index = 0; index < currentCases.length; index++) {
       const rdnCase = currentCases[index];
-
-      // If vin is repeated, skip
-      const vin = rdnCase.vinLastEight;
-      const isRepeatedVin = repeatedVins.includes(vin);
-      if (isRepeatedVin) {
-        continue;
-      }
-      repeatedVins.push(vin);
 
       // If lenderClientId doesnt exist, create it
       if (!groupCurrentByLenderClientId[rdnCase.lenderClientId]) {
@@ -718,17 +747,9 @@ export const compareLiveHitsByClientLender = (
         value: number;
       };
     } = {};
-    const repeatedPreviousVins: string[] = [];
+
     for (let index = 0; index < previousCases.length; index++) {
       const rdnCase = previousCases[index];
-
-      // If vin is repeated, skip
-      const vin = rdnCase.vinLastEight;
-      const isRepeatedVin = repeatedPreviousVins.includes(vin);
-      if (isRepeatedVin) {
-        continue;
-      }
-      repeatedPreviousVins.push(vin);
 
       // If lenderClientId doesnt exist, create it
       if (!groupPreviousByLenderClientId[rdnCase.lenderClientId]) {
@@ -1103,6 +1124,58 @@ export const addUsersToData = (
   });
 
   return result;
+};
+
+export const groupByUser = (camerasByBranch: any) => {
+  const resultObject: { [key: string]: any } = {};
+
+  for (const branchName in camerasByBranch) {
+    const branchObject = camerasByBranch[branchName];
+    const result: any[] = [];
+
+    for (const dataName in branchObject) {
+      const dataList = branchObject[dataName];
+
+      for (let index = 0; index < dataList.length; index++) {
+        const data = dataList[index];
+
+        // Get the agent object
+        const agent = result.find((agent) => agent.drnId === data.drnId);
+
+        // If the agent doesn't exist, create it
+        if (!agent) {
+          result.push({
+            ...data,
+            [`${dataName}Count`]: data.count,
+            [`${dataName}Status`]: data.status,
+          });
+
+          continue;
+        }
+
+        // If the agent exists, update it
+        agent[`${dataName}Count`] = data.count;
+        agent[`${dataName}Status`] = data.status;
+      }
+    }
+
+    resultObject[branchName] = result;
+  }
+
+  // Sort the object by scannedCount and add a rank
+  for (const branchName in resultObject) {
+    const branchObject = resultObject[branchName];
+
+    branchObject.sort((a: any, b: any) => b.scannedCount - a.scannedCount);
+
+    for (let index = 0; index < branchObject.length; index++) {
+      const agent = branchObject[index];
+
+      agent.rank = index + 1;
+    }
+  }
+
+  return resultObject;
 };
 
 export const groupByBranch = (
