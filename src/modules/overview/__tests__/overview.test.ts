@@ -2,6 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import {
   fetchAggregateAssignments,
   fetchAggregateMissedRepossessions,
+  fetchAggregateRepossessions,
   fetchAssignments,
   fetchMissedRepossessions,
   fetchRepossessions,
@@ -79,18 +80,16 @@ describe('Branch Tests', () => {
   });
 
   test('Fetches all repossessions for given time frame', async () => {
-    const aggregateRepossessions = await fetchRepossessions(
+    const aggregateRepossessions = await fetchAggregateRepossessions(
       gqlClient,
       rdnStartDate,
       rdnEndDate,
-      'aggregate',
     );
 
     const repossessions = await fetchRepossessions(
       gqlClient,
       rdnStartDate,
       rdnEndDate,
-      'other',
     );
 
     expect(repossessions?.length).toBe(1163);

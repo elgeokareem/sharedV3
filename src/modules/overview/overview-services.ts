@@ -167,11 +167,10 @@ export const fetchAssignments = async (
   return response?.assignments;
 };
 
-export const fetchRepossessions = async (
+export const fetchAggregateRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-  type: string,
 ) => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -185,21 +184,35 @@ export const fetchRepossessions = async (
     where: { rdnRepoDate: { gte: startDate, lte: endDate } },
   };
 
-  let response;
+  const response = await client.query({
+    query: AGGREGATE_REPOSSESSIONS_QUERY,
+    variables,
+  });
 
-  if (type === 'aggregate') {
-    response = await client.query({
-      query: AGGREGATE_REPOSSESSIONS_QUERY,
-      variables,
-    });
-  } else {
-    response = await client.query({
-      query: REPOSSESSIONS_QUERY,
-      variables,
-    });
+  return response?.repossessions?._count?.caseId;
+};
+
+export const fetchRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
 
-  return type === 'aggregate'
-    ? response?.repossessions?._count?.caseId
-    : response?.repossessions;
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: REPOSSESSIONS_QUERY,
+    variables,
+  });
+
+  return response?.repossessions;
 };
