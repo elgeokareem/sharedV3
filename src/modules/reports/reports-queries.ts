@@ -63,6 +63,7 @@ export const FETCH_SECURED_CASES = gql`
       vendorBranchName
       vendor_address
       yearMakeModel
+      originalOrderDate
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
@@ -71,6 +72,8 @@ export const FETCH_SECURED_CASES = gql`
       lenderClientName
       lenderClientId
       status
+      vin
+      originalOrderDate
     }
   }
 `;

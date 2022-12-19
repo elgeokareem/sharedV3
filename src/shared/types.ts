@@ -214,6 +214,14 @@ export type Case = {
   caseId: string;
 };
 
+/**
+ * New helpers --------------.
+ */
+
+export type DuplicatedVins = Pick<
+  RdnCurrent,
+  'vinLastEight' | 'originalOrderDate'
+>;
 export interface CameraHitsTable {
   lpr: number;
   lpr_vins: string;
@@ -249,12 +257,23 @@ export type RdnCurrent = {
   spottedLng: number | null;
   repoLat: number | null;
   repoLng: number | null;
+  spottedAddress: string | null;
+  vin: string;
+  vendorBranchName: string;
+  vendor_address: string;
+  yearMakeModel: string;
+  originalOrderDate: string;
 };
 
-export type RdnPrevious = Omit<
-  RdnCurrent,
-  'spottedLat' | 'spottedLng' | 'repoLat' | 'repoLng'
->;
+export type RdnPrevious = {
+  caseId: string;
+  vinLastEight: string;
+  status: string;
+  lenderClientName: string;
+  lenderClientId: string;
+  vin: string;
+  originalOrderDate: string;
+};
 
 export type CameraHitParsed = {
   lpr: number;

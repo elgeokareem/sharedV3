@@ -23,6 +23,8 @@ import {
   compareSecuredRDNCasesByClientLender,
   addUsersToData,
   groupByBranch,
+  removeDuplicatedVins,
+  groupByUser,
 } from './reports-helpers';
 import {
   FETCH_ALL_MISSED_REPOSSESSIONS,
@@ -386,11 +388,17 @@ export const fetchTest = (client: GraphQLClient) => {
       },
     };
     const {
-      data: { rDNCases, previousRDNCases },
+      data: {
+        rDNCases: rDNCasesNoFilter,
+        previousRDNCases: previousRDNCasesNoFilter,
+      },
     } = await client.query({
       query: FETCH_SECURED_CASES,
       variables: securedCasesVariables,
     });
+
+    const rDNCases = removeDuplicatedVins(rDNCasesNoFilter);
+    const previousRDNCases = removeDuplicatedVins(previousRDNCasesNoFilter);
 
     const securedRDNCases = rDNCases.filter(
       (rDNcase: RdnCurrent) => rDNcase.status === CASE_STATUSES.repossessed,
@@ -492,12 +500,14 @@ export const fetchTest = (client: GraphQLClient) => {
       branches,
     );
 
+    const camerasByUser = groupByUser(camerasByBranch);
+
     const modalsData = {
       liveHits: currentLiveHitsLenderInfo,
       secured: currentSecuredRDNCasesWithStatusByClientLender,
     };
 
-    return { camerasByBranch, modalsData };
+    return { camerasByBranch, modalsData, camerasByUser };
   };
 };
 
