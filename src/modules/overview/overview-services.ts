@@ -111,11 +111,10 @@ export const fetchMissedRepossessions = async (
   };
 };
 
-export const fetchAssignments = async (
+export const fetchAggregateAssignments = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-  type: string,
 ) => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -132,23 +131,40 @@ export const fetchAssignments = async (
     },
   };
 
-  let response;
+  const response = await client.query({
+    query: AGGREGATE_ASSIGNMENTS_QUERY,
+    variables,
+  });
 
-  if (type === 'aggregate') {
-    response = await client.query({
-      query: AGGREGATE_ASSIGNMENTS_QUERY,
-      variables,
-    });
-  } else {
-    response = await client.query({
-      query: ASSIGNMENTS_QUERY,
-      variables,
-    });
+  return response?.assignments?._count?.caseId;
+};
+
+export const fetchAssignments = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
 
-  return type === 'aggregate'
-    ? response?.assignments?._count?.caseId
-    : response?.assignments;
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: {
+      orderDate: { gte: startDate, lte: endDate },
+      status: { in: [...ACCEPTED_RDN_STATUSES] },
+    },
+  };
+
+  const response = await client.query({
+    query: ASSIGNMENTS_QUERY,
+    variables,
+  });
+
+  return response?.assignments;
 };
 
 export const fetchRepossessions = async (

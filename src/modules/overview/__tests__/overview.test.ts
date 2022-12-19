@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import {
+  fetchAggregateAssignments,
   fetchAggregateMissedRepossessions,
   fetchAssignments,
   fetchMissedRepossessions,
@@ -65,19 +66,13 @@ describe('Branch Tests', () => {
   });
 
   test('Fetches all assignments for given time frame', async () => {
-    const aggregateAssignments = await fetchAssignments(
+    const aggregateAssignments = await fetchAggregateAssignments(
       gqlClient,
       startDate,
       endDate,
-      'aggregate',
     );
 
-    const assignments = await fetchAssignments(
-      gqlClient,
-      startDate,
-      endDate,
-      'other',
-    );
+    const assignments = await fetchAssignments(gqlClient, startDate, endDate);
 
     expect(assignments?.length).toBe(4438);
     expect(aggregateAssignments).toBe(4438);
