@@ -48,3 +48,12 @@ export const AGGREGATE_ASSIGNMENTS_QUERY = gql`
     }
   }
 `;
+
+export const ASSIGNMENTS_QUERY = gql`
+  query RDNCases($where: RDNCaseWhereInput) {
+    assignments: rDNCases(where: $where) {
+      caseId
+      lenderClientId
+    }
+  }
+`;

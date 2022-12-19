@@ -3,10 +3,15 @@ import moment = require('moment-timezone');
 import { fetchBranches } from '../../shared/branch/branch-action';
 import { GraphQLClient } from '../../shared/types';
 
-import { DATETIME_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
+import {
+  ACCEPTED_RDN_STATUSES,
+  DATETIME_FORMAT,
+  ERROR_MESSAGES,
+} from '../../shared/constants';
 
 import {
   AGGREGATE_ASSIGNMENTS_QUERY,
+  ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
 } from './queries';
 import { MissedRepossessionsResult } from './types';
@@ -77,10 +82,11 @@ export const fetchMissedRepossessions = async (
   };
 };
 
-export const fetchAggregateAssignments = async (
+export const fetchAssignments = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
+  type: string,
 ) => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -91,13 +97,27 @@ export const fetchAggregateAssignments = async (
   }
 
   const variables: Record<string, any> = {
-    where: { orderDate: { gte: startDate, lte: endDate } },
+    where: {
+      orderDate: { gte: startDate, lte: endDate },
+      status: { in: [...ACCEPTED_RDN_STATUSES] },
+    },
   };
 
-  const response = await client.query({
-    query: AGGREGATE_ASSIGNMENTS_QUERY,
-    variables,
-  });
+  let response;
 
-  return response?.assignments?._count?.caseId;
+  if (type === 'aggregate') {
+    response = await client.query({
+      query: AGGREGATE_ASSIGNMENTS_QUERY,
+      variables,
+    });
+  } else {
+    response = await client.query({
+      query: ASSIGNMENTS_QUERY,
+      variables,
+    });
+  }
+
+  return type === 'aggregate'
+    ? response?.assignments?._count?.caseId
+    : response?.assignments;
 };
