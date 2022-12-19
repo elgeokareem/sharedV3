@@ -1,15 +1,49 @@
 import moment = require('moment-timezone');
 
+import { Case, GraphQLClient } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
-import {  GraphQLClient } from '../../shared/types';
 
 import {
+  ACCEPTED_RDN_STATUSES,
   DATETIME_FORMAT,
   ERROR_MESSAGES,
 } from '../../shared/constants';
 
-import { MISSED_REPOSSESSIONS_QUERY } from './queries';
+import {
+  AGGREGATE_ASSIGNMENTS_QUERY,
+  AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
+  AGGREGATE_REPOSSESSIONS_QUERY,
+  ASSIGNMENTS_QUERY,
+  MISSED_REPOSSESSIONS_QUERY,
+  REPOSSESSIONS_QUERY,
+} from './queries';
+
 import { MissedRepossessionsResult } from './types';
+
+export const fetchAggregateMissedRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+): Promise<number> => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { createdAt: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
+    variables,
+  });
+
+  return response?.missedRepossesions?._count?.caseId;
+};
 
 export const fetchMissedRepossessions = async (
   client: GraphQLClient,
@@ -34,6 +68,7 @@ export const fetchMissedRepossessions = async (
   }
 
   const rdnBranchNames: string[] = [];
+
   if (branchId !== 0) {
     const branches = await fetchBranches(client);
     const branch = branches.find((b) => b.id === branchId);
@@ -47,9 +82,9 @@ export const fetchMissedRepossessions = async (
     });
   }
 
-  const getMissedRepossessionVariables = (start: string, end: string) => (
-    { createdAt: { gte: start, lte: end } }
-  );
+  const getMissedRepossessionVariables = (start: string, end: string) => ({
+    createdAt: { gte: start, lte: end },
+  });
 
   const variables: Record<string, any> = {
     where1: getMissedRepossessionVariables(startDate, endDate),
@@ -61,6 +96,7 @@ export const fetchMissedRepossessions = async (
     variables.where1.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
+
     variables.where2.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
@@ -70,9 +106,115 @@ export const fetchMissedRepossessions = async (
     query: MISSED_REPOSSESSIONS_QUERY,
     variables,
   });
-  console.log('response', response);
+
   return {
     current: response?.current,
     previous: response?.previous,
   };
+};
+
+export const fetchAggregateAssignments = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+): Promise<number> => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: {
+      orderDate: { gte: startDate, lte: endDate },
+      status: { in: [...ACCEPTED_RDN_STATUSES] },
+    },
+  };
+
+  const response = await client.query({
+    query: AGGREGATE_ASSIGNMENTS_QUERY,
+    variables,
+  });
+
+  return response?.assignments?._count?.caseId;
+};
+
+export const fetchAssignments = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+): Promise<Case[]> => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: {
+      orderDate: { gte: startDate, lte: endDate },
+      status: { in: [...ACCEPTED_RDN_STATUSES] },
+    },
+  };
+
+  const response = await client.query({
+    query: ASSIGNMENTS_QUERY,
+    variables,
+  });
+
+  return response?.assignments;
+};
+
+export const fetchAggregateRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+): Promise<number> => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: AGGREGATE_REPOSSESSIONS_QUERY,
+    variables,
+  });
+
+  return response?.repossessions?._count?.caseId;
+};
+
+export const fetchRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+): Promise<Case[]> => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: REPOSSESSIONS_QUERY,
+    variables,
+  });
+
+  return response?.repossessions;
 };
