@@ -1,6 +1,6 @@
 import moment = require('moment-timezone');
 
-import { GraphQLClient } from '../../shared/types';
+import { Case, GraphQLClient } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
@@ -24,7 +24,7 @@ export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-) => {
+): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
@@ -68,6 +68,7 @@ export const fetchMissedRepossessions = async (
   }
 
   const rdnBranchNames: string[] = [];
+
   if (branchId !== 0) {
     const branches = await fetchBranches(client);
     const branch = branches.find((b) => b.id === branchId);
@@ -95,6 +96,7 @@ export const fetchMissedRepossessions = async (
     variables.where1.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
+
     variables.where2.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
@@ -115,7 +117,7 @@ export const fetchAggregateAssignments = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-) => {
+): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
@@ -143,7 +145,7 @@ export const fetchAssignments = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-) => {
+): Promise<Case[]> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
@@ -171,7 +173,7 @@ export const fetchAggregateRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-) => {
+): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
@@ -196,7 +198,7 @@ export const fetchRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-) => {
+): Promise<Case[]> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
   }
