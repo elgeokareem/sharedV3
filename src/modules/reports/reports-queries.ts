@@ -51,10 +51,19 @@ export const FETCH_SECURED_CASES = gql`
     rDNCases(where: $where) {
       caseId
       vinLastEight
-      status
       lenderClientName
       lenderClientId
+      spottedLat
+      spottedLng
+      repoLat
+      repoLng
       status
+      spottedAddress
+      vin
+      vendorBranchName
+      vendor_address
+      yearMakeModel
+      originalOrderDate
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
@@ -63,6 +72,8 @@ export const FETCH_SECURED_CASES = gql`
       lenderClientName
       lenderClientId
       status
+      vin
+      originalOrderDate
     }
   }
 `;

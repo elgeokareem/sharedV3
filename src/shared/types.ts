@@ -216,5 +216,144 @@ export type MissedRepossession = {
 }
 
 export type Case = {
-  caseId: string
+  caseId: string;
+};
+
+/**
+ * New helpers --------------.
+ */
+
+export type DuplicatedVins = Pick<
+  RdnCurrent,
+  'vinLastEight' | 'originalOrderDate'
+>;
+export interface CameraHitsTable {
+  lpr: number;
+  lpr_vins: string;
+  direct_hits_vins: string;
+  drnId: string;
+  count: number;
 }
+
+export interface UsersTable {
+  id: number;
+  drnId: string;
+  rdnId: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string;
+  branchId: number;
+}
+
+export interface BranchTable {
+  id: number;
+  name: string;
+}
+
+export type Branches = { [branchId: number]: string };
+
+export type RdnCurrent = {
+  vinLastEight: string;
+  lenderClientName: string;
+  lenderClientId: string;
+  caseId: string;
+  status: string;
+  spottedLat: number | null;
+  spottedLng: number | null;
+  repoLat: number | null;
+  repoLng: number | null;
+  spottedAddress: string | null;
+  vin: string;
+  vendorBranchName: string;
+  vendor_address: string;
+  yearMakeModel: string;
+  originalOrderDate: string;
+};
+
+export type RdnPrevious = {
+  caseId: string;
+  vinLastEight: string;
+  status: string;
+  lenderClientName: string;
+  lenderClientId: string;
+  vin: string;
+  originalOrderDate: string;
+};
+
+export type CameraHitParsed = {
+  lpr: number;
+  lpr_vins: string[];
+  direct_hits_vins: string[];
+  drnId: string;
+  count: number;
+};
+
+export type ScansResult = {
+  status: number;
+  drnId: string;
+  count: number;
+};
+
+export type GroupedHits = Record<
+  string, //drnId
+  { count: number; direct_hits_vins: string[]; lpr_vins: string[] }
+>;
+
+export interface RdnCurrentOrPrevious {
+  current: RdnCurrent[];
+  previous: RdnPrevious[];
+}
+
+export type GroupedRDNCases = {
+  direct: RdnCurrent[] | RdnPrevious[];
+  lpr: RdnCurrent[] | RdnPrevious[];
+};
+
+export interface LiveHitsStatus {
+  previousValue: number;
+  drnId: string;
+  status: number;
+  count: number;
+  direct_hits_vins: string[];
+  lpr_vins: string[];
+}
+
+export type LiveHitsDetails = {
+  previousValue: number;
+  id: string;
+  name: string;
+  status: number;
+  drnId: string;
+  value: number;
+  details: RdnCurrent[];
+};
+
+export type LiveHitsModalResult = {
+  previousValue: number;
+  id: string;
+  name: string;
+  status: number;
+  drnId: string;
+  value: number;
+  details: RdnCurrent[];
+  directVins: string[];
+  lprVins: string[];
+  totalCount: number;
+};
+
+export type SecuredUsers = {
+  count: number;
+  drnId: string;
+  status: number;
+  lenderClientCount: {
+    [lenderClientName: string]: { id: string; value: number };
+  };
+};
+
+export type TopCameraCardData = {
+  [branchName: string]: {
+    scanned: any;
+    all_hits: any;
+    secured: any;
+  };
+};
