@@ -11,8 +11,10 @@ import {
 
 import {
   AGGREGATE_ASSIGNMENTS_QUERY,
+  AGGREGATE_REPOSSESSIONS_QUERY,
   ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
+  REPOSSESSIONS_QUERY,
 } from './queries';
 import { MissedRepossessionsResult } from './types';
 
@@ -75,7 +77,7 @@ export const fetchMissedRepossessions = async (
     query: MISSED_REPOSSESSIONS_QUERY,
     variables,
   });
-  console.log('response', response);
+
   return {
     current: response?.current,
     previous: response?.previous,
@@ -120,4 +122,41 @@ export const fetchAssignments = async (
   return type === 'aggregate'
     ? response?.assignments?._count?.caseId
     : response?.assignments;
+};
+
+export const fetchRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+  type: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
+  };
+
+  let response;
+
+  if (type === 'aggregate') {
+    response = await client.query({
+      query: AGGREGATE_REPOSSESSIONS_QUERY,
+      variables,
+    });
+  } else {
+    response = await client.query({
+      query: REPOSSESSIONS_QUERY,
+      variables,
+    });
+  }
+
+  return type === 'aggregate'
+    ? response?.repossessions?._count?.caseId
+    : response?.repossessions;
 };

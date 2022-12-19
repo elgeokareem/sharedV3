@@ -57,3 +57,22 @@ export const ASSIGNMENTS_QUERY = gql`
     }
   }
 `;
+
+export const AGGREGATE_REPOSSESSIONS_QUERY = gql`
+  query AggregateRDNCase($where: RDNCaseWhereInput) {
+    repossessions: aggregateRDNCase(where: $where) {
+      _count {
+        caseId
+      }
+    }
+  }
+`;
+
+export const REPOSSESSIONS_QUERY = gql`
+  query RDNCases($where: RDNCaseWhereInput) {
+    repossessions: rDNCases(where: $where) {
+      caseId
+      lenderClientId
+    }
+  }
+`;
