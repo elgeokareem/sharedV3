@@ -10,9 +10,23 @@ export * from './shared/types';
 export * from './modules/reports/reports-services';
 
 // Overview
-import { fetchMissedRepossessions } from './modules/overview/overview-services';
+import {
+  fetchAssignments,
+  fetchRepossessions,
+  fetchMissedRepossessions,
+  fetchAggregateAssignments,
+  fetchAggregateRepossessions,
+  fetchAggregateMissedRepossessions,
+} from './modules/overview/overview-services';
 
-export { fetchMissedRepossessions };
+export {
+  fetchAssignments,
+  fetchRepossessions,
+  fetchMissedRepossessions,
+  fetchAggregateAssignments,
+  fetchAggregateRepossessions,
+  fetchAggregateMissedRepossessions,
+};
 
 // tasks
 
