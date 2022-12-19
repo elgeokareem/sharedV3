@@ -1,5 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
-import { fetchMissedRepossessions } from '../overview-services';
+import {
+  fetchAggregateAssignments,
+  fetchMissedRepossessions,
+} from '../overview-services';
 import { createClient } from '../../../shared/graphql';
 
 describe('Branch Tests', () => {
@@ -7,10 +10,10 @@ describe('Branch Tests', () => {
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzU4LCJkYk5hbWUiOiJycmFfZGIiLCJpYXQiOjE2NzEwMTcxNzEsImV4cCI6MTY3MzYwOTE3MX0.pU7z0AuAH5-nPO4yKRfNEYFskfH-8g0kqYYiwjFXLLU';
   const gqlClient = createClient(endpoint, token);
-  const startDate = '2022-12-01 07:00:00';
-  const endDate = '2022-12-31 07:00:00';
-  const previousStartDate = '2021-12-01 07:00:00';
-  const previousEndDate = '2021-12-31 07:00:00';
+  const startDate = '2022-12-01T05:00:00Z';
+  const endDate = '2022-12-20T04:59:59Z';
+  const previousStartDate = '2021-12-01T05:00:00Z';
+  const previousEndDate = '2021-12-20T04:59:59Z';
 
   test('it fetches all the branches', async () => {
     // const missedRepos = await fetchMissedRepossessions(
@@ -38,5 +41,15 @@ describe('Branch Tests', () => {
     // expect(missedReposWithBranchFiltering?.current?.length).toBe(33);
     // expect(missedReposWithBranchFiltering?.previous?.length).toBe(24);
     expect(true).toBeTruthy();
+  });
+
+  test('Fetches all assignments for given time frame', async () => {
+    const assignments = await fetchAggregateAssignments(
+      gqlClient,
+      startDate,
+      endDate,
+    );
+
+    expect(assignments).toBe(2815);
   });
 });

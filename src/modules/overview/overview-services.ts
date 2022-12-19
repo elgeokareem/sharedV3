@@ -1,14 +1,14 @@
 import moment = require('moment-timezone');
 
 import { fetchBranches } from '../../shared/branch/branch-action';
-import {  GraphQLClient } from '../../shared/types';
+import { GraphQLClient } from '../../shared/types';
+
+import { DATETIME_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 import {
-  DATETIME_FORMAT,
-  ERROR_MESSAGES,
-} from '../../shared/constants';
-
-import { MISSED_REPOSSESSIONS_QUERY } from './queries';
+  AGGREGATE_ASSIGNMENTS_QUERY,
+  MISSED_REPOSSESSIONS_QUERY,
+} from './queries';
 import { MissedRepossessionsResult } from './types';
 
 export const fetchMissedRepossessions = async (
@@ -47,9 +47,9 @@ export const fetchMissedRepossessions = async (
     });
   }
 
-  const getMissedRepossessionVariables = (start: string, end: string) => (
-    { createdAt: { gte: start, lte: end } }
-  );
+  const getMissedRepossessionVariables = (start: string, end: string) => ({
+    createdAt: { gte: start, lte: end },
+  });
 
   const variables: Record<string, any> = {
     where1: getMissedRepossessionVariables(startDate, endDate),
@@ -75,4 +75,29 @@ export const fetchMissedRepossessions = async (
     current: response?.current,
     previous: response?.previous,
   };
+};
+
+export const fetchAggregateAssignments = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { orderDate: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: AGGREGATE_ASSIGNMENTS_QUERY,
+    variables,
+  });
+
+  return response?.assignments?._count?.caseId;
 };

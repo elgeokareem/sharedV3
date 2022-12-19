@@ -2,9 +2,10 @@ import gql from 'graphql-tag';
 
 export const MISSED_REPOSSESSIONS_QUERY = gql`
   query MissedRepossessions(
-    $where1: MissedRepossessionWhereInput, 
-    $where2: MissedRepossessionWhereInput, 
-    $orderBy: [MissedRepossessionOrderByWithRelationInput!]){
+    $where1: MissedRepossessionWhereInput
+    $where2: MissedRepossessionWhereInput
+    $orderBy: [MissedRepossessionOrderByWithRelationInput!]
+  ) {
     current: missedRepossessions(where: $where1, orderBy: $orderBy) {
       createdAt
       case {
@@ -33,6 +34,16 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
         vendorBranchName
         lenderClientId
         lenderClientName
+      }
+    }
+  }
+`;
+
+export const AGGREGATE_ASSIGNMENTS_QUERY = gql`
+  query AggregateRDNCase($where: RDNCaseWhereInput) {
+    assignments: aggregateRDNCase(where: $where) {
+      _count {
+        caseId
       }
     }
   }
