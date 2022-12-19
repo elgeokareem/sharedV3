@@ -1,6 +1,6 @@
 {
   "name": "@insightt/insightt-shared",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Shared code for Insightt",
   "main": "dist/index.js",
   "scripts": {

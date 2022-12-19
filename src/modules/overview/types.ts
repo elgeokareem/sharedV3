@@ -1,6 +1,6 @@
-import { Case } from '../../shared/types';
+import { MissedRepossession } from '../../shared/types';
 
 export type MissedRepossessionsResult = {
-  current: Case[],
-  previous: Case[]
+  current: MissedRepossession[],
+  previous: MissedRepossession[]
 }

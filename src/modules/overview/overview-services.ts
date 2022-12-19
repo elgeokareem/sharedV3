@@ -1,14 +1,11 @@
 import moment = require('moment-timezone');
 
 import { fetchBranches } from '../../shared/branch/branch-action';
-import { CASE_STATUSES, GraphQLClient } from '../../shared/types';
+import {  GraphQLClient } from '../../shared/types';
 
 import {
   DATETIME_FORMAT,
   ERROR_MESSAGES,
-  IMPOUND_ORDER_TYPES,
-  INVOLUNTARY_ORDER_TYPES,
-  VOLUNTARY_ORDER_TYPES,
 } from '../../shared/constants';
 
 import { MISSED_REPOSSESSIONS_QUERY } from './queries';
@@ -50,38 +47,9 @@ export const fetchMissedRepossessions = async (
     });
   }
 
-  const closeStatuses = [CASE_STATUSES.closed, CASE_STATUSES.pending_close];
-  const holdStatuses = [CASE_STATUSES.onHold, CASE_STATUSES.pending_on_hold];
-
-  const getMissedRepossessionVariables = (start: string, end: string) => ({
-    AND: [
-      {
-        OR: [
-          {
-            status: { in: closeStatuses },
-            close_date: { gte: start, lte: end },
-          },
-          {
-            status: { in: holdStatuses },
-            hold_date: { gte: start, lte: end },
-          },
-        ],
-      },
-      {
-        OR: [
-          {
-            orderType: { in: INVOLUNTARY_ORDER_TYPES },
-            spottedDate: { not: null },
-          },
-          {
-            orderType: {
-              in: [...VOLUNTARY_ORDER_TYPES, ...IMPOUND_ORDER_TYPES],
-            },
-          },
-        ],
-      },
-    ],
-  });
+  const getMissedRepossessionVariables = (start: string, end: string) => (
+    { createdAt: { gte: start, lte: end } }
+  );
 
   const variables: Record<string, any> = {
     where1: getMissedRepossessionVariables(startDate, endDate),
@@ -90,19 +58,19 @@ export const fetchMissedRepossessions = async (
   };
 
   if (branchId !== 0) {
-    variables.where1.AND.push({
-      vendorBranchName: { in: rdnBranchNames },
-    });
-    variables.where2.AND.push({
-      vendorBranchName: { in: rdnBranchNames },
-    });
+    variables.where1.case = {
+      is: { vendorBranchName: { in: rdnBranchNames } },
+    };
+    variables.where2.case = {
+      is: { vendorBranchName: { in: rdnBranchNames } },
+    };
   }
 
   const response = await client.query({
     query: MISSED_REPOSSESSIONS_QUERY,
     variables,
   });
-
+  console.log('response', response);
   return {
     current: response?.current,
     previous: response?.previous,
