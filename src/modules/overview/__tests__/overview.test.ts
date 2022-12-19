@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import {
+  fetchAggregateMissedRepossessions,
   fetchAssignments,
   fetchMissedRepossessions,
   fetchRepossessions,
@@ -18,6 +19,23 @@ describe('Branch Tests', () => {
   const rdnEndDate = '2022-12-01T07:59:59Z';
   const rdnPreviousStartDate = '2021-11-01T08:00:00Z';
   const rdnPreviousEndDate = '2021-12-01T07:59:59Z';
+
+  test('Fetches all missed repossessions for given time frame', async () => {
+    const missedRepossessions = await fetchAggregateMissedRepossessions(
+      gqlClient,
+      rdnStartDate,
+      rdnEndDate,
+    );
+
+    const lastMissedRepossessions = await fetchAggregateMissedRepossessions(
+      gqlClient,
+      rdnPreviousStartDate,
+      rdnPreviousEndDate,
+    );
+
+    expect(missedRepossessions).toBe(139);
+    expect(lastMissedRepossessions).toBe(21);
+  });
 
   test('it fetches all the branches', async () => {
     const missedRepos = await fetchMissedRepossessions(

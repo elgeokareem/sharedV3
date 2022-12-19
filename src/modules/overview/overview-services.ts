@@ -1,7 +1,7 @@
 import moment = require('moment-timezone');
 
-import { fetchBranches } from '../../shared/branch/branch-action';
 import { GraphQLClient } from '../../shared/types';
+import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
@@ -11,12 +11,39 @@ import {
 
 import {
   AGGREGATE_ASSIGNMENTS_QUERY,
+  AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
   AGGREGATE_REPOSSESSIONS_QUERY,
   ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
   REPOSSESSIONS_QUERY,
 } from './queries';
+
 import { MissedRepossessionsResult } from './types';
+
+export const fetchAggregateMissedRepossessions = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where: { createdAt: { gte: startDate, lte: endDate } },
+  };
+
+  const response = await client.query({
+    query: AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
+    variables,
+  });
+
+  return response?.missedRepossesions?._count?.caseId;
+};
 
 export const fetchMissedRepossessions = async (
   client: GraphQLClient,

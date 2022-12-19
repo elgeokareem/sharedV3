@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+export const AGGREGATE_MISSED_REPOSSESSIONS_QUERY = gql`
+  query AggregateMissedRepossession($where: MissedRepossessionWhereInput) {
+    missedRepossesions: aggregateMissedRepossession(where: $where) {
+      _count {
+        caseId
+      }
+    }
+  }
+`;
+
 export const MISSED_REPOSSESSIONS_QUERY = gql`
   query MissedRepossessions(
     $where1: MissedRepossessionWhereInput
