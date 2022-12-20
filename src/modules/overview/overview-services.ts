@@ -108,7 +108,7 @@ export const fetchMissedRepossessions = async (
     query: MISSED_REPOSSESSIONS_QUERY,
     variables,
   });
-
+  console.log("DEBUG:response", response);
   return {
     current: response?.data?.current,
     previous: response?.data?.previous,

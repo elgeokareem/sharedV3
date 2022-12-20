@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { fetchBranches } from '../branch-action';
-import { createClient } from '../../graphql';
+import { createClient } from '../../tests/graphql';
 
 describe('Branch Tests', () => {
   const endpoint = 'http://localhost:5000/graphql';

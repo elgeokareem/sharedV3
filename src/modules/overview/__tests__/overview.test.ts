@@ -1,15 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
 
 import {
-  fetchAggregateAssignments,
-  fetchAggregateMissedRepossessions,
-  fetchAggregateRepossessions,
-  fetchAssignments,
   fetchMissedRepossessions,
-  fetchRepossessions,
 } from '../overview-services';
-
-import { createClient } from '../../../shared/graphql';
+import { createClient } from '../../../shared/tests/graphql';
 
 describe('Branch Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';
@@ -28,78 +22,14 @@ describe('Branch Tests', () => {
   const rdnPreviousEndDate = '2021-12-01T07:59:59Z';
 
   test('Fetches all missed repossessions for given time frame', async () => {
-    const missedRepossessions = await fetchAggregateMissedRepossessions(
+    const missedRepo = await fetchMissedRepossessions(
       gqlClient,
-      rdnStartDate,
-      rdnEndDate,
+      '2022-12-01T07:00:00Z',
+    '2023-01-01T06:59:59Z',
+    '2021-12-01T07:00:00Z',
+    '2022-01-01T06:59:59Z',
+    1
     );
-
-    const lastMissedRepossessions = await fetchAggregateMissedRepossessions(
-      gqlClient,
-      rdnPreviousStartDate,
-      rdnPreviousEndDate,
-    );
-
-    expect(missedRepossessions).toBe(139);
-    expect(lastMissedRepossessions).toBe(21);
-  });
-
-  test('it fetches all the branches', async () => {
-    const missedRepos = await fetchMissedRepossessions(
-      gqlClient,
-      startDate,
-      endDate,
-      rdnPreviousStartDate,
-      rdnPreviousEndDate,
-    );
-    expect(missedRepos?.current?.length).toBe(139);
-    expect(missedRepos?.previous?.length).toBe(21);
-    expect(true).toBeTruthy();
-  });
-
-  test('it fetches all the branches, filtered by Insight branch', async () => {
-    const missedReposWithBranchFiltering = await fetchMissedRepossessions(
-      gqlClient,
-      startDate,
-      endDate,
-      rdnPreviousStartDate,
-      rdnPreviousEndDate,
-      1,
-    );
-    expect(missedReposWithBranchFiltering?.current?.length).toBe(70);
-    expect(missedReposWithBranchFiltering?.previous?.length).toBe(7);
-    expect(true).toBeTruthy();
-  });
-
-  test('Fetches all assignments for given time frame', async () => {
-    const aggregateAssignments = await fetchAggregateAssignments(
-      gqlClient,
-      startDate,
-      endDate,
-      '228298',
-    );
-
-    const assignments = await fetchAssignments(gqlClient, startDate, endDate);
-
-    expect(assignments?.length).toBe(4439);
-    expect(aggregateAssignments).toBe(1221);
-  });
-
-  test('Fetches all repossessions for given time frame', async () => {
-    const aggregateRepossessions = await fetchAggregateRepossessions(
-      gqlClient,
-      rdnStartDate,
-      rdnEndDate,
-      '228298',
-    );
-
-    const repossessions = await fetchRepossessions(
-      gqlClient,
-      rdnStartDate,
-      rdnEndDate,
-    );
-
-    expect(repossessions?.length).toBe(1163);
-    expect(aggregateRepossessions).toBe(208);
+    expect(missedRepo).toBe(21);
   });
 });

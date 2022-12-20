@@ -6,5 +6,5 @@ export const fetchBranches = async (client: GraphQLClient): Promise<Branch[]> =>
   const response = await client.query({
     query: BRANCHES_QUERY,
   });
-  return response.branches;
+  return response.data.branches;
 };
