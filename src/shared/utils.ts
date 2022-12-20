@@ -1,5 +1,6 @@
 /* eslint-disable jsdoc/no-types */
 import { DriverType, UserType } from './types';
+import packageJson from '../../package.json';
 
 /**
  * Replace multi spaces with single spaces.
@@ -76,3 +77,5 @@ export const filterUser = (user: UserType, search: string) => {
 
   return filterUserByFullName(fullName, search);
 };
+
+export const version = (): string => packageJson.version;

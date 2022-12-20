@@ -19,6 +19,7 @@ import {
 } from './queries';
 
 import { MissedRepossessionsResult } from './types';
+import { version } from '../../shared/utils';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -53,6 +54,7 @@ export const fetchMissedRepossessions = async (
   previousEndDate: string,
   branchId: number = 0,
 ): Promise<MissedRepossessionsResult> => {
+  console.log('fetchMissedRepossessions:', version());
   if (
     !moment(startDate, DATETIME_FORMAT, true).isValid() &&
     !moment(previousStartDate, DATETIME_FORMAT, true).isValid()
