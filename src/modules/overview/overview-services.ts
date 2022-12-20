@@ -43,7 +43,7 @@ export const fetchAggregateMissedRepossessions = async (
     variables,
   });
 
-  return response?.missedRepossesions?._count?.caseId;
+  return response?.data?.missedRepossesions?._count?.caseId;
 };
 
 export const fetchMissedRepossessions = async (
@@ -145,7 +145,7 @@ export const fetchAggregateAssignments = async (
     variables,
   });
 
-  return response?.assignments?._count?.caseId;
+  return response?.data?.assignments?._count?.caseId;
 };
 
 export const fetchAssignments = async (
@@ -173,7 +173,7 @@ export const fetchAssignments = async (
     variables,
   });
 
-  return response?.assignments;
+  return response?.data?.assignments;
 };
 
 export const fetchAggregateRepossessions = async (
@@ -203,7 +203,7 @@ export const fetchAggregateRepossessions = async (
     variables,
   });
 
-  return response?.repossessions?._count?.caseId;
+  return response?.data?.repossessions?._count?.caseId;
 };
 
 export const fetchRepossessions = async (
@@ -228,5 +228,5 @@ export const fetchRepossessions = async (
     variables,
   });
 
-  return response?.repossessions;
+  return response?.data?.repossessions;
 };
