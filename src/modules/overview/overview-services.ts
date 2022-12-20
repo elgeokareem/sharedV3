@@ -108,8 +108,8 @@ export const fetchMissedRepossessions = async (
   });
 
   return {
-    current: response?.current,
-    previous: response?.previous,
+    current: response?.data?.current,
+    previous: response?.data?.previous,
   };
 };
 
