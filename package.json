@@ -1,8 +1,8 @@
 {
   "name": "@insightt/insightt-shared",
-  "version": "1.5.10",
+  "version": "1.6.1",
   "description": "Shared code for Insightt",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
