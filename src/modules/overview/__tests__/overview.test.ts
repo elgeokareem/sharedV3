@@ -76,12 +76,13 @@ describe('Branch Tests', () => {
       gqlClient,
       startDate,
       endDate,
+      '228298',
     );
 
     const assignments = await fetchAssignments(gqlClient, startDate, endDate);
 
-    expect(assignments?.length).toBe(4438);
-    expect(aggregateAssignments).toBe(4438);
+    expect(assignments?.length).toBe(4439);
+    expect(aggregateAssignments).toBe(1221);
   });
 
   test('Fetches all repossessions for given time frame', async () => {
@@ -89,6 +90,7 @@ describe('Branch Tests', () => {
       gqlClient,
       rdnStartDate,
       rdnEndDate,
+      '228298',
     );
 
     const repossessions = await fetchRepossessions(
@@ -98,6 +100,6 @@ describe('Branch Tests', () => {
     );
 
     expect(repossessions?.length).toBe(1163);
-    expect(aggregateRepossessions).toBe(1163);
+    expect(aggregateRepossessions).toBe(208);
   });
 });
