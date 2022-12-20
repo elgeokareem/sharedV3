@@ -51,7 +51,7 @@ export const fetchMissedRepossessions = async (
   endDate: string,
   previousStartDate: string,
   previousEndDate: string,
-  branchId = 0,
+  branchId: number = 0,
 ): Promise<MissedRepossessionsResult> => {
   if (
     !moment(startDate, DATETIME_FORMAT, true).isValid() &&
@@ -117,6 +117,7 @@ export const fetchAggregateAssignments = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
+  clientId?: string,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -132,6 +133,10 @@ export const fetchAggregateAssignments = async (
       status: { in: [...ACCEPTED_RDN_STATUSES] },
     },
   };
+
+  if (clientId) {
+    variables.where.lenderClientId = { equals: clientId };
+  }
 
   const response = await client.query({
     query: AGGREGATE_ASSIGNMENTS_QUERY,
@@ -173,6 +178,7 @@ export const fetchAggregateRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
+  clientId?: string,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -185,6 +191,10 @@ export const fetchAggregateRepossessions = async (
   const variables: Record<string, any> = {
     where: { rdnRepoDate: { gte: startDate, lte: endDate } },
   };
+
+  if (clientId) {
+    variables.where.lenderClientId = { equals: clientId };
+  }
 
   const response = await client.query({
     query: AGGREGATE_REPOSSESSIONS_QUERY,
