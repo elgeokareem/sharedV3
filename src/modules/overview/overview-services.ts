@@ -5,6 +5,7 @@ import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
+  RDN_STATUSES_OBJECT,
   DATETIME_FORMAT,
   ERROR_MESSAGES,
 } from '../../shared/constants';
@@ -15,11 +16,14 @@ import {
   AGGREGATE_REPOSSESSIONS_QUERY,
   ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
+  REOPEN_AND_REPOSSESSED_CASES_QUERY,
   REPOSSESSIONS_QUERY,
 } from './queries';
 
 import { MissedRepossessionsResult } from './types';
 import { version } from '../../shared/utils';
+import { removeDuplicatedVins } from '../reports/reports-helpers';
+import { fetchUsers } from 'shared/users/users-action';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -52,7 +56,7 @@ export const fetchMissedRepossessions = async (
   endDate: string,
   previousStartDate: string,
   previousEndDate: string,
-  branchId: number = 0,
+  branchId = 0,
 ): Promise<MissedRepossessionsResult> => {
   console.log('fetchMissedRepossessions:', version());
   if (
@@ -69,9 +73,8 @@ export const fetchMissedRepossessions = async (
     throw new Error(ERROR_MESSAGES.endDateInvalid);
   }
 
-  const rdnBranchNames: string[] = [];
-
-  if (branchId !== 0) {
+  let rdnBranchNames: string[] | null = [];
+  if (branchId !== 0 && branchId !== -1) {
     const branches = await fetchBranches(client);
     const branch = branches.find((b) => b.id === branchId);
 
@@ -80,8 +83,12 @@ export const fetchMissedRepossessions = async (
     }
 
     branch.subBranches.forEach((subBranch) => {
-      rdnBranchNames.push(subBranch.name);
+      rdnBranchNames!.push(subBranch.name);
     });
+  }
+
+  if (branchId === -1) {
+    rdnBranchNames = null;
   }
 
   const getMissedRepossessionVariables = (start: string, end: string) => ({
@@ -98,7 +105,6 @@ export const fetchMissedRepossessions = async (
     variables.where1.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
-
     variables.where2.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
@@ -108,11 +114,54 @@ export const fetchMissedRepossessions = async (
     query: MISSED_REPOSSESSIONS_QUERY,
     variables,
   });
-  console.log("DEBUG:response", response);
+
+  const current = response?.data?.current ?? [];
+  const previous = response?.data?.previous ?? [];
+
+  // Add users to the cases
+  const users = await fetchUsers(client);
+  const currentWithUsers = current.map((c: { case: { spotterId: number } }) => {
+    const user = users.find((u) => u.id === c.case?.spotterId);
+
+    if (!user) {
+      return { ...c };
+    }
+
+    return { ...c, user };
+  });
+
   return {
-    current: response?.data?.current,
-    previous: response?.data?.previous,
+    current: currentWithUsers,
+    previous: previous,
   };
+};
+
+export const fetchReopenAndRepossessedCases = async (
+  client: GraphQLClient,
+  vins: string[],
+  earliestDate: string,
+): Promise<any> => {
+  // ): Promise<ReopenAndRepossessedCasesResult> => {
+  const variables = {
+    where: {
+      vin: { in: vins },
+      status: {
+        in: [RDN_STATUSES_OBJECT.open, RDN_STATUSES_OBJECT.repossessed],
+      },
+      originalOrderDate: { gte: earliestDate },
+    },
+  };
+
+  const response = await client.query({
+    query: REOPEN_AND_REPOSSESSED_CASES_QUERY,
+    variables,
+  });
+
+  const cases = response?.data?.rDNCases;
+
+  const casesFiltered = removeDuplicatedVins(cases);
+
+  return casesFiltered;
 };
 
 export const fetchAggregateAssignments = async (

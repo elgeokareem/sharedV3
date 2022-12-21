@@ -20,15 +20,23 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
       createdAt
       case {
         caseId
+        vin
+        vinLastEight
         status
         orderType
         closeDate
         holdDate
         originalOrderDate
         spottedDate
+        spottedAddress
+        spottedLat
+        spottedLng
         vendorBranchName
+        yearMakeModel
+        vendor_address
         lenderClientId
         lenderClientName
+        spotterId
       }
     }
     previous: missedRepossessions(where: $where2, orderBy: $orderBy) {
@@ -45,6 +53,27 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
         lenderClientId
         lenderClientName
       }
+    }
+  }
+`;
+
+export const REOPEN_AND_REPOSSESSED_CASES_QUERY = gql`
+  query RDNCase($where: RDNCaseWhereInput) {
+    rDNCases(where: $where) {
+      caseId
+      vin
+      vinLastEight
+      status
+      orderType
+      closeDate
+      holdDate
+      originalOrderDate
+      spottedDate
+      vendorBranchName
+      lenderClientId
+      lenderClientName
+      yearMakeModel
+      rdnRepoDate
     }
   }
 `;
