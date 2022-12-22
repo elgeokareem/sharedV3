@@ -1,13 +1,14 @@
 import moment = require('moment-timezone');
 
-import { Case, GraphQLClient } from '../../shared/types';
+import { Case, CASE_STATUSES, GraphQLClient, MissedRepossession } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
-  RDN_STATUSES_OBJECT,
   DATETIME_FORMAT,
   ERROR_MESSAGES,
+  MISSED_REPOSSESSED_STATUSES,
+  RDN_STATUSES_OBJECT,
 } from '../../shared/constants';
 
 import {
@@ -23,7 +24,8 @@ import {
 import { MissedRepossessionsResult } from './types';
 import { version } from '../../shared/utils';
 import { removeDuplicatedVins } from '../reports/reports-helpers';
-import { fetchUsers } from 'shared/users/users-action';
+import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
+import { wasCaseReopened } from '../../shared/cases/utils';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -73,35 +75,36 @@ export const fetchMissedRepossessions = async (
     throw new Error(ERROR_MESSAGES.endDateInvalid);
   }
 
-  let rdnBranchNames: string[] | null = [];
-  if (branchId !== 0 && branchId !== -1) {
-    const branches = await fetchBranches(client);
-    const branch = branches.find((b) => b.id === branchId);
-
-    if (!branch) {
-      throw new Error(ERROR_MESSAGES.branchNotFound);
-    }
-
-    branch.subBranches.forEach((subBranch) => {
-      rdnBranchNames!.push(subBranch.name);
-    });
+  if (branchId < -1) {
+    throw new Error(ERROR_MESSAGES.branchNotFound);
   }
 
-  if (branchId === -1) {
-    rdnBranchNames = null;
-  }
-
-  const getMissedRepossessionVariables = (start: string, end: string) => ({
-    createdAt: { gte: start, lte: end },
-  });
-
+  // Date Filters
   const variables: Record<string, any> = {
-    where1: getMissedRepossessionVariables(startDate, endDate),
-    where2: getMissedRepossessionVariables(previousStartDate, previousEndDate),
+    where1: ({ createdAt: { gte: startDate, lte: endDate } }),
+    where2: ({ createdAt: { gte: previousStartDate, lte: previousEndDate } }),
     orderBy: [{ caseId: 'desc' }],
   };
 
   if (branchId !== 0) {
+    const rdnBranchNames: (string | null)[] = [];
+    if (branchId > 0) {
+      const branches = await fetchBranches(client);
+      const branch = branches.find((b) => b.id === branchId);
+
+      if (!branch) {
+        throw new Error(ERROR_MESSAGES.branchNotFound);
+      }
+
+      branch.subBranches.forEach((subBranch) => {
+        rdnBranchNames.push(subBranch.name);
+      });
+    }
+
+    if (branchId === -1) {
+      rdnBranchNames.push(null);
+    }
+
     variables.where1.case = {
       is: { vendorBranchName: { in: rdnBranchNames } },
     };
@@ -117,51 +120,64 @@ export const fetchMissedRepossessions = async (
 
   const current = response?.data?.current ?? [];
   const previous = response?.data?.previous ?? [];
-
-  // Add users to the cases
-  const users = await fetchUsers(client);
-  const currentWithUsers = current.map((c: { case: { spotterId: number } }) => {
-    const user = users.find((u) => u.id === c.case?.spotterId);
-
-    if (!user) {
-      return { ...c };
-    }
-
-    return { ...c, user };
-  });
-
   return {
-    current: currentWithUsers,
-    previous: previous,
+    current,
+    previous,
   };
 };
 
-export const fetchReopenAndRepossessedCases = async (
+export const fetchReopenCases = async (
   client: GraphQLClient,
-  vins: string[],
-  earliestDate: string,
-): Promise<any> => {
-  // ): Promise<ReopenAndRepossessedCasesResult> => {
-  const variables = {
-    where: {
-      vin: { in: vins },
-      status: {
-        in: [RDN_STATUSES_OBJECT.open, RDN_STATUSES_OBJECT.repossessed],
-      },
-      originalOrderDate: { gte: earliestDate },
-    },
-  };
+  missedRepossessions: MissedRepossession[],
+): Promise<Case[]> => {
 
-  const response = await client.query({
-    query: REOPEN_AND_REPOSSESSED_CASES_QUERY,
-    variables,
+
+  // Calculate Reopen Cases:
+  // - Cases that had at some point a MISSED REPO STATUS, and later were OPEN or REOPEN
+  const caseIds = missedRepossessions.map((mr) => mr.case.caseId);
+  const reopenCaseVariables: Record<string, any> = {
+    'where': { 'caseId': { 'in': caseIds } },
+    'rdnCaseLogOrderBy': { 'createdAt': 'asc' }, // We order by createdAt to get the first status first
+  };
+  const casesWithLog = await fetchCasesWithLog(client, reopenCaseVariables);
+  const reopenCases = casesWithLog.filter(wasCaseReopened);
+
+
+  // Calculate Following Cases
+  //   - Query cases with the same VINS and orderDate (firstOfThe Month - EndOfTheMonth+1 week)
+  //   - For each Missed Repo Case, search for a matching VIN
+  const vins = missedRepossessions.map((mr) => mr.case.vin);
+  const followingCasesVariables = { where: { vin: { in: vins } } };
+  const cases = await fetchCases(client, followingCasesVariables);
+  const maybeFollowingCasesMap: Record<string, Case[]> = {};
+  cases.forEach((c) => {
+    const listOfCasesByVin = maybeFollowingCasesMap[c.vin];
+    if (listOfCasesByVin) {
+      listOfCasesByVin.push(c);
+    } else {
+      maybeFollowingCasesMap[c.vin] = [c];
+    }
+  });
+  const followingCases: Case[] = [];
+  missedRepossessions.forEach((mr) => {
+    const maybeFollowingCases = maybeFollowingCasesMap[mr.case.vin];
+    if (maybeFollowingCases === undefined) return;
+    // We check for:
+    // - Higher CaseId for newer case
+    // - Order Date between first of the Month and end of the month + 1 week
+    maybeFollowingCases.forEach((c) => {
+      if (c.caseId < mr.case.caseId) return;
+      if (moment(c.originalOrderDate).isBetween(
+        moment(mr.case.originalOrderDate).startOf('month'),
+        moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),
+      )
+      ) {
+        followingCases.push(c);
+      }
+    });
   });
 
-  const cases = response?.data?.rDNCases;
-
-  const casesFiltered = removeDuplicatedVins(cases);
-
-  return casesFiltered;
+  return reopenCases.concat(followingCases);
 };
 
 export const fetchAggregateAssignments = async (

@@ -11,48 +11,43 @@ export const AGGREGATE_MISSED_REPOSSESSIONS_QUERY = gql`
 `;
 
 export const MISSED_REPOSSESSIONS_QUERY = gql`
-  query MissedRepossessions(
-    $where1: MissedRepossessionWhereInput
-    $where2: MissedRepossessionWhereInput
-    $orderBy: [MissedRepossessionOrderByWithRelationInput!]
-  ) {
-    current: missedRepossessions(where: $where1, orderBy: $orderBy) {
+  fragment Spotter on User {
+    id
+    firstName
+    lastName
+    avatarUrl
+    branchId
+  }
+  
+  fragment MissedRepossessionCase on MissedRepossession {
       createdAt
       case {
         caseId
-        vin
-        vinLastEight
         status
         orderType
         closeDate
         holdDate
         originalOrderDate
         spottedDate
-        spottedAddress
-        spottedLat
-        spottedLng
         vendorBranchName
-        yearMakeModel
-        vendor_address
         lenderClientId
         lenderClientName
-        spotterId
+        spotter {
+          ...Spotter
+        }
+  
       }
+  }
+  
+  query MissedRepossessions(
+    $where1: MissedRepossessionWhereInput, 
+    $where2: MissedRepossessionWhereInput, 
+    $orderBy: [MissedRepossessionOrderByWithRelationInput!]){
+    current: missedRepossessions(where: $where1, orderBy: $orderBy) {
+      ...MissedRepossessionCase
     }
     previous: missedRepossessions(where: $where2, orderBy: $orderBy) {
-      createdAt
-      case {
-        caseId
-        status
-        orderType
-        closeDate
-        holdDate
-        originalOrderDate
-        spottedDate
-        vendorBranchName
-        lenderClientId
-        lenderClientName
-      }
+      ...MissedRepossessionCase
     }
   }
 `;
