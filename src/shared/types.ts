@@ -222,6 +222,7 @@ export type CaseLog = {
 
 export type Case = {
   caseId: string;
+  lenderClientId: string;
   originalOrderDate: string;
   vin: string;
   RDNCaseLog: CaseLog[];

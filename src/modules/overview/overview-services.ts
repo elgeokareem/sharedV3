@@ -25,7 +25,7 @@ import { MissedRepossessionsResult } from './types';
 import { version } from '../../shared/utils';
 import { removeDuplicatedVins } from '../reports/reports-helpers';
 import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
-import { wasCaseReopened } from '../../shared/cases/utils';
+import { wasCaseReopen } from '../../shared/cases/utils';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -140,7 +140,7 @@ export const fetchReopenCases = async (
     'rdnCaseLogOrderBy': { 'createdAt': 'asc' }, // We order by createdAt to get the first status first
   };
   const casesWithLog = await fetchCasesWithLog(client, reopenCaseVariables);
-  const reopenCases = casesWithLog.filter(wasCaseReopened);
+  const reopenCases = casesWithLog.filter(wasCaseReopen);
 
 
   // Calculate Following Cases
@@ -161,12 +161,16 @@ export const fetchReopenCases = async (
   const followingCases: Case[] = [];
   missedRepossessions.forEach((mr) => {
     const maybeFollowingCases = maybeFollowingCasesMap[mr.case.vin];
+    // No cases with this VIN. Which is weird, but we can't do anything about it
     if (maybeFollowingCases === undefined) return;
     // We check for:
-    // - Higher CaseId for newer case
+    // - Higher CaseId (a newer case)
+    // - Same Client Name
     // - Order Date between first of the Month and end of the month + 1 week
+
     maybeFollowingCases.forEach((c) => {
-      if (c.caseId < mr.case.caseId) return;
+      if (Number(c.caseId) < Number(mr.case.caseId)) return;
+      if (c.lenderClientId !== mr.case.lenderClientId) return;
       if (moment(c.originalOrderDate).isBetween(
         moment(mr.case.originalOrderDate).startOf('month'),
         moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),

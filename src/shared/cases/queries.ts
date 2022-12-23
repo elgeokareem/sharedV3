@@ -6,6 +6,7 @@ export const CASES_WITH_LOG_QUERY = gql`
         caseId
         vin
         status
+        lenderClientId
         RDNCaseLog(orderBy: $rdnCaseLogOrderBy) {
           createdAt
           status
@@ -22,6 +23,7 @@ export const CASES_QUERY = gql`
         caseId
         vin
         status
+        lenderClientId
       } 
     }
 `;

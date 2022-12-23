@@ -2,7 +2,7 @@ import { MISSED_REPOSSESSED_STATUSES } from '../constants';
 import { Case, CASE_STATUSES } from '../types';
 
 
-export const wasCaseReopened = (caseData: Case): boolean => {
+export const wasCaseReopen = (caseData: Case): boolean => {
   const caseLogs = caseData.RDNCaseLog;
   for (let i = 0; i < caseLogs.length; i++) {
     const caseLog = caseLogs[i];
