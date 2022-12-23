@@ -18,38 +18,21 @@ describe('Branch Tests', () => {
   const startDate = '2022-11-01T05:00:00Z';
   const endDate = '2022-12-01T04:59:59Z';
 
-  const rdnStartDate = '2022-11-01T08:00:00Z';
-  const rdnEndDate = '2022-12-01T07:59:59Z';
-  const rdnPreviousStartDate = '2021-11-01T08:00:00Z';
-  const rdnPreviousEndDate = '2021-12-01T07:59:59Z';
+  const rdnStartDate = "2022-12-01T00:00:00-07:00";
+  const rdnEndDate = "2022-12-31T23:59:59-07:00";
+  const rdnPreviousStartDate = "2021-12-01T00:00:00-07:00";
+  const rdnPreviousEndDate = "2021-12-31T23:59:59-07:00";
 
   test('Fetches all missed repossessions for given time frame', async () => {
-
-    const variables = {
-      'where': {
-        'caseId': {
-          'in': [
-            '2116626576',
-            '2116626538',
-          ],
-        },
-      },
-    };
-    const cases = await fetchCasesWithLog(gqlClient, variables);
-    // console.log('cases:', cases);
     const missedRepo = await fetchMissedRepossessions(
       gqlClient,
-      '2022-12-01T07:00:00Z',
-      '2023-01-01T06:59:59Z',
-      '2021-12-01T07:00:00Z',
-      '2022-01-01T06:59:59Z',
-      1,
+      rdnStartDate,
+      rdnEndDate,
+      rdnPreviousStartDate,
+      rdnPreviousEndDate,
     );
-    console.log('missedRepo:', missedRepo);
     expect(missedRepo).not.toBe(null);
-
     const reopenCases = await fetchReopenCases(gqlClient, missedRepo.current);
-    //
     console.log('reopenCases:', reopenCases);
     expect(reopenCases).not.toBe(null);
   });

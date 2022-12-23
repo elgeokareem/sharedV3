@@ -23,6 +23,7 @@ export const CASES_QUERY = gql`
         caseId
         vin
         status
+        originalOrderDate
         lenderClientId
       } 
     }

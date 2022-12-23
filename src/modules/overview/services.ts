@@ -1,13 +1,15 @@
 import moment = require('moment-timezone');
 
-import { Case, GraphQLClient, MissedRepossession, ReopenCase } from '../../shared/types';
+import {
+  Case,
+  GraphQLClient,
+  MISSED_REPOSSESSION_REOPEN_CASE_TYPE,
+  MissedRepossession,
+  MissedRepossessionReopenCase,
+} from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
-import {
-  ACCEPTED_RDN_STATUSES,
-  DATETIME_FORMAT,
-  ERROR_MESSAGES,
-} from '../../shared/constants';
+import { ACCEPTED_RDN_STATUSES, DATETIME_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 import {
   AGGREGATE_ASSIGNMENTS_QUERY,
@@ -127,7 +129,7 @@ export const fetchMissedRepossessions = async (
 export const fetchReopenCases = async (
   client: GraphQLClient,
   missedRepossessions: MissedRepossession[],
-): Promise<ReopenCase[]> => {
+): Promise<MissedRepossessionReopenCase[]> => {
   // Calculate Reopen Cases:
   // - Cases that had at some point a MISSED REPO STATUS, and later were OPEN or REOPEN
   const caseIds = missedRepossessions.map((mr) => mr.case.caseId);
@@ -149,7 +151,7 @@ export const fetchReopenCases = async (
       missedDateMap[missedRepossession.case.caseId] = oldestDate.format(DATETIME_FORMAT);
     }
   });
-  const reopenMissedRepossessionCases: ReopenCase[] = [];
+  const reopenMissedRepossessionCases: MissedRepossessionReopenCase[] = [];
   reopenCases.forEach((reopenCase) => {
     const missedDate = missedDateMap[reopenCase.caseId];
     if (missedDate === undefined) {
@@ -158,6 +160,7 @@ export const fetchReopenCases = async (
     reopenMissedRepossessionCases.push({
       ...reopenCase,
       missedDate,
+      type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE.REOPEN,
     });
   });
 
@@ -177,7 +180,7 @@ export const fetchReopenCases = async (
       maybeFollowingCasesMap[c.vin] = [c];
     }
   });
-  const followingCases: ReopenCase[] = [];
+  const followingCases: MissedRepossessionReopenCase[] = [];
   missedRepossessions.forEach((mr) => {
     const originalVin = mr.case.vin;
     const maybeFollowingCases = maybeFollowingCasesMap[originalVin];
@@ -200,12 +203,11 @@ export const fetchReopenCases = async (
         followingCases.push({
           ...c,
           missedDate: mr.createdAt,
+          type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE.FOLLOWING_CASE,
         });
       }
     });
   });
-
-
 
   return reopenMissedRepossessionCases.concat(followingCases);
 };
