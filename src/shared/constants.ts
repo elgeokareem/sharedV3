@@ -21,6 +21,17 @@ export const TIMEFORMATS = {
   DATETIME: 'YYYY-MM-DD HH:mm:ss',
 };
 
+export const RDN_STATUSES_OBJECT = {
+  open: 'Open',
+  need_info: 'Need Info',
+  pending_close: 'Pending Close',
+  pending: 'Pending',
+  pending_on_hold: 'Pending On Hold',
+  closed: 'Closed',
+  onHold: 'On Hold',
+  repossessed: 'Repossessed',
+};
+
 export const ACCEPTED_RDN_STATUSES = [
   CASE_STATUSES_RDN_MATCH.open,
   CASE_STATUSES_RDN_MATCH.need_info,

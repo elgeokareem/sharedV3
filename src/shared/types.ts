@@ -215,8 +215,17 @@ export type MissedRepossession = {
   case: Case
 }
 
+export type CaseLog = {
+  status: CASE_STATUSES;
+  createdAt: string;
+}
+
 export type Case = {
   caseId: string;
+  lenderClientId: string;
+  originalOrderDate: string;
+  vin: string;
+  RDNCaseLog: CaseLog[];
 };
 
 /**
@@ -227,6 +236,7 @@ export type DuplicatedVins = Pick<
   RdnCurrent,
   'vinLastEight' | 'originalOrderDate'
 >;
+
 export interface CameraHitsTable {
   lpr: number;
   lpr_vins: string;
