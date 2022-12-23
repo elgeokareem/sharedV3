@@ -6,7 +6,7 @@ import {
 import { createClient } from '../../../shared/tests/graphql';
 import { fetchCasesWithLog } from '../../../shared/cases/actions';
 import { Case, CASE_STATUSES } from '../../../shared/types';
-import { wasCaseReopen } from '../../../shared/cases/utils';
+import { getMostRecentOpenDate } from '../../../shared/cases/utils';
 
 describe('Branch Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';
@@ -18,10 +18,10 @@ describe('Branch Tests', () => {
   const startDate = '2022-11-01T05:00:00Z';
   const endDate = '2022-12-01T04:59:59Z';
 
-  const rdnStartDate = "2022-12-01T00:00:00-07:00";
-  const rdnEndDate = "2022-12-31T23:59:59-07:00";
-  const rdnPreviousStartDate = "2021-12-01T00:00:00-07:00";
-  const rdnPreviousEndDate = "2021-12-31T23:59:59-07:00";
+  const rdnStartDate = '2022-12-01T00:00:00-07:00';
+  const rdnEndDate = '2022-12-31T23:59:59-07:00';
+  const rdnPreviousStartDate = '2021-12-01T00:00:00-07:00';
+  const rdnPreviousEndDate = '2021-12-31T23:59:59-07:00';
 
   test('Fetches all missed repossessions for given time frame', async () => {
     const missedRepo = await fetchMissedRepossessions(
@@ -40,17 +40,11 @@ describe('Branch Tests', () => {
 
   test('Was Case Reopen', async () => {
 
+    const mostRecentOpenDate1 = '2021-12-01T07:00:00Z';
     const case1: Partial<Case> = {
       RDNCaseLog: [
         { status: CASE_STATUSES.closed, createdAt: '2021-12-01T07:00:00Z' },
-        { status: CASE_STATUSES.open, createdAt: '2021-12-01T07:00:00Z' },
-      ],
-    };
-
-    const case3: Partial<Case> = {
-      RDNCaseLog: [
-        { status: CASE_STATUSES.pending_on_hold, createdAt: '2021-12-01T07:00:00Z' },
-        { status: CASE_STATUSES.open, createdAt: '2021-12-01T07:00:00Z' },
+        { status: CASE_STATUSES.open, createdAt: mostRecentOpenDate1 },
       ],
     };
 
@@ -61,12 +55,22 @@ describe('Branch Tests', () => {
       ],
     };
 
-    const r1 = wasCaseReopen(case1 as Case);
-    expect(r1).toBe(true);
-    const r2 = wasCaseReopen(case2 as Case);
-    expect(r2).toBe(false);
-    const r3 = wasCaseReopen(case3 as Case);
-    expect(r3).toBe(true);
+    const mostRecentOpenDate3 = '2021-12-02T07:00:00Z';
+    const case3: Partial<Case> = {
+      RDNCaseLog: [
+        { status: CASE_STATUSES.pending_on_hold, createdAt: '2021-12-01T07:00:00Z' },
+        { status: CASE_STATUSES.open, createdAt: '2021-12-01T07:00:00Z' },
+        { status: CASE_STATUSES.pending_on_hold, createdAt: '2021-12-01T07:00:00Z' },
+        { status: CASE_STATUSES.open, createdAt: mostRecentOpenDate3 },
+      ],
+    };
+
+    const r1 = getMostRecentOpenDate(case1 as Case);
+    expect(r1).toBe(mostRecentOpenDate1);
+    const r2 = getMostRecentOpenDate(case2 as Case);
+    expect(r2).toBe(null);
+    const r3 = getMostRecentOpenDate(case3 as Case);
+    expect(r3).toBe(mostRecentOpenDate3);
 
   });
 });

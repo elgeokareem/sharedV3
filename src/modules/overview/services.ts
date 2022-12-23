@@ -23,7 +23,7 @@ import {
 import { MissedRepossessionsResult } from './types';
 import { version } from '../../shared/utils';
 import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
-import { wasCaseReopen } from '../../shared/cases/utils';
+import { getMostRecentOpenDate } from '../../shared/cases/utils';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -138,7 +138,9 @@ export const fetchReopenCases = async (
     rdnCaseLogOrderBy: { createdAt: 'asc' }, // We order by createdAt to get the first status first
   };
   const casesWithLog = await fetchCasesWithLog(client, reopenCaseVariables);
-  const reopenCases = casesWithLog.filter(wasCaseReopen);
+  const reopenCases = casesWithLog.filter((c) => {
+    return getMostRecentOpenDate(c) !== null;
+  });
 
   // Calculating missed Date for Reopen Cases
   const missedDateMap: Record<string, string> = {};
@@ -159,6 +161,7 @@ export const fetchReopenCases = async (
     }
     reopenMissedRepossessionCases.push({
       ...reopenCase,
+      reOpenDate: getMostRecentOpenDate(reopenCase),
       missedDate,
       type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE.REOPEN,
     });
@@ -202,6 +205,7 @@ export const fetchReopenCases = async (
       ) {
         followingCases.push({
           ...c,
+          reOpenDate: c.originalOrderDate,
           missedDate: mr.createdAt,
           type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE.FOLLOWING_CASE,
         });

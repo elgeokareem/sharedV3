@@ -234,6 +234,7 @@ export enum MISSED_REPOSSESSION_REOPEN_CASE_TYPE {
 }
 
 export interface MissedRepossessionReopenCase extends Case {
+  reOpenDate: string | null;
   missedDate: string;
   type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE;
 }
