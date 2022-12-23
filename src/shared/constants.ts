@@ -83,4 +83,5 @@ export const ERROR_MESSAGES = {
   startDateInvalid: 'startDate format invalid!',
   endDateInvalid: 'endDate format invalid!',
   branchNotFound: 'Invalid branchId',
+  missedDateNotFound: 'Invalid missing Date',
 };

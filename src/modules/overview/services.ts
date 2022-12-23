@@ -1,6 +1,6 @@
 import moment = require('moment-timezone');
 
-import { Case, GraphQLClient, MissedRepossession } from '../../shared/types';
+import { Case, GraphQLClient, MissedRepossession, ReopenCase } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
@@ -127,9 +127,7 @@ export const fetchMissedRepossessions = async (
 export const fetchReopenCases = async (
   client: GraphQLClient,
   missedRepossessions: MissedRepossession[],
-): Promise<Case[]> => {
-
-
+): Promise<ReopenCase[]> => {
   // Calculate Reopen Cases:
   // - Cases that had at some point a MISSED REPO STATUS, and later were OPEN or REOPEN
   const caseIds = missedRepossessions.map((mr) => mr.case.caseId);
@@ -140,6 +138,28 @@ export const fetchReopenCases = async (
   const casesWithLog = await fetchCasesWithLog(client, reopenCaseVariables);
   const reopenCases = casesWithLog.filter(wasCaseReopen);
 
+  // Calculating missed Date for Reopen Cases
+  const missedDateMap: Record<string, string> = {};
+  missedRepossessions.forEach((missedRepossession) => {
+    const record = missedDateMap[missedRepossession.case.caseId];
+    if (record === undefined) {
+      missedDateMap[missedRepossession.case.caseId] = missedRepossession.createdAt;
+    } else {
+      const oldestDate = moment.min(moment(record), moment(missedRepossession.createdAt));
+      missedDateMap[missedRepossession.case.caseId] = oldestDate.format(DATETIME_FORMAT);
+    }
+  });
+  const reopenMissedRepossessionCases: ReopenCase[] = [];
+  reopenCases.forEach((reopenCase) => {
+    const missedDate = missedDateMap[reopenCase.caseId];
+    if (missedDate === undefined) {
+      throw new Error(ERROR_MESSAGES.missedDateNotFound);
+    }
+    reopenMissedRepossessionCases.push({
+      ...reopenCase,
+      missedDate,
+    });
+  });
 
   // Calculate Following Cases
   //   - Query cases with the same VINS and orderDate (firstOfThe Month - EndOfTheMonth+1 week)
@@ -157,7 +177,7 @@ export const fetchReopenCases = async (
       maybeFollowingCasesMap[c.vin] = [c];
     }
   });
-  const followingCases: Case[] = [];
+  const followingCases: ReopenCase[] = [];
   missedRepossessions.forEach((mr) => {
     const originalVin = mr.case.vin;
     const maybeFollowingCases = maybeFollowingCasesMap[originalVin];
@@ -177,12 +197,17 @@ export const fetchReopenCases = async (
         moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),
       )
       ) {
-        followingCases.push(c);
+        followingCases.push({
+          ...c,
+          missedDate: mr.createdAt,
+        });
       }
     });
   });
 
-  return reopenCases.concat(followingCases);
+
+
+  return reopenMissedRepossessionCases.concat(followingCases);
 };
 
 export const fetchAggregateAssignments = async (
