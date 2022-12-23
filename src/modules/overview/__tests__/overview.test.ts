@@ -15,13 +15,10 @@ describe('Branch Tests', () => {
 
   const gqlClient = createClient(endpoint, token);
 
-  const startDate = '2022-11-01T05:00:00Z';
-  const endDate = '2022-12-01T04:59:59Z';
-
-  const rdnStartDate = '2022-12-01T00:00:00-07:00';
-  const rdnEndDate = '2022-12-31T23:59:59-07:00';
-  const rdnPreviousStartDate = '2021-12-01T00:00:00-07:00';
-  const rdnPreviousEndDate = '2021-12-31T23:59:59-07:00';
+  const rdnStartDate = '2022-12-01T00:00:00+00:00';
+  const rdnEndDate = '2022-12-31T23:59:59+00:00';
+  const rdnPreviousStartDate = '2021-12-01T00:00:00+00:00';
+  const rdnPreviousEndDate = '2021-12-31T23:59:59+00:00';
 
   test('Fetches all missed repossessions for given time frame', async () => {
     const missedRepo = await fetchMissedRepossessions(
@@ -32,6 +29,7 @@ describe('Branch Tests', () => {
       rdnPreviousEndDate,
     );
     expect(missedRepo).not.toBe(null);
+    console.log('missedRepo:', missedRepo);
     const reopenCases = await fetchReopenCases(gqlClient, missedRepo.current);
     console.log('reopenCases:', reopenCases);
     expect(reopenCases).not.toBe(null);

@@ -156,6 +156,7 @@ export const fetchReopenCases = async (
   const reopenMissedRepossessionCases: MissedRepossessionReopenCase[] = [];
   reopenCases.forEach((reopenCase) => {
     const missedDate = missedDateMap[reopenCase.caseId];
+    // THIS SHOULD NEVER HAPPEN. But just in case
     if (missedDate === undefined) {
       throw new Error(ERROR_MESSAGES.missedDateNotFound);
     }
@@ -183,7 +184,7 @@ export const fetchReopenCases = async (
       maybeFollowingCasesMap[c.vin] = [c];
     }
   });
-  const followingCases: MissedRepossessionReopenCase[] = [];
+  const followingCasesMap: Record<string, MissedRepossessionReopenCase> = {};
   missedRepossessions.forEach((mr) => {
     const originalVin = mr.case.vin;
     const maybeFollowingCases = maybeFollowingCasesMap[originalVin];
@@ -203,17 +204,17 @@ export const fetchReopenCases = async (
         moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),
       )
       ) {
-        followingCases.push({
+        followingCasesMap[c.caseId] = {
           ...c,
           reOpenDate: c.originalOrderDate,
           missedDate: mr.createdAt,
           type: MISSED_REPOSSESSION_REOPEN_CASE_TYPE.FOLLOWING_CASE,
-        });
+        };
       }
     });
   });
 
-  return reopenMissedRepossessionCases.concat(followingCases);
+  return reopenMissedRepossessionCases.concat(Object.values(followingCasesMap));
 };
 
 export const fetchAggregateAssignments = async (
