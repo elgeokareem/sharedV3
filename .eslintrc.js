@@ -34,12 +34,12 @@ module.exports = {
     'jsdoc/no-types': 2,
     'jsdoc/no-undefined-types': 2, // Recommended
     'jsdoc/require-description': 2,
-    'jsdoc/require-example': 2,
+    'jsdoc/require-example': 0,
     'jsdoc/require-jsdoc': 2, // Recommended
     'jsdoc/require-param': 2, // Recommended
     'jsdoc/require-param-description': 2, // Recommended
     'jsdoc/require-param-name': 2, // Recommended
-    'jsdoc/require-param-type': 2, // Recommended
+    'jsdoc/require-param-type': 0, // Recommended
     'jsdoc/require-returns': 2, // Recommended
     'jsdoc/require-returns-check': 2, // Recommended
     'jsdoc/require-returns-description': 2, // Recommended
