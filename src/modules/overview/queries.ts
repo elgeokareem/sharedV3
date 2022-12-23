@@ -32,6 +32,7 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
         vendorBranchName
         lenderClientId
         lenderClientName
+        vin
         spotter {
           ...Spotter
         }

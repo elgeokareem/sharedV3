@@ -18,7 +18,7 @@ import {
   fetchAggregateRepossessions,
   fetchAggregateMissedRepossessions,
   fetchReopenCases
-} from './modules/overview/overview-services';
+} from './modules/overview/services';
 
 export {
   fetchAssignments,
