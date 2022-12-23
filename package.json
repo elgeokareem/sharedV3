@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "prepare": "npx husky install",
+    "prepare": "husky install",
     "test": "jest"
   },
   "engines": {
