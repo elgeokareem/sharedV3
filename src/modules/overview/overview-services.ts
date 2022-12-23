@@ -1,14 +1,12 @@
 import moment = require('moment-timezone');
 
-import { Case, CASE_STATUSES, GraphQLClient, MissedRepossession } from '../../shared/types';
+import { Case, GraphQLClient, MissedRepossession } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
   DATETIME_FORMAT,
   ERROR_MESSAGES,
-  MISSED_REPOSSESSED_STATUSES,
-  RDN_STATUSES_OBJECT,
 } from '../../shared/constants';
 
 import {
@@ -17,13 +15,11 @@ import {
   AGGREGATE_REPOSSESSIONS_QUERY,
   ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
-  REOPEN_AND_REPOSSESSED_CASES_QUERY,
   REPOSSESSIONS_QUERY,
 } from './queries';
 
 import { MissedRepossessionsResult } from './types';
 import { version } from '../../shared/utils';
-import { removeDuplicatedVins } from '../reports/reports-helpers';
 import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 import { wasCaseReopen } from '../../shared/cases/utils';
 
