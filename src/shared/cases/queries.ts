@@ -1,41 +1,38 @@
 import gql from 'graphql-tag';
 
 export const CASES_WITH_LOG_QUERY = gql`
-  query Cases($where: RDNCaseWhereInput, $rdnCaseLogOrderBy: [RDNCaseLogOrderByWithRelationInput!]){
-      rDNCases(where: $where) {
-        caseId
-        vin
+  query Cases(
+    $where: RDNCaseWhereInput
+    $rdnCaseLogOrderBy: [RDNCaseLogOrderByWithRelationInput!]
+  ) {
+    rDNCases(where: $where) {
+      caseId
+      vin
+      status
+      lenderClientId
+      orderType
+      originalOrderDate
+      yearMakeModel
+      spottedDate
+      RDNCaseLog(orderBy: $rdnCaseLogOrderBy) {
+        createdAt
         status
-        lenderClientId
-        orderType
-        originalOrderDate
-        RDNCaseLog(orderBy: $rdnCaseLogOrderBy) {
-          createdAt
-          status
-        }
-      } 
+      }
     }
+  }
 `;
-
-
 
 export const CASES_QUERY = gql`
-  query Cases($where: RDNCaseWhereInput){
-      rDNCases(where: $where) {
-        caseId
-        vin
-        status
-        orderType
-        originalOrderDate
-        lenderClientId
-      } 
+  query Cases($where: RDNCaseWhereInput) {
+    rDNCases(where: $where) {
+      caseId
+      vin
+      status
+      orderType
+      originalOrderDate
+      lenderClientId
+      yearMakeModel
+      spottedDate
     }
+  }
 `;
-
-
-
-
-
-
-
-

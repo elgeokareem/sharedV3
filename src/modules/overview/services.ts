@@ -9,7 +9,11 @@ import {
 } from '../../shared/types';
 import { fetchBranches } from '../../shared/branch/branch-action';
 
-import { ACCEPTED_RDN_STATUSES, DATETIME_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
+import {
+  ACCEPTED_RDN_STATUSES,
+  DATETIME_FORMAT,
+  ERROR_MESSAGES,
+} from '../../shared/constants';
 
 import {
   AGGREGATE_ASSIGNMENTS_QUERY,
@@ -29,6 +33,7 @@ export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
+  branchId = 0,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -41,6 +46,29 @@ export const fetchAggregateMissedRepossessions = async (
   const variables: Record<string, any> = {
     where: { createdAt: { gte: startDate, lte: endDate } },
   };
+
+  if (branchId !== 0) {
+    if (branchId > 0) {
+      const rdnBranchNames: string[] = [];
+      const branches = await fetchBranches(client);
+      const branch = branches.find((b) => b.id === branchId);
+      if (!branch) {
+        throw new Error(ERROR_MESSAGES.branchNotFound);
+      }
+      branch.subBranches.forEach((subBranch) => {
+        rdnBranchNames.push(subBranch.name);
+      });
+      variables.where.case = {
+        is: { vendorBranchName: { in: rdnBranchNames } },
+      };
+    }
+
+    if (branchId === -1) {
+      variables.where.case = {
+        is: { vendorBranchName: null },
+      };
+    }
+  }
 
   const response = await client.query({
     query: AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
@@ -79,8 +107,8 @@ export const fetchMissedRepossessions = async (
 
   // Date Filters
   const variables: Record<string, any> = {
-    where1: ({ createdAt: { gte: startDate, lte: endDate } }),
-    where2: ({ createdAt: { gte: previousStartDate, lte: previousEndDate } }),
+    where1: { createdAt: { gte: startDate, lte: endDate } },
+    where2: { createdAt: { gte: previousStartDate, lte: previousEndDate } },
     orderBy: [{ caseId: 'desc' }],
   };
 
@@ -147,10 +175,15 @@ export const fetchReopenCases = async (
   missedRepossessions.forEach((missedRepossession) => {
     const record = missedDateMap[missedRepossession.case.caseId];
     if (record === undefined) {
-      missedDateMap[missedRepossession.case.caseId] = missedRepossession.createdAt;
+      missedDateMap[missedRepossession.case.caseId] =
+        missedRepossession.createdAt;
     } else {
-      const oldestDate = moment.min(moment(record), moment(missedRepossession.createdAt));
-      missedDateMap[missedRepossession.case.caseId] = oldestDate.format(DATETIME_FORMAT);
+      const oldestDate = moment.min(
+        moment(record),
+        moment(missedRepossession.createdAt),
+      );
+      missedDateMap[missedRepossession.case.caseId] =
+        oldestDate.format(DATETIME_FORMAT);
     }
   });
   const reopenMissedRepossessionCases: MissedRepossessionReopenCase[] = [];
@@ -173,7 +206,9 @@ export const fetchReopenCases = async (
   //   - For each Missed Repo Case, search for a matching VIN
   const vins = missedRepossessions.map((mr) => mr.case.vin);
   // Cases with these VINS, but excluding the original cases
-  const followingCasesVariables = { where: { vin: { in: vins }, caseId: { notIn: caseIds } } };
+  const followingCasesVariables = {
+    where: { vin: { in: vins }, caseId: { notIn: caseIds } },
+  };
   const cases = await fetchCases(client, followingCasesVariables);
   const maybeFollowingCasesMap: Record<string, Case[]> = {};
   cases.forEach((c) => {
@@ -199,10 +234,11 @@ export const fetchReopenCases = async (
       if (Number(c.caseId) < Number(mr.case.caseId)) return;
       // this means tha the case is for a different Bank. So we ignored it
       if (c.lenderClientId !== mr.case.lenderClientId) return;
-      if (moment(c.originalOrderDate).isBetween(
-        moment(mr.case.originalOrderDate).startOf('month'),
-        moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),
-      )
+      if (
+        moment(c.originalOrderDate).isBetween(
+          moment(mr.case.originalOrderDate).startOf('month'),
+          moment(mr.case.originalOrderDate).endOf('month').add(1, 'week'),
+        )
       ) {
         followingCasesMap[c.caseId] = {
           ...c,
