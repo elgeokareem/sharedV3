@@ -18,32 +18,36 @@ export const MISSED_REPOSSESSIONS_QUERY = gql`
     avatarUrl
     branchId
   }
-  
+
   fragment MissedRepossessionCase on MissedRepossession {
-      createdAt
-      case {
-        caseId
-        status
-        orderType
-        closeDate
-        holdDate
-        originalOrderDate
-        spottedDate
-        vendorBranchName
-        lenderClientId
-        lenderClientName
-        vin
-        spotter {
-          ...Spotter
-        }
-  
+    createdAt
+    case {
+      caseId
+      status
+      orderType
+      closeDate
+      holdDate
+      originalOrderDate
+      spottedDate
+      vendorBranchName
+      lenderClientId
+      lenderClientName
+      vin
+      yearMakeModel
+      spottedAddress
+      spottedLat
+      spottedLng
+      spotter {
+        ...Spotter
       }
+    }
   }
-  
+
   query MissedRepossessions(
-    $where1: MissedRepossessionWhereInput, 
-    $where2: MissedRepossessionWhereInput, 
-    $orderBy: [MissedRepossessionOrderByWithRelationInput!]){
+    $where1: MissedRepossessionWhereInput
+    $where2: MissedRepossessionWhereInput
+    $orderBy: [MissedRepossessionOrderByWithRelationInput!]
+  ) {
     current: missedRepossessions(where: $where1, orderBy: $orderBy) {
       ...MissedRepossessionCase
     }
