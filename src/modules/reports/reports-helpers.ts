@@ -826,6 +826,74 @@ export const compareLiveHitsByClientLender = (
   return finalObject;
 };
 
+export const addScannedDateToLiveHits = (
+  cameraHitsTable: any[],
+  liveHitsLenderInfo: Record<string, any>,
+) => {
+  const formattedHits: any = {};
+
+  for (let index = 0; index < cameraHitsTable.length; index++) {
+    const hit = cameraHitsTable[index];
+
+    const lprVins = hit.lpr_vins;
+    const directVins = hit.direct_hits_vins;
+    const allVins = [...lprVins, ...directVins];
+
+    const hitData = allVins.reduce((acc, vin) => {
+      if (!acc[vin]) {
+        acc[vin] = {
+          scannedDate: [],
+        };
+      }
+
+      acc[vin].scannedDate.push(hit.scanned_at);
+      return acc;
+    }, {});
+
+    if (!formattedHits[hit.drnId]) {
+      formattedHits[hit.drnId] = hitData;
+      continue;
+    }
+
+    formattedHits[hit.drnId] = {
+      // check if vins of hitData exists
+      ...formattedHits[hit.drnId],
+      ...hitData,
+    };
+  }
+
+  // Now add the data to the live hits cases
+  const drnIds = Object.keys(liveHitsLenderInfo);
+
+  for (let index = 0; index < drnIds.length; index++) {
+    const drnId = drnIds[index];
+    const liveHitsCases: any[] = liveHitsLenderInfo[drnId].data;
+
+    const newLiveHitsCases = liveHitsCases.map((liveHitCase) => {
+      const detailsCase: any[] = liveHitCase.details;
+
+      const newDetailsCase = detailsCase.map((detailCase) => {
+        const vinLastEight = detailCase.vinLastEight;
+        const scannedDate = formattedHits[drnId][vinLastEight].scannedDate;
+
+        return {
+          ...detailCase,
+          scannedDate: scannedDate[0],
+        };
+      });
+
+      return {
+        ...liveHitCase,
+        details: newDetailsCase,
+      };
+    });
+
+    liveHitsLenderInfo[drnId].data = newLiveHitsCases;
+  }
+
+  return liveHitsLenderInfo;
+};
+
 /**
  * Secured.
  */

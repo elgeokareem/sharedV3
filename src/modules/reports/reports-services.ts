@@ -25,12 +25,9 @@ import {
   groupByBranch,
   removeDuplicatedVins,
   groupByUser,
+  addScannedDateToLiveHits,
 } from './reports-helpers';
-import {
-  FETCH_ALL_MISSED_REPOSSESSIONS,
-  FETCH_CAMERA_HITS,
-  FETCH_SECURED_CASES,
-} from './reports-queries';
+import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
 import {
   Branches,
   BranchTable,
@@ -435,12 +432,18 @@ export const fetchTest = (client: GraphQLClient) => {
       previousCameraHitsByUser,
     );
 
-    // For modal data.
+    // Grouping for the modal data.
     const currentLiveHitsLenderInfo = compareLiveHitsByClientLender(
       currentCameraHitsByUser,
       previousCameraHitsByUser,
       rDNCases,
       previousRDNCases,
+    );
+
+    // Add the scanned date to the live hits.
+    const liveHitsModalInfo = addScannedDateToLiveHits(
+      currentCameraHitsParsed,
+      currentLiveHitsLenderInfo,
     );
 
     /**
@@ -503,7 +506,7 @@ export const fetchTest = (client: GraphQLClient) => {
     const camerasByUser = groupByUser(camerasByBranch);
 
     const modalsData = {
-      liveHits: currentLiveHitsLenderInfo,
+      liveHits: liveHitsModalInfo,
       secured: currentSecuredRDNCasesWithStatusByClientLender,
     };
 
