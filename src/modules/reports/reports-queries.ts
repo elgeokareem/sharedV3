@@ -13,6 +13,7 @@ export const FETCH_CAMERA_HITS = gql`
       direct_hits_vins
       drnId
       count
+      scanned_at
     }
     previousCameraHits: cameraHits(where: $where1) {
       lpr_vins
@@ -64,6 +65,7 @@ export const FETCH_SECURED_CASES = gql`
       vendor_address
       yearMakeModel
       originalOrderDate
+      rdnRepoDate
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
