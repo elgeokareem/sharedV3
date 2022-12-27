@@ -66,6 +66,7 @@ export const FETCH_SECURED_CASES = gql`
       yearMakeModel
       originalOrderDate
       rdnRepoDate
+      orderType
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
