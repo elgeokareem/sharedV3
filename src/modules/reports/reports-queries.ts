@@ -67,6 +67,7 @@ export const FETCH_SECURED_CASES = gql`
       originalOrderDate
       rdnRepoDate
       orderType
+      repoAddress
     }
     previousRDNCases: rDNCases(where: $where1) {
       caseId
