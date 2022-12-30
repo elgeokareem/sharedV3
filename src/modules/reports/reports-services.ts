@@ -1,17 +1,6 @@
 import moment = require('moment-timezone');
 
 import {
-  formatVinsByUser,
-  mapVinsToUserAndAllVins,
-  formatSecuredByUser,
-  formatSecuredByUserList,
-  sumAndGroupScanByUser,
-  sumCameraHitsByUserAndClientLenderCount,
-  statusCalc,
-  statusCalcCameraScans,
-  statusCalcAllHits,
-  groupCamerasByBranch,
-  groupCamerasByUser,
   getAllVins,
   groupCameraHitsByUser,
   groupByDrnId,
@@ -35,7 +24,6 @@ import {
   GraphQLClient,
   RdnCurrent,
   RdnPrevious,
-  UserType,
 } from '../../shared/types';
 import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
