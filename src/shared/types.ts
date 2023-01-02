@@ -212,13 +212,13 @@ export type DriverType = {
 
 export type MissedRepossession = {
   createdAt: string;
-  case: Case
-}
+  case: Case;
+};
 
 export type CaseLog = {
   status: CASE_STATUSES;
   createdAt: string;
-}
+};
 
 export interface Case {
   caseId: string;
@@ -226,7 +226,7 @@ export interface Case {
   originalOrderDate: string;
   vin: string;
   RDNCaseLog: CaseLog[];
-};
+}
 
 export enum MISSED_REPOSSESSION_REOPEN_CASE_TYPE {
   REOPEN = 'REOPEN',

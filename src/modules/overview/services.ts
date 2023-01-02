@@ -34,6 +34,7 @@ export const fetchAggregateMissedRepossessions = async (
   startDate: string,
   endDate: string,
   branchId = 0,
+  clientId?: string,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
@@ -46,6 +47,12 @@ export const fetchAggregateMissedRepossessions = async (
   const variables: Record<string, any> = {
     where: { createdAt: { gte: startDate, lte: endDate } },
   };
+
+  if (clientId) {
+    variables.where.case = {
+      is: { lenderClientId: { equals: clientId } },
+    };
+  }
 
   if (branchId !== 0) {
     if (branchId > 0) {
