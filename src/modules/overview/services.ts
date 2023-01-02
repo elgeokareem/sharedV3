@@ -33,6 +33,7 @@ export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
+  clientId?: string,
   branchId = 0,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
@@ -46,6 +47,12 @@ export const fetchAggregateMissedRepossessions = async (
   const variables: Record<string, any> = {
     where: { createdAt: { gte: startDate, lte: endDate } },
   };
+
+  if (clientId) {
+    variables.where.case = {
+      is: { lenderClientId: { equals: clientId } },
+    };
+  }
 
   if (branchId !== 0) {
     if (branchId > 0) {
