@@ -33,8 +33,8 @@ export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
   startDate: string,
   endDate: string,
-  clientId?: string,
   branchId = 0,
+  clientId?: string,
 ): Promise<number> => {
   if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
     throw new Error(ERROR_MESSAGES.startDateInvalid);
