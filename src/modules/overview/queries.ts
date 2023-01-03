@@ -93,6 +93,7 @@ export const ASSIGNMENTS_QUERY = gql`
     assignments: rDNCases(where: $where) {
       caseId
       lenderClientId
+      lenderClientName
     }
   }
 `;
