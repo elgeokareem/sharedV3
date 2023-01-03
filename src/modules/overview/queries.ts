@@ -1,15 +1,5 @@
 import gql from 'graphql-tag';
 
-export const AGGREGATE_MISSED_REPOSSESSIONS_QUERY = gql`
-  query AggregateMissedRepossession($where: MissedRepossessionWhereInput) {
-    missedRepossesions: aggregateMissedRepossession(where: $where) {
-      _count {
-        caseId
-      }
-    }
-  }
-`;
-
 export const MISSED_REPOSSESSIONS_QUERY = gql`
   fragment Spotter on User {
     id
@@ -78,32 +68,12 @@ export const REOPEN_AND_REPOSSESSED_CASES_QUERY = gql`
   }
 `;
 
-export const AGGREGATE_ASSIGNMENTS_QUERY = gql`
-  query AggregateRDNCase($where: RDNCaseWhereInput) {
-    assignments: aggregateRDNCase(where: $where) {
-      _count {
-        caseId
-      }
-    }
-  }
-`;
-
 export const ASSIGNMENTS_QUERY = gql`
   query RDNCases($where: RDNCaseWhereInput) {
     assignments: rDNCases(where: $where) {
       caseId
       lenderClientId
       lenderClientName
-    }
-  }
-`;
-
-export const AGGREGATE_REPOSSESSIONS_QUERY = gql`
-  query AggregateRDNCase($where: RDNCaseWhereInput) {
-    repossessions: aggregateRDNCase(where: $where) {
-      _count {
-        caseId
-      }
     }
   }
 `;

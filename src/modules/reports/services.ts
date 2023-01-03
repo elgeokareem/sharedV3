@@ -296,3 +296,10 @@ export const fetchTargetRecoveryRatesByUser = async (
 
   return res?.data?.targetRecoveryRates;
 };
+
+export const fetchClientListAssignments = async (
+  client: GraphQLClient,
+  clientId: string,
+): Promise<number> => {
+  return 1;
+};

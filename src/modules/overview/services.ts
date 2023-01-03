@@ -1,5 +1,7 @@
 import moment = require('moment-timezone');
 
+import { MissedRepossessionsResult, OverviewStatsInput } from './types';
+
 import {
   Case,
   GraphQLClient,
@@ -15,18 +17,22 @@ import {
 } from '../../shared/constants';
 
 import {
-  AGGREGATE_ASSIGNMENTS_QUERY,
-  AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
-  AGGREGATE_REPOSSESSIONS_QUERY,
   ASSIGNMENTS_QUERY,
   MISSED_REPOSSESSIONS_QUERY,
   REPOSSESSIONS_QUERY,
 } from './queries';
 
-import { MissedRepossessionsResult, OverviewStatsInput } from './types';
+import { MISSED_REPOSSESSION_COUNT } from '../../shared/queries';
+
+import {
+  fetchAssignmentCount,
+  fetchMissedRepossessionCount,
+  fetchRepossessionCount,
+} from '../../shared/services';
 
 import { version } from '../../shared/utils';
 import { getMostRecentOpenDate } from '../../shared/cases/utils';
+
 import { fetchBranches } from '../../shared/branch/branch-action';
 import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 
@@ -79,7 +85,7 @@ export const fetchAggregateMissedRepossessions = async (
   }
 
   const response = await client.query({
-    query: AGGREGATE_MISSED_REPOSSESSIONS_QUERY,
+    query: MISSED_REPOSSESSION_COUNT,
     variables,
   });
 
@@ -261,39 +267,6 @@ export const fetchReopenCases = async (
   return reopenMissedRepossessionCases.concat(Object.values(followingCasesMap));
 };
 
-export const fetchAggregateAssignments = async (
-  client: GraphQLClient,
-  startDate: string,
-  endDate: string,
-  clientId?: string,
-): Promise<number> => {
-  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.startDateInvalid);
-  }
-
-  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.endDateInvalid);
-  }
-
-  const variables: Record<string, any> = {
-    where: {
-      orderDate: { gte: startDate, lte: endDate },
-      status: { in: [...ACCEPTED_RDN_STATUSES] },
-    },
-  };
-
-  if (clientId) {
-    variables.where.lenderClientId = { equals: clientId };
-  }
-
-  const response = await client.query({
-    query: AGGREGATE_ASSIGNMENTS_QUERY,
-    variables,
-  });
-
-  return response?.data?.assignments?._count?.caseId;
-};
-
 export const fetchAssignments = async (
   client: GraphQLClient,
   startDate: string,
@@ -320,36 +293,6 @@ export const fetchAssignments = async (
   });
 
   return response?.data?.assignments;
-};
-
-export const fetchAggregateRepossessions = async (
-  client: GraphQLClient,
-  startDate: string,
-  endDate: string,
-  clientId?: string,
-): Promise<number> => {
-  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.startDateInvalid);
-  }
-
-  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.endDateInvalid);
-  }
-
-  const variables: Record<string, any> = {
-    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
-  };
-
-  if (clientId) {
-    variables.where.lenderClientId = { equals: clientId };
-  }
-
-  const response = await client.query({
-    query: AGGREGATE_REPOSSESSIONS_QUERY,
-    variables,
-  });
-
-  return response?.data?.repossessions?._count?.caseId;
 };
 
 export const fetchRepossessions = async (
@@ -405,37 +348,37 @@ export const fetchOverviewStats = async (input: OverviewStatsInput) => {
   if (!moment(input.rdnPreviousEndDate, DATETIME_FORMAT, true).isValid())
     throw new Error(ERROR_MESSAGES.endDateInvalid);
 
-  const currentAssignments = await fetchAggregateAssignments(
+  const currentAssignments = await fetchAssignmentCount(
     input.client,
     input.startDate,
     input.endDate,
   );
 
-  const previousAssignments = await fetchAggregateAssignments(
+  const previousAssignments = await fetchAssignmentCount(
     input.client,
     input.previousStartDate,
     input.previousEndDate,
   );
 
-  const currentRepossessions = await fetchAggregateRepossessions(
+  const currentRepossessions = await fetchRepossessionCount(
     input.client,
     input.rdnStartDate,
     input.rdnEndDate,
   );
 
-  const previousRepossessions = await fetchAggregateRepossessions(
+  const previousRepossessions = await fetchRepossessionCount(
     input.client,
     input.rdnPreviousStartDate,
     input.rdnPreviousEndDate,
   );
 
-  const currentMissedRepossessions = await fetchAggregateMissedRepossessions(
+  const currentMissedRepossessions = await fetchMissedRepossessionCount(
     input.client,
     input.rdnStartDate,
     input.rdnEndDate,
   );
 
-  const previousMissedRepossessions = await fetchAggregateMissedRepossessions(
+  const previousMissedRepossessions = await fetchMissedRepossessionCount(
     input.client,
     input.rdnPreviousStartDate,
     input.rdnPreviousEndDate,
