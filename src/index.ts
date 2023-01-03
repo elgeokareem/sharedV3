@@ -1,44 +1,51 @@
 // Constants
-
 export * from './shared/constants';
 
 // Types
-
 export * from './shared/types';
+
+// Shared Services
+import {
+  getAssignmentCount,
+  getAssignments,
+  getRepossessionCount,
+  getRepossessions,
+  getMissedRepossessionCount,
+  getMissedRepossessions,
+} from './shared/services';
+
+export {
+  getAssignmentCount,
+  getAssignments,
+  getRepossessionCount,
+  getRepossessions,
+  getMissedRepossessionCount,
+  getMissedRepossessions,
+};
 
 // Reports
 export * from './modules/reports/services';
 
 // Overview
 import {
-  fetchAssignments,
-  fetchRepossessions,
   fetchMissedRepossessions,
-  fetchAggregateAssignments,
-  fetchAggregateRepossessions,
   fetchAggregateMissedRepossessions,
   fetchReopenCases,
   fetchOverviewStats,
 } from './modules/overview/services';
 
 export {
-  fetchAssignments,
-  fetchRepossessions,
   fetchMissedRepossessions,
-  fetchAggregateAssignments,
-  fetchAggregateRepossessions,
   fetchAggregateMissedRepossessions,
   fetchReopenCases,
   fetchOverviewStats,
 };
 
-// tasks
-
+// Tasks
 export * from './modules/tasks/types';
 export * from './modules/tasks/utils';
 export * from './modules/tasks/validators';
 export * from './modules/tasks/permissions';
 
 // Utils
-
 export * from './shared/utils';
