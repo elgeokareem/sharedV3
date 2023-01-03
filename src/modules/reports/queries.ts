@@ -91,3 +91,15 @@ export const FETCH_ALL_MISSED_REPOSSESSIONS = gql`
     }
   }
 `;
+
+export const FETCH_TARGET_RECOVERY_RATES_BY_USER = gql`
+  query TargetRecoveryRates($where: TargetRecoveryRateWhereInput) {
+    targetRecoveryRates: targetRecoveryRates(where: $where) {
+      branchId
+      clientId
+      duration
+      targetRecoveryRate
+      userId
+    }
+  }
+`;

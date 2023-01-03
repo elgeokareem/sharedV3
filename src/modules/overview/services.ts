@@ -7,7 +7,6 @@ import {
   MissedRepossession,
   MissedRepossessionReopenCase,
 } from '../../shared/types';
-import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
@@ -24,10 +23,12 @@ import {
   REPOSSESSIONS_QUERY,
 } from './queries';
 
-import { MissedRepossessionsResult } from './types';
+import { MissedRepossessionsResult, OverviewStatsInput } from './types';
+
 import { version } from '../../shared/utils';
-import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 import { getMostRecentOpenDate } from '../../shared/cases/utils';
+import { fetchBranches } from '../../shared/branch/branch-action';
+import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,
@@ -374,4 +375,78 @@ export const fetchRepossessions = async (
   });
 
   return response?.data?.repossessions;
+};
+
+// Please DO NOT touch this function, if you want to make modifications, make your own with this being the template.
+export const fetchOverviewStats = async (input: OverviewStatsInput) => {
+  // Validate all inputted start dates.
+  if (!moment(input.startDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.previousStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.rdnStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.rdnPreviousStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  // Validate all inputted end dates.
+  if (!moment(input.endDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.previousEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.rdnEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.rdnPreviousEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  const currentAssignments = await fetchAggregateAssignments(
+    input.client,
+    input.startDate,
+    input.endDate,
+  );
+
+  const previousAssignments = await fetchAggregateAssignments(
+    input.client,
+    input.previousStartDate,
+    input.previousEndDate,
+  );
+
+  const currentRepossessions = await fetchAggregateRepossessions(
+    input.client,
+    input.rdnStartDate,
+    input.rdnEndDate,
+  );
+
+  const previousRepossessions = await fetchAggregateRepossessions(
+    input.client,
+    input.rdnPreviousStartDate,
+    input.rdnPreviousEndDate,
+  );
+
+  const currentMissedRepossessions = await fetchAggregateMissedRepossessions(
+    input.client,
+    input.rdnStartDate,
+    input.rdnEndDate,
+  );
+
+  const previousMissedRepossessions = await fetchAggregateMissedRepossessions(
+    input.client,
+    input.rdnPreviousStartDate,
+    input.rdnPreviousEndDate,
+  );
+
+  return {
+    currentAssignments,
+    previousAssignments,
+    currentRepossessions,
+    previousRepossessions,
+    currentMissedRepossessions,
+    previousMissedRepossessions,
+  };
 };

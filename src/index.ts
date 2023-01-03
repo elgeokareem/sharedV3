@@ -7,7 +7,7 @@ export * from './shared/constants';
 export * from './shared/types';
 
 // Reports
-export * from './modules/reports/reports-services';
+export * from './modules/reports/services';
 
 // Overview
 import {
@@ -17,7 +17,8 @@ import {
   fetchAggregateAssignments,
   fetchAggregateRepossessions,
   fetchAggregateMissedRepossessions,
-  fetchReopenCases
+  fetchReopenCases,
+  fetchOverviewStats,
 } from './modules/overview/services';
 
 export {
@@ -27,7 +28,8 @@ export {
   fetchAggregateAssignments,
   fetchAggregateRepossessions,
   fetchAggregateMissedRepossessions,
-  fetchReopenCases
+  fetchReopenCases,
+  fetchOverviewStats,
 };
 
 // tasks

@@ -15,8 +15,16 @@ import {
   removeDuplicatedVins,
   groupByUser,
   addScannedDateToLiveHits,
-} from './reports-helpers';
-import { FETCH_CAMERA_HITS, FETCH_SECURED_CASES } from './reports-queries';
+} from './helpers';
+
+import {
+  FETCH_CAMERA_HITS,
+  FETCH_SECURED_CASES,
+  FETCH_TARGET_RECOVERY_RATES_BY_USER,
+} from './queries';
+
+import { TargetRecoveryRate } from './types';
+
 import {
   Branches,
   BranchTable,
@@ -25,6 +33,7 @@ import {
   RdnCurrent,
   RdnPrevious,
 } from '../../shared/types';
+
 import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
@@ -270,4 +279,20 @@ export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
 
     return { camerasByBranch, modalsData, camerasByUser };
   };
+};
+
+export const fetchTargetRecoveryRatesByUser = async (
+  client: GraphQLClient,
+  userId: number,
+): Promise<TargetRecoveryRate[]> => {
+  const variables: Record<string, any> = {
+    where: { userId: { equals: userId } },
+  };
+
+  const res = await client.query({
+    query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
+    variables,
+  });
+
+  return res?.data?.targetRecoveryRates;
 };
