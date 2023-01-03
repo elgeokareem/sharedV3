@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export enum TARGET_RECOVERY_RATE_DURATION_TYPE {
   MTD = 'MTD',
   YTD = 'YTD',

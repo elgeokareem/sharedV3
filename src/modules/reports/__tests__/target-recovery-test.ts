@@ -2,6 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 
 import { createClient } from '../../../shared/tests/graphql';
 import { fetchTargetRecoveryRatesByUser } from '../services';
+import { TARGET_RECOVERY_RATE_DURATION_TYPE } from '../types';
 
 describe('Target Recovery Rate Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';
@@ -13,7 +14,7 @@ describe('Target Recovery Rate Tests', () => {
   const object1 = {
     branchId: 1,
     clientId: '201883',
-    duration: 'MTD',
+    duration: TARGET_RECOVERY_RATE_DURATION_TYPE.MTD,
     targetRecoveryRate: 30,
     userId: 758,
   };
@@ -21,7 +22,7 @@ describe('Target Recovery Rate Tests', () => {
   const object2 = {
     branchId: 1,
     clientId: '201883',
-    duration: 'YTD',
+    duration: TARGET_RECOVERY_RATE_DURATION_TYPE.YTD,
     targetRecoveryRate: 30,
     userId: 758,
   };
