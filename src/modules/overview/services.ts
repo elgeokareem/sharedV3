@@ -10,24 +10,15 @@ import {
   MissedRepossessionReopenCase,
 } from '../../shared/types';
 
-import {
-  ACCEPTED_RDN_STATUSES,
-  DATETIME_FORMAT,
-  ERROR_MESSAGES,
-} from '../../shared/constants';
+import { DATETIME_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
+
+import { MISSED_REPOSSESSIONS_QUERY } from './queries';
+import { MISSED_REPOSSESSION_COUNT_QUERY } from '../../shared/queries';
 
 import {
-  ASSIGNMENTS_QUERY,
-  MISSED_REPOSSESSIONS_QUERY,
-  REPOSSESSIONS_QUERY,
-} from './queries';
-
-import { MISSED_REPOSSESSION_COUNT } from '../../shared/queries';
-
-import {
-  fetchAssignmentCount,
-  fetchMissedRepossessionCount,
-  fetchRepossessionCount,
+  getAssignmentCount,
+  getMissedRepossessionCount,
+  getRepossessionCount,
 } from '../../shared/services';
 
 import { version } from '../../shared/utils';
@@ -85,7 +76,7 @@ export const fetchAggregateMissedRepossessions = async (
   }
 
   const response = await client.query({
-    query: MISSED_REPOSSESSION_COUNT,
+    query: MISSED_REPOSSESSION_COUNT_QUERY,
     variables,
   });
 
@@ -267,59 +258,6 @@ export const fetchReopenCases = async (
   return reopenMissedRepossessionCases.concat(Object.values(followingCasesMap));
 };
 
-export const fetchAssignments = async (
-  client: GraphQLClient,
-  startDate: string,
-  endDate: string,
-): Promise<Case[]> => {
-  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.startDateInvalid);
-  }
-
-  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.endDateInvalid);
-  }
-
-  const variables: Record<string, any> = {
-    where: {
-      orderDate: { gte: startDate, lte: endDate },
-      status: { in: [...ACCEPTED_RDN_STATUSES] },
-    },
-  };
-
-  const response = await client.query({
-    query: ASSIGNMENTS_QUERY,
-    variables,
-  });
-
-  return response?.data?.assignments;
-};
-
-export const fetchRepossessions = async (
-  client: GraphQLClient,
-  startDate: string,
-  endDate: string,
-): Promise<Case[]> => {
-  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.startDateInvalid);
-  }
-
-  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
-    throw new Error(ERROR_MESSAGES.endDateInvalid);
-  }
-
-  const variables: Record<string, any> = {
-    where: { rdnRepoDate: { gte: startDate, lte: endDate } },
-  };
-
-  const response = await client.query({
-    query: REPOSSESSIONS_QUERY,
-    variables,
-  });
-
-  return response?.data?.repossessions;
-};
-
 // Please DO NOT touch this function, if you want to make modifications, make your own with this being the template.
 export const fetchOverviewStats = async (input: OverviewStatsInput) => {
   // Validate all inputted start dates.
@@ -348,37 +286,37 @@ export const fetchOverviewStats = async (input: OverviewStatsInput) => {
   if (!moment(input.rdnPreviousEndDate, DATETIME_FORMAT, true).isValid())
     throw new Error(ERROR_MESSAGES.endDateInvalid);
 
-  const currentAssignments = await fetchAssignmentCount(
+  const currentAssignments = await getAssignmentCount(
     input.client,
     input.startDate,
     input.endDate,
   );
 
-  const previousAssignments = await fetchAssignmentCount(
+  const previousAssignments = await getAssignmentCount(
     input.client,
     input.previousStartDate,
     input.previousEndDate,
   );
 
-  const currentRepossessions = await fetchRepossessionCount(
+  const currentRepossessions = await getRepossessionCount(
     input.client,
     input.rdnStartDate,
     input.rdnEndDate,
   );
 
-  const previousRepossessions = await fetchRepossessionCount(
+  const previousRepossessions = await getRepossessionCount(
     input.client,
     input.rdnPreviousStartDate,
     input.rdnPreviousEndDate,
   );
 
-  const currentMissedRepossessions = await fetchMissedRepossessionCount(
+  const currentMissedRepossessions = await getMissedRepossessionCount(
     input.client,
     input.rdnStartDate,
     input.rdnEndDate,
   );
 
-  const previousMissedRepossessions = await fetchMissedRepossessionCount(
+  const previousMissedRepossessions = await getMissedRepossessionCount(
     input.client,
     input.rdnPreviousStartDate,
     input.rdnPreviousEndDate,
