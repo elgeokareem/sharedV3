@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { createClient } from '../../../shared/tests/graphql';
-import { fetchTargetRecoveryRateByUser } from '../reports-services';
+import { fetchTargetRecoveryRateByUser } from '../services';
 
 describe('Target Recovery Rate Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';

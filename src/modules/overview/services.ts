@@ -6,9 +6,7 @@ import {
   MISSED_REPOSSESSION_REOPEN_CASE_TYPE,
   MissedRepossession,
   MissedRepossessionReopenCase,
-  OverviewStatsInput,
 } from '../../shared/types';
-import { fetchBranches } from '../../shared/branch/branch-action';
 
 import {
   ACCEPTED_RDN_STATUSES,
@@ -25,10 +23,12 @@ import {
   REPOSSESSIONS_QUERY,
 } from './queries';
 
-import { MissedRepossessionsResult } from './types';
+import { MissedRepossessionsResult, OverviewStatsInput } from './types';
+
 import { version } from '../../shared/utils';
-import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 import { getMostRecentOpenDate } from '../../shared/cases/utils';
+import { fetchBranches } from '../../shared/branch/branch-action';
+import { fetchCases, fetchCasesWithLog } from '../../shared/cases/actions';
 
 export const fetchAggregateMissedRepossessions = async (
   client: GraphQLClient,

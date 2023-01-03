@@ -15,12 +15,16 @@ import {
   removeDuplicatedVins,
   groupByUser,
   addScannedDateToLiveHits,
-} from './reports-helpers';
+} from './helpers';
+
 import {
   FETCH_CAMERA_HITS,
   FETCH_SECURED_CASES,
   FETCH_TARGET_RECOVERY_RATE_BY_USER,
-} from './reports-queries';
+} from './queries';
+
+import { TargetRecoveryRate } from './types';
+
 import {
   Branches,
   BranchTable,
@@ -28,8 +32,8 @@ import {
   GraphQLClient,
   RdnCurrent,
   RdnPrevious,
-  TargetRecoveryRate,
 } from '../../shared/types';
+
 import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
 
 export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
