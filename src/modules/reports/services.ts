@@ -20,7 +20,7 @@ import {
 import {
   FETCH_CAMERA_HITS,
   FETCH_SECURED_CASES,
-  FETCH_TARGET_RECOVERY_RATE_BY_USER,
+  FETCH_TARGET_RECOVERY_RATES_BY_USER,
 } from './queries';
 
 import { TargetRecoveryRate } from './types';
@@ -281,7 +281,7 @@ export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
   };
 };
 
-export const fetchTargetRecoveryRateByUser = async (
+export const fetchTargetRecoveryRatesByUser = async (
   client: GraphQLClient,
   userId: number,
 ): Promise<TargetRecoveryRate[]> => {
@@ -290,7 +290,7 @@ export const fetchTargetRecoveryRateByUser = async (
   };
 
   const res = await client.query({
-    query: FETCH_TARGET_RECOVERY_RATE_BY_USER,
+    query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
     variables,
   });
 

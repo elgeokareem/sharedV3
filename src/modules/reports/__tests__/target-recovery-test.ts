@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { createClient } from '../../../shared/tests/graphql';
-import { fetchTargetRecoveryRateByUser } from '../services';
+import { fetchTargetRecoveryRatesByUser } from '../services';
 
 describe('Target Recovery Rate Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';
@@ -27,7 +27,7 @@ describe('Target Recovery Rate Tests', () => {
   };
 
   test('Fetch Target Recovery Rate By User Length', async () => {
-    const targetRecoveryRates = await fetchTargetRecoveryRateByUser(
+    const targetRecoveryRates = await fetchTargetRecoveryRatesByUser(
       client,
       758,
     );
@@ -36,7 +36,7 @@ describe('Target Recovery Rate Tests', () => {
   });
 
   test('Fetch Target Recovery Rate By User Results', async () => {
-    const targetRecoveryRates = await fetchTargetRecoveryRateByUser(
+    const targetRecoveryRates = await fetchTargetRecoveryRatesByUser(
       client,
       758,
     );
