@@ -10,6 +10,7 @@ export const CASES_WITH_LOG_QUERY = gql`
       vin
       status
       lenderClientId
+      lenderClientName
       orderType
       originalOrderDate
       yearMakeModel
