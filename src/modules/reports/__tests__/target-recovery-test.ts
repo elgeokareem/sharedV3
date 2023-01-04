@@ -15,7 +15,7 @@ describe('Target Recovery Rate Tests', () => {
     branchId: 1,
     clientId: '201883',
     duration: TARGET_RECOVERY_RATE_DURATION_TYPE.MTD,
-    targetRecoveryRate: 30,
+    targetRecoveryRate: 20,
     userId: 758,
   };
 
@@ -23,7 +23,7 @@ describe('Target Recovery Rate Tests', () => {
     branchId: 1,
     clientId: '201883',
     duration: TARGET_RECOVERY_RATE_DURATION_TYPE.YTD,
-    targetRecoveryRate: 30,
+    targetRecoveryRate: 20,
     userId: 758,
   };
 

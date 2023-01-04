@@ -23,7 +23,7 @@ import {
   FETCH_TARGET_RECOVERY_RATES_BY_USER,
 } from './queries';
 
-import { TargetRecoveryRate } from './types';
+import { ClientListInput, TargetRecoveryRate } from './types';
 
 import {
   Branches,
@@ -34,7 +34,17 @@ import {
   RdnPrevious,
 } from '../../shared/types';
 
-import { DATE_FORMAT, ERROR_MESSAGES } from '../../shared/constants';
+import {
+  DATETIME_FORMAT,
+  DATE_FORMAT,
+  ERROR_MESSAGES,
+} from '../../shared/constants';
+
+import {
+  getAssignments,
+  getMissedRepossessions,
+  getRepossessions,
+} from '../../shared/services';
 
 export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
   return async (startDate: string, endDate: string): Promise<any> => {
@@ -295,4 +305,80 @@ export const fetchTargetRecoveryRatesByUser = async (
   });
 
   return res?.data?.targetRecoveryRates;
+};
+
+// Revisit this later.
+// I could add the whole function, but might cause complications. Will discuss in a meeting.
+// For now, this only retrieves stats with necessary fields for client list.
+export const fetchClientList = async (input: ClientListInput) => {
+  // Validate all inputted start dates.
+  if (!moment(input.startDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.previousStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.rdnStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  if (!moment(input.rdnPreviousStartDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+
+  // Validate all inputted end dates.
+  if (!moment(input.endDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.previousEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.rdnEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  if (!moment(input.rdnPreviousEndDate, DATETIME_FORMAT, true).isValid())
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+
+  const currentAssignments = await getAssignments(
+    input.client,
+    input.startDate,
+    input.endDate,
+  );
+
+  const previousAssignments = await getAssignments(
+    input.client,
+    input.previousStartDate,
+    input.previousEndDate,
+  );
+
+  const currentRepossessions = await getRepossessions(
+    input.client,
+    input.rdnStartDate,
+    input.rdnEndDate,
+  );
+
+  const previousRepossessions = await getRepossessions(
+    input.client,
+    input.rdnPreviousStartDate,
+    input.rdnPreviousEndDate,
+  );
+
+  const currentMissedRepossessions = await getMissedRepossessions(
+    input.client,
+    input.rdnStartDate,
+    input.rdnEndDate,
+  );
+
+  const previousMissedRepossessions = await getMissedRepossessions(
+    input.client,
+    input.rdnPreviousStartDate,
+    input.rdnPreviousEndDate,
+  );
+
+  return {
+    currentAssignments,
+    previousAssignments,
+    currentRepossessions,
+    previousRepossessions,
+    currentMissedRepossessions,
+    previousMissedRepossessions,
+  };
 };
