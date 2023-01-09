@@ -21,9 +21,14 @@ import {
   FETCH_CAMERA_HITS,
   FETCH_SECURED_CASES,
   FETCH_TARGET_RECOVERY_RATES_BY_USER,
+  UPDATE_TARGET_RECOVERY_RATES,
 } from './queries';
 
-import { ClientListInput, TargetRecoveryRate } from './types';
+import {
+  ClientListInput,
+  TargetRecoveryRate,
+  UpdateTargetRecoveryRateInput,
+} from './types';
 
 import {
   Branches,
@@ -307,9 +312,41 @@ export const fetchTargetRecoveryRatesByUser = async (
   return res?.data?.targetRecoveryRates;
 };
 
-// Revisit this later.
-// I could add the whole function, but might cause complications. Will discuss in a meeting.
-// For now, this only retrieves stats with necessary fields for client list.
+export const updateManyTargetRecoveryRates = async (
+  input: UpdateTargetRecoveryRateInput,
+) => {
+  const updateVariables = {
+    data: {
+      targetRecoveryRate: { set: Number(input.targetRecoveryRate) },
+      updatedAt: { set: moment() },
+    },
+    where: {
+      branchId:
+        input.updateBranches[0] === null
+          ? { equals: null }
+          : { in: input.updateBranches },
+      clientId: { equals: input.clientId },
+      duration: { in: input.updateDurations },
+      userId: { equals: input.userId },
+    },
+  };
+
+  const refetchVariables = {
+    where: { userId: { equals: input.userId } },
+  };
+
+  const response = input.client.mutate({
+    mutation: UPDATE_TARGET_RECOVERY_RATES,
+    variables: updateVariables,
+    refetchQueries: {
+      query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
+      variables: refetchVariables,
+    },
+  });
+
+  return response;
+};
+
 export const fetchClientList = async (input: ClientListInput) => {
   // Validate all inputted start dates.
   if (!moment(input.startDate, DATETIME_FORMAT, true).isValid())

@@ -201,9 +201,20 @@ export type GraphQLQuery = {
   query: DocumentNode;
   variables?: Record<string, any>;
 };
-export type GraphQLClient = {
-  query: (options: GraphQLQuery) => Promise<any>;
+
+export type GraphQLMutation = {
+  mutation: DocumentNode;
+  variables?: Record<string, any>;
+  refetchQueries?: GraphQLQuery;
 };
+
+export interface GraphQLClient {
+  query: (options: GraphQLQuery) => Promise<any>;
+}
+
+export interface GraphQLClientMutation {
+  mutate: (options: GraphQLMutation) => Promise<any>;
+}
 
 export type DriverType = {
   count: number;

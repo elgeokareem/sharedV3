@@ -1,8 +1,14 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { createClient } from '../../../shared/tests/graphql';
-import { fetchTargetRecoveryRatesByUser } from '../services';
-import { TARGET_RECOVERY_RATE_DURATION_TYPE } from '../types';
+import {
+  createClient,
+  createClientMutation,
+} from '../../../shared/tests/graphql';
+
+import {
+  fetchTargetRecoveryRatesByUser,
+  updateManyTargetRecoveryRates,
+} from '../services';
 
 describe('Target Recovery Rate Tests', () => {
   const endpoint = 'https://api.insightt.io/graphql';
@@ -11,19 +17,14 @@ describe('Target Recovery Rate Tests', () => {
 
   const client = createClient(endpoint, token);
 
-  const object1 = {
-    branchId: 1,
-    clientId: '201883',
-    duration: TARGET_RECOVERY_RATE_DURATION_TYPE.MTD,
-    targetRecoveryRate: 20,
-    userId: 758,
-  };
+  const mutationClient = createClientMutation(endpoint, token);
 
-  const object2 = {
-    branchId: 1,
+  const updateInput = {
+    client: mutationClient,
+    targetRecoveryRate: '30',
+    updateBranches: [1],
     clientId: '201883',
-    duration: TARGET_RECOVERY_RATE_DURATION_TYPE.YTD,
-    targetRecoveryRate: 20,
+    updateDurations: ['MTD', 'YTD'],
     userId: 758,
   };
 
@@ -33,16 +34,14 @@ describe('Target Recovery Rate Tests', () => {
       758,
     );
 
-    expect(targetRecoveryRates.length).toBe(2);
+    expect(targetRecoveryRates.length).toBe(12);
   });
 
-  test('Fetch Target Recovery Rate By User Results', async () => {
-    const targetRecoveryRates = await fetchTargetRecoveryRatesByUser(
-      client,
-      758,
+  test('Update Target Recovery Rate for userId: 758, clientId: 201833, branchId: 1', async () => {
+    const updateRecoveryRates = await updateManyTargetRecoveryRates(
+      updateInput,
     );
 
-    expect(targetRecoveryRates[0]).toEqual(object1);
-    expect(targetRecoveryRates[1]).toEqual(object2);
+    expect(updateRecoveryRates?.data?.updateTargetRecoveryRates?.count).toBe(2);
   });
 });
