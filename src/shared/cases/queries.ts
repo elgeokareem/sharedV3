@@ -15,6 +15,10 @@ export const CASES_WITH_LOG_QUERY = gql`
       originalOrderDate
       yearMakeModel
       spottedDate
+      rdnRepoDate
+      repoAddress
+      repoLat
+      repoLng
       RDNCaseLog(orderBy: $rdnCaseLogOrderBy) {
         createdAt
         status
@@ -34,6 +38,10 @@ export const CASES_QUERY = gql`
       lenderClientId
       yearMakeModel
       spottedDate
+      rdnRepoDate
+      repoAddress
+      repoLat
+      repoLng
     }
   }
 `;
