@@ -23,6 +23,16 @@ export interface UpdateTargetRecoveryRateInput {
   userId: number;
 }
 
+export interface TargetRecoveryRateCreateManyInput {
+  branchId: number | null;
+  clientId: string;
+  createdAt: string;
+  duration: string;
+  targetRecoveryRate: number;
+  updatedAt: string;
+  userId: number;
+}
+
 export interface ClientListInput {
   client: GraphQLClient;
   startDate: string;

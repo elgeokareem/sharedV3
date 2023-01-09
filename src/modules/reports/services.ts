@@ -18,6 +18,7 @@ import {
 } from './helpers';
 
 import {
+  CREATE_TARGET_RECOVERY_RATES,
   FETCH_CAMERA_HITS,
   FETCH_SECURED_CASES,
   FETCH_TARGET_RECOVERY_RATES_BY_USER,
@@ -27,6 +28,7 @@ import {
 import {
   ClientListInput,
   TargetRecoveryRate,
+  TargetRecoveryRateCreateManyInput,
   UpdateTargetRecoveryRateInput,
 } from './types';
 
@@ -35,6 +37,7 @@ import {
   BranchTable,
   CASE_STATUSES,
   GraphQLClient,
+  GraphQLClientMutation,
   RdnCurrent,
   RdnPrevious,
 } from '../../shared/types';
@@ -315,7 +318,7 @@ export const fetchTargetRecoveryRatesByUser = async (
 export const updateManyTargetRecoveryRates = async (
   input: UpdateTargetRecoveryRateInput,
 ) => {
-  const updateVariables = {
+  const updateVariables: Record<string, any> = {
     data: {
       targetRecoveryRate: { set: Number(input.targetRecoveryRate) },
       updatedAt: { set: moment() },
@@ -331,13 +334,38 @@ export const updateManyTargetRecoveryRates = async (
     },
   };
 
-  const refetchVariables = {
+  const refetchVariables: Record<string, any> = {
     where: { userId: { equals: input.userId } },
   };
 
   const response = input.client.mutate({
     mutation: UPDATE_TARGET_RECOVERY_RATES,
     variables: updateVariables,
+    refetchQueries: {
+      query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
+      variables: refetchVariables,
+    },
+  });
+
+  return response;
+};
+
+export const createManyTargetRecoveryRates = async (
+  client: GraphQLClientMutation,
+  data: TargetRecoveryRateCreateManyInput[],
+) => {
+  const createVariables: Record<string, any> = {
+    data,
+    skipDuplicates: true,
+  };
+
+  const refetchVariables: Record<string, any> = {
+    where: { userId: { equals: data[0].userId } },
+  };
+
+  const response = client.mutate({
+    mutation: CREATE_TARGET_RECOVERY_RATES,
+    variables: createVariables,
     refetchQueries: {
       query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
       variables: refetchVariables,

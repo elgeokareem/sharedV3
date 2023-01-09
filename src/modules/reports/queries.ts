@@ -117,3 +117,17 @@ export const UPDATE_TARGET_RECOVERY_RATES = gql`
     }
   }
 `;
+
+export const CREATE_TARGET_RECOVERY_RATES = gql`
+  mutation CreateManyTargetRecoveryRate(
+    $data: [TargetRecoveryRateCreateManyInput!]!
+    $skipDuplicates: Boolean
+  ) {
+    createTargetRecoveryRates: createManyTargetRecoveryRate(
+      data: $data
+      skipDuplicates: $skipDuplicates
+    ) {
+      count
+    }
+  }
+`;

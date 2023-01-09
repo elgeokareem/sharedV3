@@ -6,6 +6,7 @@ import {
 } from '../../../shared/tests/graphql';
 
 import {
+  createManyTargetRecoveryRates,
   fetchTargetRecoveryRatesByUser,
   updateManyTargetRecoveryRates,
 } from '../services';
@@ -22,11 +23,32 @@ describe('Target Recovery Rate Tests', () => {
   const updateInput = {
     client: mutationClient,
     targetRecoveryRate: '30',
-    updateBranches: [1],
+    updateBranches: [null],
     clientId: '201883',
     updateDurations: ['MTD', 'YTD'],
     userId: 758,
   };
+
+  const data = [
+    {
+      branchId: 1,
+      clientId: '228298',
+      createdAt: '2023-01-09T20:48:02.023Z',
+      duration: 'MTD',
+      targetRecoveryRate: 20,
+      updatedAt: '2023-01-09T20:48:02.023Z',
+      userId: 758,
+    },
+    {
+      branchId: 1,
+      clientId: '228298',
+      createdAt: '2023-01-09T20:48:02.023Z',
+      duration: 'YTD',
+      targetRecoveryRate: 20,
+      updatedAt: '2023-01-09T20:48:02.023Z',
+      userId: 758,
+    },
+  ];
 
   test('Fetch Target Recovery Rate By User Length', async () => {
     const targetRecoveryRates = await fetchTargetRecoveryRatesByUser(
@@ -34,14 +56,23 @@ describe('Target Recovery Rate Tests', () => {
       758,
     );
 
-    expect(targetRecoveryRates.length).toBe(12);
+    expect(targetRecoveryRates.length).toBe(14);
   });
 
-  test('Update Target Recovery Rate for userId: 758, clientId: 201833, branchId: 1', async () => {
+  test('Update Target Recovery Rate for userId: 758, clientId: 201833, branchId: 1, MTD/YTD at 30', async () => {
     const updateRecoveryRates = await updateManyTargetRecoveryRates(
       updateInput,
     );
 
     expect(updateRecoveryRates?.data?.updateTargetRecoveryRates?.count).toBe(2);
+  });
+
+  test('Create 2 Target Recovery Rate for userId: 758, clientId: 228298, branchId: 1, MTD/YTD at 20', async () => {
+    const createRecoveryRates = await createManyTargetRecoveryRates(
+      mutationClient,
+      data,
+    );
+
+    expect(createRecoveryRates?.data?.createTargetRecoveryRates?.count).toBe(2);
   });
 });
