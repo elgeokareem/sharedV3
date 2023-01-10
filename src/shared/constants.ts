@@ -85,3 +85,8 @@ export const ERROR_MESSAGES = {
   branchNotFound: 'Invalid branchId',
   missedDateNotFound: 'Invalid missing Date',
 };
+
+export const CASE_ADDRESS_SOURCE = {
+  RDN: 'RDN',
+  SPOT: 'SPOT',
+};
