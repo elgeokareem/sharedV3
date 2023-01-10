@@ -205,7 +205,7 @@ export type GraphQLQuery = {
 export type GraphQLMutation = {
   mutation: DocumentNode;
   variables?: Record<string, any>;
-  refetchQueries?: GraphQLQuery;
+  refetchQueries: any;
 };
 
 export interface GraphQLClient {

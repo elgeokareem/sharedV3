@@ -316,6 +316,7 @@ export const fetchTargetRecoveryRatesByUser = async (
 };
 
 export const updateManyTargetRecoveryRates = async (
+  client: GraphQLClientMutation,
   input: UpdateTargetRecoveryRateInput,
 ) => {
   const updateVariables: Record<string, any> = {
@@ -334,17 +335,10 @@ export const updateManyTargetRecoveryRates = async (
     },
   };
 
-  const refetchVariables: Record<string, any> = {
-    where: { userId: { equals: input.userId } },
-  };
-
-  const response = input.client.mutate({
+  const response = await client.mutate({
     mutation: UPDATE_TARGET_RECOVERY_RATES,
     variables: updateVariables,
-    refetchQueries: {
-      query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
-      variables: refetchVariables,
-    },
+    refetchQueries: [FETCH_TARGET_RECOVERY_RATES_BY_USER],
   });
 
   return response;
@@ -359,18 +353,13 @@ export const createManyTargetRecoveryRates = async (
     skipDuplicates: true,
   };
 
-  const refetchVariables: Record<string, any> = {
-    where: { userId: { equals: data[0].userId } },
-  };
-
-  const response = client.mutate({
+  const response = await client.mutate({
     mutation: CREATE_TARGET_RECOVERY_RATES,
     variables: createVariables,
-    refetchQueries: {
-      query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
-      variables: refetchVariables,
-    },
+    refetchQueries: [FETCH_TARGET_RECOVERY_RATES_BY_USER],
   });
+
+  console.log(response);
 
   return response;
 };
