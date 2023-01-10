@@ -1,4 +1,4 @@
-import { GraphQLClient } from 'shared/types';
+import { GraphQLClient, GraphQLClientMutation } from 'shared/types';
 
 /* eslint-disable no-unused-vars */
 export enum TARGET_RECOVERY_RATE_DURATION_TYPE {
@@ -11,6 +11,25 @@ export interface TargetRecoveryRate {
   clientId: string;
   duration: TARGET_RECOVERY_RATE_DURATION_TYPE;
   targetRecoveryRate: number;
+  userId: number;
+}
+
+export interface UpdateTargetRecoveryRateInput {
+  client: GraphQLClientMutation;
+  targetRecoveryRate: string;
+  updateBranches: number[] | null[];
+  clientId: string;
+  updateDurations: string[];
+  userId: number;
+}
+
+export interface TargetRecoveryRateCreateManyInput {
+  branchId: number | null;
+  clientId: string;
+  createdAt: string;
+  duration: string;
+  targetRecoveryRate: number;
+  updatedAt: string;
   userId: number;
 }
 

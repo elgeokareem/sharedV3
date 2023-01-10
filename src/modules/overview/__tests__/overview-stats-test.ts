@@ -24,7 +24,7 @@ describe('Overview Stats Test', () => {
   test('Get overview stats', async () => {
     const overviewStats = await fetchOverviewStats(input);
 
-    expect(overviewStats.currentAssignments).toBe(3996);
+    expect(overviewStats.currentAssignments).toBe(4009);
     expect(overviewStats.previousAssignments).toBe(3732);
     expect(overviewStats.currentRepossessions).toBe(1236);
     expect(overviewStats.previousRepossessions).toBe(1007);

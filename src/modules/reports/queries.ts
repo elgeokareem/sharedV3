@@ -103,3 +103,31 @@ export const FETCH_TARGET_RECOVERY_RATES_BY_USER = gql`
     }
   }
 `;
+
+export const UPDATE_TARGET_RECOVERY_RATES = gql`
+  mutation UpdateManyTargetRecoveryRate(
+    $data: TargetRecoveryRateUpdateManyMutationInput!
+    $where: TargetRecoveryRateWhereInput
+  ) {
+    updateTargetRecoveryRates: updateManyTargetRecoveryRate(
+      data: $data
+      where: $where
+    ) {
+      count
+    }
+  }
+`;
+
+export const CREATE_TARGET_RECOVERY_RATES = gql`
+  mutation CreateManyTargetRecoveryRate(
+    $data: [TargetRecoveryRateCreateManyInput!]!
+    $skipDuplicates: Boolean
+  ) {
+    createTargetRecoveryRates: createManyTargetRecoveryRate(
+      data: $data
+      skipDuplicates: $skipDuplicates
+    ) {
+      count
+    }
+  }
+`;
