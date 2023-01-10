@@ -200,12 +200,12 @@ export type HitType = {
 export type GraphQLQuery = {
   query: DocumentNode;
   variables?: Record<string, any>;
+  fetchPolicy?: string;
 };
 
 export type GraphQLMutation = {
   mutation: DocumentNode;
   variables?: Record<string, any>;
-  refetchQueries: any;
 };
 
 export interface GraphQLClient {

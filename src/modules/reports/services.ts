@@ -302,6 +302,7 @@ export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
 export const fetchTargetRecoveryRatesByUser = async (
   client: GraphQLClient,
   userId: number,
+  fetchPolicy: string = 'network-only',
 ): Promise<TargetRecoveryRate[]> => {
   const variables: Record<string, any> = {
     where: { userId: { equals: userId } },
@@ -310,6 +311,7 @@ export const fetchTargetRecoveryRatesByUser = async (
   const res = await client.query({
     query: FETCH_TARGET_RECOVERY_RATES_BY_USER,
     variables,
+    fetchPolicy,
   });
 
   return res?.data?.targetRecoveryRates;
@@ -338,7 +340,6 @@ export const updateManyTargetRecoveryRates = async (
   const response = await client.mutate({
     mutation: UPDATE_TARGET_RECOVERY_RATES,
     variables: updateVariables,
-    refetchQueries: [FETCH_TARGET_RECOVERY_RATES_BY_USER],
   });
 
   return response;
@@ -356,10 +357,7 @@ export const createManyTargetRecoveryRates = async (
   const response = await client.mutate({
     mutation: CREATE_TARGET_RECOVERY_RATES,
     variables: createVariables,
-    refetchQueries: [FETCH_TARGET_RECOVERY_RATES_BY_USER],
   });
-
-  console.log(response);
 
   return response;
 };

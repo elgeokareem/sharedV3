@@ -42,10 +42,10 @@ describe('Target Recovery Rate Tests', () => {
   // ];
 
   const updateInput = {
-    targetRecoveryRate: '20',
-    updateBranches: [null],
-    clientId: '201883',
-    updateDurations: ['MTD', 'YTD'],
+    targetRecoveryRate: '50',
+    updateBranches: [1],
+    clientId: '228298',
+    updateDurations: ['MTD'],
     userId: 758,
   };
 
@@ -58,21 +58,21 @@ describe('Target Recovery Rate Tests', () => {
   //   expect(createRecoveryRates?.data?.createTargetRecoveryRates?.count).toBe(2);
   // });
 
-  test('Fetch Target Recovery Rate By User Length', async () => {
+  test('Fetch Target Recovery Rate By User', async () => {
     const targetRecoveryRates = await fetchTargetRecoveryRatesByUser(
       client,
       758,
     );
 
-    expect(targetRecoveryRates.length).toBe(0);
+    expect(targetRecoveryRates[0]?.targetRecoveryRate).toBe(50);
   });
 
-  test('Update Target Recovery Rate for userId: 758, clientId: 201833, branchId: 1, MTD/YTD at 30', async () => {
+  test('Update Target Recovery Rate', async () => {
     const updateRecoveryRates = await updateManyTargetRecoveryRates(
       mutationClient,
       updateInput,
     );
 
-    expect(updateRecoveryRates?.data?.updateTargetRecoveryRates?.count).toBe(0);
+    expect(updateRecoveryRates?.data?.updateTargetRecoveryRates?.count).toBe(1);
   });
 });
