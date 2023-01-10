@@ -15,7 +15,6 @@ export interface TargetRecoveryRate {
 }
 
 export interface UpdateTargetRecoveryRateInput {
-  client: GraphQLClientMutation;
   targetRecoveryRate: string;
   updateBranches: number[] | null[];
   clientId: string;
