@@ -90,3 +90,21 @@ export const CASE_ADDRESS_SOURCE = {
   RDN: 'RDN',
   SPOT: 'SPOT',
 };
+
+export const PLATFORM_SETTINGS = {
+  translateAddressesWithinDays: 'TRANSLATE_ADDRESSES_WITHIN_DAYS',
+  enableSubscriptionPaywall: 'ENABLE_SUBSCRIPTION_PAYWALL',
+  enableProductTour: 'ENABLE_PRODUCT_TOUR',
+  mobileAppApiUrl: 'MOBILE_APP_API_URL',
+  enableInfractionMap: 'ENABLE_INFRACTION_MAP',
+  enableNewActiveShift: 'ENABLE_NEW_ACTIVE_SHIFTS',
+  enableSessionManagement: 'ENABLE_SESSION_MANAGEMENT',
+  enableBiometrics: 'ENABLE_BIOMETRICS',
+  enableUpdateLink: 'ENABLE_UPDATE_LINK',
+  EXPIRATION_HOURS_FOR_SPOTTED_ALERT: 'EXPIRATION_HOURS_FOR_SPOTTED_ALERT',
+};
+
+export const CASE_RECORD_STATUS = {
+  NEW: 'NEW',
+  PROCESSED: 'PROCESSED',
+};

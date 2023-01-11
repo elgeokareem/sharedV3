@@ -36,6 +36,7 @@ export const CASES_QUERY = gql`
       orderType
       originalOrderDate
       lenderClientId
+      lenderClientName
       yearMakeModel
       spottedDate
       rdnRepoDate
