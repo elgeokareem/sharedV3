@@ -44,7 +44,6 @@ export const createClientMutation = (
       const response = await graphQLClient.request(
         options.mutation,
         options.variables,
-        options.refetchQueries,
       );
       return {
         data: { ...response },
