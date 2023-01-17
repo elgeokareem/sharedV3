@@ -97,7 +97,7 @@ export const isShiftActive = (shift: ShiftType, startTime: Moment, endTime: Mome
   const { days } = shift;
 
   if (!days) {
-    throw new Error('Shift needs days');
+    throw new Error('days field is required');
   }
 
   let isActive = false;
@@ -124,7 +124,7 @@ export const getTimeRangeShift = (shift: ShiftType, momentNow = moment()) => {
   const { startTimeV2, endTimeV2, days } = shift;
 
   if (!startTimeV2 || !endTimeV2 || !days) {
-    throw new Error('Shift needs days, startTime and endTime');
+    throw new Error('startTimeV2, endTimeV2 and days fields are required');
   }
 
   const [startHour, startMinute] = startTimeV2.split(':');
