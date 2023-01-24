@@ -170,6 +170,14 @@ export type UserType = {
   updated_at: string;
 };
 
+export type ShiftType = {
+  id: number;
+  name: string;
+  days: string;
+  startTimeV2: string;
+  endTimeV2: string
+}
+
 export type RdnCaseType = {
   vinLastEight: string;
   lenderClientName: string;
