@@ -1,7 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
 import moment = require('moment');
+import { inProgressTask } from './data.mock';
 
 import {
+  isTaskOnTime,
   IS_VALID_COMPLETION_DATE_ERROR,
   validateCompletionDate,
 } from '../validators';
@@ -23,5 +25,9 @@ describe('validators tests', () => {
         new Date().toISOString(),
       ),
     ).toEqual([true, '']);
+  });
+
+  test('expect isTaskOnTime to be false', () => {
+    expect(isTaskOnTime(inProgressTask)).toBeFalsy();
   });
 });

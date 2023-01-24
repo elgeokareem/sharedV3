@@ -20,8 +20,7 @@ export const canRequestAdditionalTime = (task: TaskType, user: UserType) =>
 
 export const canMarkAsCompleted = (task: TaskType, user: UserType) =>
   isAssignee(task, user) &&
-  task?.status !== TASK_STATUSES.marked_as_completed &&
-  task?.status !== TASK_STATUSES.uncompleted;
+  task?.status !== TASK_STATUSES.marked_as_completed;
 
 export const canApproveMarkedAsCompleted = (task: TaskType, user: UserType) =>
   isAssigner(task, user) && task?.status === TASK_STATUSES.marked_as_completed;
