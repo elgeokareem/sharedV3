@@ -1,6 +1,10 @@
 // Constants
 export * from './shared/constants';
 
+// Permissions
+export * from './shared/permissions/constants';
+export * from './shared/permissions/utils';
+
 // Types
 export * from './shared/types';
 

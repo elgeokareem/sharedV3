@@ -1,7 +1,7 @@
 import { RBAC as RBACClass } from '@cobuildlab/rbac';
 
 import { PLANS } from '../constants';
-import { Permissions } from './constants';
+import { AppPermissions } from './constants';
 import { rules } from './rules';
 
 /**
@@ -14,7 +14,7 @@ export const RBACproject = new RBACClass(PLANS.basic);
  */
 Object.keys(rules.permissions).forEach((subscriptionType) => {
   let canRender = false;
-  Object.values(Permissions).forEach((permission) => {
+  Object.values(AppPermissions).forEach((permission) => {
     canRender = rules.permissions[subscriptionType].static.includes(permission);
     RBACproject.createRule(subscriptionType, permission, canRender);
   });

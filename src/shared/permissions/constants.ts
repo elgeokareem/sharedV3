@@ -1,4 +1,4 @@
-export const Permissions = {
+export const AppPermissions = {
   // Overview
   SHOW_TOTAL_ASSIGNMENTS: 'SHOW_TOTAL_ASSIGNMENTS',
   SHOW_MISSED_REPOSSESSIONS: 'SHOW_MISSED_REPOSSESSIONS',
