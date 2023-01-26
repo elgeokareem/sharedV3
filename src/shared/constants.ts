@@ -115,3 +115,11 @@ export const CASE_RECORD_STATUS = {
   NEW: 'NEW',
   PROCESSED: 'PROCESSED',
 };
+
+export const PLANS = {
+  // The 'free' option is only to be able to filter what will be shown in
+  // the system when there is no subscription.
+  free: 'free',
+  basic: 'basic',
+  advanced: 'advanced',
+};

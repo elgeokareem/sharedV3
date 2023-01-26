@@ -1,6 +1,6 @@
 {
   "name": "@insightt/insightt-shared",
-  "version": "1.9.8",
+  "version": "1.10.0",
   "description": "Shared code for Insightt",
   "main": "dist/src/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "author": "insightt/alacret",
   "license": "ISC",
   "dependencies": {
+    "@cobuildlab/rbac": "^0.3.0",
     "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
     "moment": "^2.24.0",
