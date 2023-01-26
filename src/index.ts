@@ -45,6 +45,9 @@ export {
   fetchOverviewStats,
 };
 
+// Users
+export * from './modules/users/validators';
+
 // Tasks
 export * from './modules/tasks/types';
 export * from './modules/tasks/utils';

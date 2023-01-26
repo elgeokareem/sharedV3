@@ -168,6 +168,7 @@ export type UserType = {
   count: number;
   created_at: string;
   updated_at: string;
+  avatar?: string;
 };
 
 export type ShiftType = {
