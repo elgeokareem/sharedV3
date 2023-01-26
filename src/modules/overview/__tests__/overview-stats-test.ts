@@ -7,7 +7,7 @@ import { createClient } from '../../../shared/tests/graphql';
 describe('Overview Stats Test', () => {
   const endpoint = 'https://api.insightt.io/graphql';
   const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzU4LCJkYk5hbWUiOiJycmFfZGIiLCJpYXQiOjE2NzEwMTcxNzEsImV4cCI6MTY3MzYwOTE3MX0.pU7z0AuAH5-nPO4yKRfNEYFskfH-8g0kqYYiwjFXLLU';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzU4LCJkYk5hbWUiOiJycmFfZGIiLCJpYXQiOjE2NzQ3NDMzNTMsImV4cCI6MTY3NzMzNTM1M30.MHuTL7H-TuWjvr_50ovu3eGuaQQ63LDy7JUoSsiDREU';
 
   const input = {
     client: createClient(endpoint, token),
@@ -24,9 +24,9 @@ describe('Overview Stats Test', () => {
   test('Get overview stats', async () => {
     const overviewStats = await fetchOverviewStats(input);
 
-    expect(overviewStats.currentAssignments).toBe(4009);
-    expect(overviewStats.previousAssignments).toBe(3732);
-    expect(overviewStats.currentRepossessions).toBe(1236);
+    expect(overviewStats.currentAssignments).toBe(4039);
+    expect(overviewStats.previousAssignments).toBe(3734);
+    expect(overviewStats.currentRepossessions).toBe(1252);
     expect(overviewStats.previousRepossessions).toBe(1007);
     expect(overviewStats.currentMissedRepossessions).toBe(190);
     expect(overviewStats.previousMissedRepossessions).toBe(30);

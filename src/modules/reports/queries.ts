@@ -131,3 +131,65 @@ export const CREATE_TARGET_RECOVERY_RATES = gql`
     }
   }
 `;
+
+export const FETCH_DAILY_MAP = gql`
+  query RDNCases(
+    $where1: RDNCaseWhereInput
+    $where2: RDNCaseWhereInput
+    $where3: RDNCaseWhereInput
+  ) {
+    totalRepossessions: rDNCases(where: $where1) {
+      vin
+      status
+      caseId
+      repoLat
+      repoLng
+      orderType
+      repoAddress
+      rdnRepoDate
+      yearMakeModel
+      repoAgentRdnId
+      lenderClientName
+    }
+
+    totalSpotted: rDNCases(where: $where2) {
+      vin
+      status
+      caseId
+      orderType
+      spotterId
+      spottedLat
+      spottedLng
+      spottedDate
+      yearMakeModel
+      spottedAddress
+      lenderClientName
+    }
+
+    spottedNotSecured: rDNCases(where: $where3) {
+      vin
+      status
+      caseId
+      orderType
+      spotterId
+      spottedLat
+      spottedLng
+      spottedDate
+      yearMakeModel
+      spottedAddress
+      lenderClientName
+    }
+
+    users: users {
+      id
+      rdnId
+      lastName
+      avatarUrl
+      firstName
+
+      branch {
+        name
+      }
+    }
+  }
+`;

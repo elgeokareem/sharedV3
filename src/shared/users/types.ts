@@ -4,4 +4,5 @@ export type User = {
   lastName: string;
   avatarUrl: string;
   branchId: number;
+  rdnId: string;
 };
