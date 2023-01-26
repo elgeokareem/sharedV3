@@ -482,17 +482,17 @@ export const fetchDailyMap = async (
       vin: rdnCase?.vin,
       id: rdnCase?.caseId,
       status: rdnCase?.status,
-      branch: user[0]?.branch?.name,
-      date: moment(rdnCase?.rdnRepoDate).format('MMM DD, YYYY H:mm:ss A'),
       latitude: rdnCase?.repoLat,
       avatar: user[0]?.avatarUrl,
       longitude: rdnCase?.repoLng,
       car: rdnCase?.yearMakeModel,
       lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
       orderType: rdnCase?.orderType,
       firstName: user[0]?.firstName,
       address: rdnCase?.repoAddress,
       client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.rdnRepoDate).format('MMM DD, YYYY H:mm A'),
     };
   });
 
@@ -506,16 +506,16 @@ export const fetchDailyMap = async (
       id: rdnCase?.caseId,
       status: rdnCase?.status,
       avatar: user[0]?.avatarUrl,
-      branch: user[0]?.branch?.name,
-      date: rdnCase?.spottedDate,
       car: rdnCase?.yearMakeModel,
       lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
       firstName: user[0]?.firstName,
       orderType: rdnCase?.orderType,
       latitude: rdnCase?.spottedLat,
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
     };
   });
 
@@ -528,17 +528,17 @@ export const fetchDailyMap = async (
       vin: rdnCase?.vin,
       id: rdnCase?.caseId,
       status: rdnCase?.status,
-      date: rdnCase?.spottedDate,
       avatar: user[0]?.avatarUrl,
       car: rdnCase?.yearMakeModel,
-      branch: user[0]?.branch?.name,
       lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
       firstName: user[0]?.firstName,
       latitude: rdnCase?.spottedLat,
       orderType: rdnCase?.orderType,
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
     };
   });
 
