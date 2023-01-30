@@ -681,7 +681,7 @@ export const addUsersToData = (
       userId: user?.id,
       drnId: user?.drnId.toLowerCase() || scan.drnId.toLowerCase(),
       rdnId: user?.drnId?.toLowerCase(),
-      branchName: branches[user?.branchId ?? -9999] ?? 'Unknown',
+      branchName: branches[user?.branchId ?? -9999] ?? 'Unassigned',
       branchId: user?.branchId ?? -1,
     };
   });
