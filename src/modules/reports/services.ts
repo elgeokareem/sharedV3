@@ -20,6 +20,7 @@ import {
 import {
   CREATE_TARGET_RECOVERY_RATES,
   FETCH_CAMERA_HITS,
+  FETCH_DAILY_MAP,
   FETCH_SECURED_CASES,
   FETCH_TARGET_RECOVERY_RATES_BY_USER,
   UPDATE_TARGET_RECOVERY_RATES,
@@ -35,6 +36,7 @@ import {
 import {
   Branches,
   BranchTable,
+  Case,
   CASE_STATUSES,
   GraphQLClient,
   GraphQLClientMutation,
@@ -43,6 +45,7 @@ import {
 } from '../../shared/types';
 
 import {
+  ACCEPTED_RDN_STATUSES,
   DATETIME_FORMAT,
   DATE_FORMAT,
   ERROR_MESSAGES,
@@ -53,6 +56,7 @@ import {
   getMissedRepossessions,
   getRepossessions,
 } from '../../shared/services';
+import { User } from 'shared/users/types';
 
 export const fetchSecuredCaseBySpotters = (client: GraphQLClient) => {
   return async (startDate: string, endDate: string): Promise<any> => {
@@ -432,5 +436,115 @@ export const fetchClientList = async (input: ClientListInput) => {
     previousRepossessions,
     currentMissedRepossessions,
     previousMissedRepossessions,
+  };
+};
+
+export const fetchDailyMap = async (
+  client: GraphQLClient,
+  startDate: string,
+  endDate: string,
+) => {
+  if (!moment(startDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.startDateInvalid);
+  }
+
+  if (!moment(endDate, DATETIME_FORMAT, true).isValid()) {
+    throw new Error(ERROR_MESSAGES.endDateInvalid);
+  }
+
+  const variables: Record<string, any> = {
+    where1: {
+      rdnRepoDate: { gte: startDate, lte: endDate },
+      status: { in: ACCEPTED_RDN_STATUSES },
+    },
+    where2: {
+      spottedDate: { gte: startDate, lte: endDate },
+      status: { in: ACCEPTED_RDN_STATUSES },
+    },
+    where3: {
+      rdnRepoDate: { equals: null },
+      spottedDate: { gte: startDate, lte: endDate },
+      status: { in: ACCEPTED_RDN_STATUSES },
+    },
+  };
+
+  const { data } = await client.query({
+    query: FETCH_DAILY_MAP,
+    variables,
+  });
+
+  const totalRepossessions = data?.totalRepossessions?.map((rdnCase: Case) => {
+    const user = data?.users?.filter(
+      (user: User) => user?.rdnId === rdnCase?.repoAgentRdnId,
+    );
+
+    return {
+      vin: rdnCase?.vin,
+      id: rdnCase?.caseId,
+      status: rdnCase?.status,
+      latitude: rdnCase?.repoLat,
+      avatar: user[0]?.avatarUrl,
+      longitude: rdnCase?.repoLng,
+      car: rdnCase?.yearMakeModel,
+      lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
+      orderType: rdnCase?.orderType,
+      firstName: user[0]?.firstName,
+      address: rdnCase?.repoAddress,
+      client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.rdnRepoDate).format('MMM DD, YYYY H:mm A'),
+    };
+  });
+
+  const totalSpotted = data?.totalSpotted?.map((rdnCase: Case) => {
+    const user = data?.users?.filter(
+      (user: User) => user?.id === rdnCase?.spotterId,
+    );
+
+    return {
+      vin: rdnCase?.vin,
+      id: rdnCase?.caseId,
+      status: rdnCase?.status,
+      avatar: user[0]?.avatarUrl,
+      car: rdnCase?.yearMakeModel,
+      lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
+      firstName: user[0]?.firstName,
+      orderType: rdnCase?.orderType,
+      latitude: rdnCase?.spottedLat,
+      longitude: rdnCase?.spottedLng,
+      address: rdnCase?.spottedAddress,
+      client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
+    };
+  });
+
+  const spottedNotSecured = data?.spottedNotSecured?.map((rdnCase: Case) => {
+    const user = data?.users?.filter(
+      (user: User) => user?.id === rdnCase?.spotterId,
+    );
+
+    return {
+      vin: rdnCase?.vin,
+      id: rdnCase?.caseId,
+      status: rdnCase?.status,
+      avatar: user[0]?.avatarUrl,
+      car: rdnCase?.yearMakeModel,
+      lastName: user[0]?.lastName,
+      branch: user[0]?.branch?.name,
+      firstName: user[0]?.firstName,
+      latitude: rdnCase?.spottedLat,
+      orderType: rdnCase?.orderType,
+      longitude: rdnCase?.spottedLng,
+      address: rdnCase?.spottedAddress,
+      client: rdnCase?.lenderClientName,
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
+    };
+  });
+
+  return {
+    totalSpotted,
+    spottedNotSecured,
+    totalRepossessions,
   };
 };

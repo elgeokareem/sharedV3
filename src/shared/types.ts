@@ -176,8 +176,8 @@ export type ShiftType = {
   name: string;
   days: string;
   startTimeV2: string;
-  endTimeV2: string
-}
+  endTimeV2: string;
+};
 
 export type RdnCaseType = {
   vinLastEight: string;
@@ -241,11 +241,25 @@ export type CaseLog = {
 };
 
 export interface Case {
-  caseId: string;
-  lenderClientId: string;
-  originalOrderDate: string;
   vin: string;
+  status: string;
+  caseId: string;
+  repoLat: number;
+  repoLng: number;
+  orderType: string;
+  spotterId: number;
+  spottedLat: number;
+  spottedLng: number;
+  rdnRepoDate: string;
+  repoAddress: string;
+  spottedDate: string;
   RDNCaseLog: CaseLog[];
+  yearMakeModel: string;
+  lenderClientId: string;
+  repoAgentRdnId: string;
+  spottedAddress: string;
+  originalOrderDate: string;
+  lenderClientName: string;
 }
 
 export enum MISSED_REPOSSESSION_REOPEN_CASE_TYPE {
