@@ -492,7 +492,7 @@ export const fetchDailyMap = async (
       firstName: user[0]?.firstName,
       address: rdnCase?.repoAddress,
       client: rdnCase?.lenderClientName,
-      date: moment(rdnCase?.rdnRepoDate).format('MMM DD, YYYY H:mm A'),
+      date: moment(rdnCase?.rdnRepoDate).format('MMM DD, YYYY hh:mm A'),
     };
   });
 
@@ -515,7 +515,7 @@ export const fetchDailyMap = async (
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
-      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY hh:mm A'),
     };
   });
 
@@ -538,7 +538,7 @@ export const fetchDailyMap = async (
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
-      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY H:mm A'),
+      date: moment(rdnCase?.spottedDate).format('MMM DD, YYYY hh:mm A'),
     };
   });
 
