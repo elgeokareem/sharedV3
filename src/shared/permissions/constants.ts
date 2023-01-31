@@ -72,6 +72,9 @@ export const AppPermissions = {
   // Top Nav
   SHOW_TOPNAV_START_SHIFT_BUTTON: 'SHOW_TOPNAV_START_SHIFT_BUTTON',
 
+  // System View
+  SYSTEM_VIEW: 'SYSTEM_VIEW',
+
   // Super Admin
   SUPER_ADMIN_VIEW: 'SUPER_ADMIN_VIEW',
 };
