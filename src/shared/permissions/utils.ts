@@ -35,3 +35,5 @@ export const canShowUserDetailActivityTab = (role: RoleType, testData: ParamsTyp
     role, AppPermissions.SHOW_USER_DETAil_ACTIVITY_HISTORY_TAB, testData
   )[0];
 };
+
+export const canShowAdminView = (role: RoleType) => RBACproject.check(role, AppPermissions.SUPER_ADMIN_VIEW)[0];
