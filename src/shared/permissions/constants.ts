@@ -12,6 +12,9 @@ export const AppPermissions = {
   // Reports
   REPORTS_VIEW: 'REPORTS_VIEW',
 
+  // Agent Reports
+  AGENT_REPORTS_VIEW: 'AGENT_REPORTS_VIEW',
+
   // Active shifts
   ACTIVE_SHIFTS_VIEW: 'ACTIVE_SHIFTS_VIEW',
 
