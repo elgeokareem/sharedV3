@@ -124,3 +124,11 @@ export const PLANS = {
   basic: 'basic',
   advanced: 'advanced',
 };
+
+/* User Roles */
+export const ROLES = {
+  superAdmin: 'super_admin',
+  admin: 'admin',
+  manager: 'manager',
+  driver: 'driver',
+};
