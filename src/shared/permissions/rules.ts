@@ -8,6 +8,7 @@ export const rules = {
       static: [
         AppPermissions.USER_DETAIL_VIEW,
         AppPermissions.SUBSCRIPTION_MANAGEMENT_VIEW,
+        AppPermissions.SUPER_ADMIN_VIEW
       ],
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
@@ -26,7 +27,6 @@ export const rules = {
         [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
         [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
-        [AppPermissions.SUPER_ADMIN_VIEW]: allPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_TOTAL_RECOVERY_RATE]: allPlanValidator,
