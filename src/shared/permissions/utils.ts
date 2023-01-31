@@ -6,7 +6,8 @@ import { ParamsType, RBACproject } from './index';
  * Method to verify if the subscription type has the required permissions.
  * 
  * @param permission - Permission.
- * @param subscriptionType - Subscription type.
+ * @param role - Role type.
+ * @param testData - Object with values for test permission.
  * @returns Boolean to indicate whether you have permission; string is message.
  */
 export const checkPermission = (permission: string, role: RoleType, testData: ParamsType) => RBACproject.check(role, permission, testData);

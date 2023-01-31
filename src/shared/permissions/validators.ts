@@ -11,4 +11,4 @@ export const advancedOrBasicPlanValidator = (params: ParamsType) => {
   return [false, 'Access denied'];
 };
 
-export const allPlanValidator = (params: ParamsType) => [true, 'Access granted'];
+export const allPlanValidator = () => [true, 'Access granted'];
