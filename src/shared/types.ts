@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { DocumentNode } from 'graphql/language';
+import { ROLES } from './constants';
 
 export enum CASE_STATUSES {
   open = 'Open',
@@ -412,3 +413,5 @@ export type TopCameraCardData = {
     secured: any;
   };
 };
+
+export type RoleType = keyof typeof ROLES;
