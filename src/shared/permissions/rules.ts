@@ -13,6 +13,7 @@ export const rules = {
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_V2_VIEW]: advancedPlanValidator,
         [AppPermissions.SHIFT_MANAGEMENT_VIEW]: advancedPlanValidator,
@@ -25,6 +26,7 @@ export const rules = {
         [AppPermissions.TIME_SHEET_PAT_VIEW]: advancedPlanValidator,
         [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
         [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
@@ -51,6 +53,7 @@ export const rules = {
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_V2_VIEW]: advancedPlanValidator,
         [AppPermissions.SHIFT_MANAGEMENT_VIEW]: advancedPlanValidator,
@@ -63,6 +66,7 @@ export const rules = {
         [AppPermissions.TIME_SHEET_PAT_VIEW]: advancedPlanValidator,
         [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
         [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
@@ -88,6 +92,7 @@ export const rules = {
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_V2_VIEW]: advancedPlanValidator,
         [AppPermissions.SHIFT_MANAGEMENT_VIEW]: advancedPlanValidator,
@@ -99,6 +104,7 @@ export const rules = {
         [AppPermissions.TIME_SHEET_PAT_VIEW]: advancedPlanValidator,
         [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
         [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
