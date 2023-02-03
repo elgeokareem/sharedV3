@@ -484,15 +484,23 @@ export const fetchDailyMap = async (
       status: rdnCase?.status,
       latitude: rdnCase?.repoLat,
       avatar: user[0]?.avatarUrl,
+      date: rdnCase?.rdnRepoDate,
       longitude: rdnCase?.repoLng,
       car: rdnCase?.yearMakeModel,
-      lastName: user[0]?.lastName,
       branch: user[0]?.branch?.name,
       orderType: rdnCase?.orderType,
-      firstName: user[0]?.firstName,
       address: rdnCase?.repoAddress,
       client: rdnCase?.lenderClientName,
-      date: rdnCase?.rdnRepoDate,
+      firstName: user[0]?.firstName
+        ? user[0]?.firstName
+        : rdnCase?.repoAgentRdnId
+        ? 'RDN ID: '
+        : 'Unknown',
+      lastName: user[0]?.lastName
+        ? user[0]?.lastName
+        : rdnCase?.repoAgentRdnId
+        ? rdnCase?.repoAgentRdnId
+        : 'User',
     };
   });
 
@@ -506,16 +514,16 @@ export const fetchDailyMap = async (
       id: rdnCase?.caseId,
       status: rdnCase?.status,
       avatar: user[0]?.avatarUrl,
+      date: rdnCase?.spottedDate,
       car: rdnCase?.yearMakeModel,
       lastName: user[0]?.lastName,
-      branch: user[0]?.branch?.name,
       firstName: user[0]?.firstName,
+      branch: user[0]?.branch?.name,
       orderType: rdnCase?.orderType,
       latitude: rdnCase?.spottedLat,
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
-      date: rdnCase?.spottedDate,
     };
   });
 
@@ -529,16 +537,16 @@ export const fetchDailyMap = async (
       id: rdnCase?.caseId,
       status: rdnCase?.status,
       avatar: user[0]?.avatarUrl,
+      date: rdnCase?.spottedDate,
       car: rdnCase?.yearMakeModel,
       lastName: user[0]?.lastName,
-      branch: user[0]?.branch?.name,
       firstName: user[0]?.firstName,
+      branch: user[0]?.branch?.name,
       latitude: rdnCase?.spottedLat,
       orderType: rdnCase?.orderType,
       longitude: rdnCase?.spottedLng,
       address: rdnCase?.spottedAddress,
       client: rdnCase?.lenderClientName,
-      date: rdnCase?.spottedDate,
     };
   });
 
