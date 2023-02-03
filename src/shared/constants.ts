@@ -133,3 +133,17 @@ export const ROLES = {
   manager: 'manager',
   driver: 'driver',
 };
+
+export enum COMPANY_USER_STATUS {
+  approved = 'approved',
+  pending = 'pending',
+  rejected = 'rejected',
+  in_active = 'in_active',
+  suspended = 'suspended',
+  deleted = 'deleted',
+};
+
+export enum USER_STATUS {
+  active = 'ACTIVE',
+  disabled = 'DISABLED',
+};
