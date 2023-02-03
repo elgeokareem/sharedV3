@@ -147,3 +147,13 @@ export enum USER_STATUS {
   active = 'ACTIVE',
   disabled = 'DISABLED',
 };
+
+export enum STRIPE_SUBSCRIPTION_STATUS {
+  INCOMPLETE = 'incomplete',
+  INCOMPLETE_EXPIRED = 'incomplete_expired',
+  TRIALING = 'trialing',
+  ACTIVE = 'active',
+  PAST_DUE = 'past_due',
+  CANCELED = 'canceled',
+  UNPAID = 'unpaid'
+};
