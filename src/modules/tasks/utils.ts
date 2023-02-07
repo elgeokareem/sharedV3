@@ -33,8 +33,7 @@ export const isTaskIncompleted = (
   if (
     status === new_deadline_approved ||
     status === new_deadline_cancelled ||
-    status === new_deadline_declined ||
-    status === new_deadline_proposed
+    status === new_deadline_declined
   ) {
     if (moment(completionDate).isBefore(currentDate)) return true;
   }
@@ -47,35 +46,15 @@ export const isTaskInProgress = (
   completionDate: string,
   currentDate = new Date().toISOString(),
 ) => {
-  if (status === marked_as_completed) return true;
-
   if (
     status === new_deadline_approved ||
     status === new_deadline_cancelled ||
-    status === new_deadline_declined ||
-    status === new_deadline_proposed
+    status === new_deadline_declined
   ) {
     if (moment(completionDate).isAfter(currentDate)) return true;
   }
 
   return status === open;
-};
-
-export const isTaskInProgressOrIncompleted = (status: TASK_STATUSES) => {
-  if (status === marked_as_completed) return true;
-
-  if (status === open) return true;
-
-  if (
-    status === new_deadline_approved ||
-    status === new_deadline_cancelled ||
-    status === new_deadline_declined ||
-    status === new_deadline_proposed
-  ) {
-    return true;
-  }
-
-  return status === uncompleted;
 };
 
 export const getTaskFriendlyStatus = (
@@ -93,6 +72,12 @@ export const getTaskFriendlyStatus = (
     return {
       status: TASK_FRIENDLY_STATUSES.closed,
       color: TASK_FRIENDLY_STATUSES_COLORS.closed,
+    };
+  }
+  if (isTaskPendingForApproval(status)) {
+    return {
+      status: TASK_FRIENDLY_STATUSES.pendingApproval,
+      color: TASK_FRIENDLY_STATUSES_COLORS.pendingApproval,
     };
   }
   if (isTaskIncompleted(status, completionDate, currentDate)) {

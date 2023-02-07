@@ -21,6 +21,7 @@ export enum TASK_FRIENDLY_STATUSES {
   completed = 'Completed',
   incomplete = 'Incomplete',
   inProgress = 'In Progress',
+  pendingApproval = 'Pending Approval',
   closed = 'Closed',
 }
 
@@ -30,7 +31,8 @@ export enum TASK_FRIENDLY_STATUSES {
 export enum TASK_FRIENDLY_STATUSES_COLORS {
   completed = '#13BF94',
   incomplete = '#F24949',
-  inProgress = '#FC9E3F',
+  inProgress = '#FDC60A',
+  pendingApproval = '#CD7F32',
   closed = '#006aff',
 }
 
