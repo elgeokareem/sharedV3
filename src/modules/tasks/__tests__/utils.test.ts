@@ -6,6 +6,7 @@ import {
   isCompletedFilter,
   isIncompletedFilter,
   isPendingApprovalFilter,
+  isTaskInProgress,
 } from '../utils';
 import {
   TASK_FRIENDLY_STATUSES,
@@ -28,8 +29,20 @@ describe('Utils tests', () => {
 
   test('expect task to be in Progress', () => {
     expect(
-      isTaskIncompleted(inProgressTask.status, inProgressTask.completionDate),
+      isTaskInProgress(inProgressTask.status, inProgressTask.completionDate),
     ).toBeTruthy();
+  });
+
+  test('expect task frienly status to be Incomplete', () => {
+    expect(
+      getTaskFriendlyStatus(
+        incompleteTask.status,
+        incompleteTask.completionDate,
+      ),
+    ).toMatchObject({
+      status: TASK_FRIENDLY_STATUSES.incomplete,
+      color: TASK_FRIENDLY_STATUSES_COLORS.incomplete,
+    });
   });
 
   test('expect isCompletedFilter to return true', () => {

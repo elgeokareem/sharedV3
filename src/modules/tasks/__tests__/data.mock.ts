@@ -1,9 +1,10 @@
+import moment = require('moment');
 import { UserType } from 'shared/types';
 import { TASK_STATUSES, TaskType } from '../types';
 
-export const currentDate = new Date();
-export const tomorrowDate = new Date(currentDate.getDate() + 1);
-export const yesterdayDate = new Date(currentDate.getDate() - 1);
+export const currentDate = moment();
+export const tomorrowDate = moment().add(1, 'days');
+export const yesterdayDate = moment().subtract(1, 'days');;
 
 export const assigneeUser: UserType = {
   id: 1,
