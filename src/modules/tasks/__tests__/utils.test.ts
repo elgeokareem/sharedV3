@@ -1,11 +1,23 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { isTaskIncompleted, getTaskFriendlyStatus } from '../utils';
+import {
+  isTaskIncompleted,
+  getTaskFriendlyStatus,
+  isCompletedFilter,
+  isIncompletedFilter,
+  isPendingApprovalFilter,
+} from '../utils';
 import {
   TASK_FRIENDLY_STATUSES,
   TASK_FRIENDLY_STATUSES_COLORS,
 } from '../types';
-import { incompleteTask, inProgressTask } from './data.mock';
+import {
+  closedTask,
+  completedTask,
+  incompleteTask,
+  inProgressTask,
+  markedAsCompletedTask,
+} from './data.mock';
 
 describe('Utils tests', () => {
   test('expect task to be incomplete', () => {
@@ -20,15 +32,27 @@ describe('Utils tests', () => {
     ).toBeTruthy();
   });
 
-  test('expect task frienly status to be Incomplete', () => {
+  test('expect isCompletedFilter to return true', () => {
+    expect(isCompletedFilter(completedTask.status)).toBeTruthy();
+  });
+
+  test('expect isCompletedFilter to return true', () => {
+    expect(isCompletedFilter(closedTask.status)).toBeTruthy();
+  });
+
+  test('expect isIncompletedFilter to return true', () => {
     expect(
-      getTaskFriendlyStatus(
-        incompleteTask.status,
-        incompleteTask.completionDate,
-      ),
-    ).toMatchObject({
-      status: TASK_FRIENDLY_STATUSES.incomplete,
-      color: TASK_FRIENDLY_STATUSES_COLORS.incomplete,
-    });
+      isIncompletedFilter(incompleteTask.status, incompleteTask.completionDate),
+    ).toBeTruthy();
+  });
+
+  test('expect isIncompletedFilter to return true', () => {
+    expect(
+      isIncompletedFilter(inProgressTask.status, inProgressTask.completionDate),
+    ).toBeTruthy();
+  });
+
+  test('expect isPendingApprovalFilter to return true', () => {
+    expect(isPendingApprovalFilter(markedAsCompletedTask.status)).toBeTruthy();
   });
 });

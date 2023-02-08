@@ -46,3 +46,11 @@ export const completedTask: TaskType = {
   assigner: assignerUser,
   assignee: assigneeUser,
 };
+
+export const closedTask: TaskType = {
+  id: 4,
+  status: TASK_STATUSES.closed,
+  completionDate: yesterdayDate.toISOString(),
+  assigner: assignerUser,
+  assignee: assigneeUser,
+};

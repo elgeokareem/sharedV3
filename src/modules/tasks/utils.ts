@@ -33,7 +33,8 @@ export const isTaskIncompleted = (
   if (
     status === new_deadline_approved ||
     status === new_deadline_cancelled ||
-    status === new_deadline_declined
+    status === new_deadline_declined ||
+    status === open
   ) {
     if (moment(completionDate).isBefore(currentDate)) return true;
   }
@@ -49,12 +50,32 @@ export const isTaskInProgress = (
   if (
     status === new_deadline_approved ||
     status === new_deadline_cancelled ||
-    status === new_deadline_declined
+    status === new_deadline_declined ||
+    status === open
   ) {
     if (moment(completionDate).isAfter(currentDate)) return true;
   }
 
-  return status === open;
+  return false;
+};
+
+export const isCompletedFilter = (status: TASK_STATUSES) => {
+  return isTaskCompleted(status) || isTaskClosed(status);
+};
+
+export const isIncompletedFilter = (
+  status: TASK_STATUSES,
+  completionDate: string,
+  currentDate = new Date().toISOString(),
+) => {
+  return (
+    isTaskIncompleted(status, completionDate, currentDate) ||
+    isTaskInProgress(status, completionDate, currentDate)
+  );
+};
+
+export const isPendingApprovalFilter = (status: TASK_STATUSES) => {
+  return isTaskPendingForApproval(status);
 };
 
 export const getTaskFriendlyStatus = (
