@@ -85,7 +85,7 @@ export const AppPermissions = {
 
 /* User Roles & Types */
 
-export enum UserRole {
+export enum UserRoles {
   SYSTEM_ADMIN_ROLE = 'system_admin',
   SUPER_ADMIN_ROLE = 'super_admin',
   ADMIN_ROLE = 'admin',
@@ -93,7 +93,7 @@ export enum UserRole {
   DRIVER_ROLE = 'driver',
 }
 
-export enum UserType {
+export enum UserTypes {
   SYSTEM_ADMIN_TYPE = 'system_admin',
   SUPER_ADMIN_TYPE = 'super_admin',
   ADMINISTRATOR_TYPE = 'administrator',
@@ -110,25 +110,25 @@ export enum UserType {
 }
 
 export const ALL_USER_ROLES = [
-  UserRole.SYSTEM_ADMIN_ROLE,
-  UserRole.SUPER_ADMIN_ROLE,
-  UserRole.ADMIN_ROLE,
-  UserRole.MANAGER_ROLE,
-  UserRole.DRIVER_ROLE,
+  UserRoles.SYSTEM_ADMIN_ROLE,
+  UserRoles.SUPER_ADMIN_ROLE,
+  UserRoles.ADMIN_ROLE,
+  UserRoles.MANAGER_ROLE,
+  UserRoles.DRIVER_ROLE,
 ];
 
 export const ALL_USER_TYPES = [
-  UserType.SYSTEM_ADMIN_TYPE,
-  UserType.SUPER_ADMIN_TYPE,
-  UserType.ADMINISTRATOR_TYPE,
-  UserType.CUSTOMER_REP_TYPE,
-  UserType.BRANCH_MANAGER_TYPE,
-  UserType.INVESTIGATOR_TYPE,
-  UserType.RECOVERY_AGENT_TYPE,
-  UserType.SPOTTER_TYPE,
-  UserType.CAMERA_CAR_TYPE,
+  UserTypes.SYSTEM_ADMIN_TYPE,
+  UserTypes.SUPER_ADMIN_TYPE,
+  UserTypes.ADMINISTRATOR_TYPE,
+  UserTypes.CUSTOMER_REP_TYPE,
+  UserTypes.BRANCH_MANAGER_TYPE,
+  UserTypes.INVESTIGATOR_TYPE,
+  UserTypes.RECOVERY_AGENT_TYPE,
+  UserTypes.SPOTTER_TYPE,
+  UserTypes.CAMERA_CAR_TYPE,
 ];
 
-export const ADMIN_ROLES = [UserRole.SUPER_ADMIN_ROLE, UserRole.ADMIN_ROLE];
+export const ADMIN_ROLES = [UserRoles.SUPER_ADMIN_ROLE, UserRoles.ADMIN_ROLE];
 
-export const MANAGER_ROLES = [UserRole.SUPER_ADMIN_ROLE, UserRole.MANAGER_ROLE, UserRole.ADMIN_ROLE];
+export const MANAGER_ROLES = [UserRoles.SUPER_ADMIN_ROLE, UserRoles.MANAGER_ROLE, UserRoles.ADMIN_ROLE];
