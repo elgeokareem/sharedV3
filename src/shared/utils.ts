@@ -82,9 +82,9 @@ export const filterUser = (user: UserType, search: string) => {
 
 /**
  * Check if a shift is active.
- * 
+ *
  * @param {ShiftType} shift - The shift.
- * @param {Moment} startTime - Start time of shift 
+ * @param {Moment} startTime - Start time of shift.
  * @param {Moment} endTime - End time of shift.
  * @param {Moment} momentNow - Current Time.
  * @returns {boolean} If the shift is active or not.
@@ -93,7 +93,7 @@ export const isShiftActive = (shift: ShiftType, startTime: Moment, endTime: Mome
   if (!shift) {
     throw new Error("Shift can't be null");
   }
-  
+
   const { days } = shift;
 
   if (!days) {
@@ -111,7 +111,7 @@ export const isShiftActive = (shift: ShiftType, startTime: Moment, endTime: Mome
 
 /**
  * To get time ranges (yesterday's and today's) of shift.
- * 
+ *
  * @param {ShiftType} shift - The shift.
  * @param {Moment} momentNow - Current Time.
  * @returns Time ranges (today and yesterday).

@@ -81,3 +81,54 @@ export const AppPermissions = {
   // Super Admin
   SUPER_ADMIN_VIEW: 'SUPER_ADMIN_VIEW',
 };
+
+
+/* User Roles & Types */
+
+export enum UserRole {
+  SYSTEM_ADMIN_ROLE = 'system_admin',
+  SUPER_ADMIN_ROLE = 'super_admin',
+  ADMIN_ROLE = 'admin',
+  MANAGER_ROLE = 'manager',
+  DRIVER_ROLE = 'driver',
+}
+
+export enum UserType {
+  SYSTEM_ADMIN_TYPE = 'system_admin',
+  SUPER_ADMIN_TYPE = 'super_admin',
+  ADMINISTRATOR_TYPE = 'administrator',
+  /**
+   * @deprecated This is replaced by CUSTOMER_REP.
+   */
+  ADMIN_REP_TYPE = 'admin_rep',
+  CUSTOMER_REP_TYPE = 'customer_rep',
+  BRANCH_MANAGER_TYPE = 'branch_manager',
+  INVESTIGATOR_TYPE = 'investigator',
+  RECOVERY_AGENT_TYPE = 'recovery_agent',
+  SPOTTER_TYPE = 'spotter',
+  CAMERA_CAR_TYPE = 'camera_car'
+}
+
+export const ALL_USER_ROLES = [
+  UserRole.SYSTEM_ADMIN_ROLE,
+  UserRole.SUPER_ADMIN_ROLE,
+  UserRole.ADMIN_ROLE,
+  UserRole.MANAGER_ROLE,
+  UserRole.DRIVER_ROLE,
+];
+
+export const ALL_USER_TYPES = [
+  UserType.SYSTEM_ADMIN_TYPE,
+  UserType.SUPER_ADMIN_TYPE,
+  UserType.ADMINISTRATOR_TYPE,
+  UserType.CUSTOMER_REP_TYPE,
+  UserType.BRANCH_MANAGER_TYPE,
+  UserType.INVESTIGATOR_TYPE,
+  UserType.RECOVERY_AGENT_TYPE,
+  UserType.SPOTTER_TYPE,
+  UserType.CAMERA_CAR_TYPE,
+];
+
+export const ADMIN_ROLES = [UserRole.SUPER_ADMIN_ROLE, UserRole.ADMIN_ROLE];
+
+export const MANAGER_ROLES = [UserRole.SUPER_ADMIN_ROLE, UserRole.MANAGER_ROLE, UserRole.ADMIN_ROLE];

@@ -1,10 +1,6 @@
 // Constants
 export * from './shared/constants';
 
-// Permissions
-export * from './shared/permissions/constants';
-export * from './shared/permissions/utils';
-
 // Types
 export * from './shared/types';
 
@@ -56,3 +52,11 @@ export * from './modules/tasks/permissions';
 
 // Utils
 export * from './shared/utils';
+
+
+// Permissions
+export {
+  UserRole, UserType, ALL_USER_ROLES, ALL_USER_TYPES, ADMIN_ROLES, MANAGER_ROLES,
+  AppPermissions
+} from './shared/permissions/constants';
+export * from './shared/permissions/utils';

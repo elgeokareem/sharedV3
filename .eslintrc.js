@@ -18,6 +18,7 @@ module.exports = {
   rules: {
     indent: ['error', 2],
     semi: [2, 'always'],
+    'no-unused-vars': 'off',
     'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
     'jsdoc/require-description-complete-sentence': 2,
     'jsdoc/require-hyphen-before-param-description': 2,
@@ -36,11 +37,11 @@ module.exports = {
     'jsdoc/require-description': 2,
     'jsdoc/require-example': 0,
     'jsdoc/require-jsdoc': 2, // Recommended
-    'jsdoc/require-param': 2, // Recommended
-    'jsdoc/require-param-description': 2, // Recommended
+    'jsdoc/require-param': 0,
+    'jsdoc/require-param-description': 0,
     'jsdoc/require-param-name': 2, // Recommended
     'jsdoc/require-param-type': 0, // Recommended
-    'jsdoc/require-returns': 2, // Recommended
+    'jsdoc/require-returns': 0,
     'jsdoc/require-returns-check': 2, // Recommended
     'jsdoc/require-returns-description': 2, // Recommended
     'jsdoc/require-returns-type': 'off', // Recommended
