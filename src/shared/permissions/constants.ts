@@ -86,7 +86,11 @@ export const AppPermissions = {
 /* User Roles & Types */
 
 export enum UserRoles {
+  // System Level
   SYSTEM_ADMIN_ROLE = 'system_admin',
+  USER_ROLE = 'user',
+
+  // Company Level
   SUPER_ADMIN_ROLE = 'super_admin',
   ADMIN_ROLE = 'admin',
   MANAGER_ROLE = 'manager',
