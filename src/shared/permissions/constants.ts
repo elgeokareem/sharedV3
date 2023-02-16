@@ -113,8 +113,12 @@ export enum UserTypes {
   CAMERA_CAR_TYPE = 'camera_car'
 }
 
-export const ALL_USER_ROLES = [
+export const ALL_SYSTEM_ROLES = [
   UserRoles.SYSTEM_ADMIN_ROLE,
+  UserRoles.USER_ROLE,
+];
+
+export const ALL_COMPANY_ROLES = [
   UserRoles.SUPER_ADMIN_ROLE,
   UserRoles.ADMIN_ROLE,
   UserRoles.MANAGER_ROLE,

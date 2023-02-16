@@ -56,7 +56,7 @@ export * from './shared/utils';
 
 // Permissions
 export {
-  UserRoles, UserTypes, ALL_USER_ROLES, ALL_USER_TYPES, ADMIN_ROLES, MANAGER_ROLES,
-  AppPermissions
+  UserRoles, UserTypes, ALL_COMPANY_ROLES, ALL_SYSTEM_ROLES, ALL_USER_TYPES, ADMIN_ROLES, MANAGER_ROLES,
+  AppPermissions,
 } from './shared/permissions/constants';
 export * from './shared/permissions/utils';
