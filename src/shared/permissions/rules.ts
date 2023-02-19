@@ -1,17 +1,110 @@
-import { ROLES } from '../constants';
+import { UserRoles, UserTypes } from '../constants';
 import { AppPermissions } from './constants';
 import { advancedOrBasicPlanValidator, advancedPlanValidator, allPlanValidator } from './validators';
 
+const defaultRulesSuperAdmin = {
+  static: [
+    AppPermissions.USER_DETAIL_VIEW,
+    AppPermissions.SUBSCRIPTION_MANAGEMENT_VIEW,
+    AppPermissions.SUPER_ADMIN_VIEW
+  ],
+  dynamic: {
+    [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_AGENT_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_CARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_CAMERA_CARS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_RECOVERY_AGENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_SPOTTERS_CARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_RECOVERY_RATE_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+
+    [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
+    [AppPermissions.ACTIVE_SHIFTS_V2_VIEW]: advancedPlanValidator,
+    [AppPermissions.SHIFT_MANAGEMENT_VIEW]: advancedPlanValidator,
+    [AppPermissions.USERS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.TASKS_VIEW]: advancedPlanValidator,
+    [AppPermissions.COMMISSIONS_VIEW]: advancedPlanValidator,
+    [AppPermissions.CHECKLIST_VIEW]: advancedPlanValidator,
+    [AppPermissions.USER_ACTIVITY_VIEW]: advancedPlanValidator,
+    [AppPermissions.TIME_SHEET_VIEW]: advancedPlanValidator,
+    [AppPermissions.TIME_SHEET_PAT_VIEW]: advancedPlanValidator,
+    [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
+    [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
+    [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_COMMISSION_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_TASK_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_ACTIVITY_HISTORY_TAB]: allPlanValidator,
+    [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
+  }
+};
+
+const defaultRulesDriver = {
+  static: [
+    AppPermissions.USER_DETAIL_VIEW,
+  ],
+  dynamic: {
+    [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_AGENT_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_CARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_CAMERA_CARS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_RECOVERY_AGENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOP_SPOTTERS_CARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_RECOVERY_RATE_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_CARD_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+
+    [AppPermissions.MY_STATS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
+    [AppPermissions.TASKS_VIEW]: advancedPlanValidator,
+    [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
+    [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_COMMISSION_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_TASK_HISTORY_TAB]: advancedPlanValidator,
+    [AppPermissions.SHOW_USER_DETAil_ACTIVITY_HISTORY_TAB]: allPlanValidator,
+    [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
+  }
+};
+
 export const rules = {
   permissions: {
-    [ROLES.superAdmin]: {
+    [`${UserRoles.SUPER_ADMIN_ROLE}-${UserTypes.SUPER_ADMIN_TYPE}`]: { ...defaultRulesSuperAdmin },
+    [`${UserRoles.SUPER_ADMIN_ROLE}-${UserTypes.ADMINISTRATOR_TYPE}`]: { ...defaultRulesSuperAdmin },
+    [`${UserRoles.ADMIN_ROLE}-${UserTypes.BRANCH_MANAGER_TYPE}`]: {
       static: [
         AppPermissions.USER_DETAIL_VIEW,
         AppPermissions.SUBSCRIPTION_MANAGEMENT_VIEW,
-        AppPermissions.SUPER_ADMIN_VIEW
       ],
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_AGENT_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_CARD_VIEW]: advancedPlanValidator,
+        [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_CAMERA_CARS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_RECOVERY_AGENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_SPOTTERS_CARD_VIEW]: advancedPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_RECOVERY_RATE_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+
         [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
@@ -29,13 +122,6 @@ export const rules = {
         [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
         [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_RECOVERY_RATE]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_REPOSSESSIONS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_CAMERA_CARS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_RECOVERY_AGENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_SPOTTERS]: advancedPlanValidator,
         [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
         [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
         [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
@@ -45,52 +131,24 @@ export const rules = {
         [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
       }
     },
-    [ROLES.admin]: {
-      static: [
-        AppPermissions.USER_DETAIL_VIEW,
-        AppPermissions.SUBSCRIPTION_MANAGEMENT_VIEW,
-      ],
-      dynamic: {
-        [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
-        [AppPermissions.ACTIVE_SHIFTS_V2_VIEW]: advancedPlanValidator,
-        [AppPermissions.SHIFT_MANAGEMENT_VIEW]: advancedPlanValidator,
-        [AppPermissions.USERS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.TASKS_VIEW]: advancedPlanValidator,
-        [AppPermissions.COMMISSIONS_VIEW]: advancedPlanValidator,
-        [AppPermissions.CHECKLIST_VIEW]: advancedPlanValidator,
-        [AppPermissions.USER_ACTIVITY_VIEW]: advancedPlanValidator,
-        [AppPermissions.TIME_SHEET_VIEW]: advancedPlanValidator,
-        [AppPermissions.TIME_SHEET_PAT_VIEW]: advancedPlanValidator,
-        [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
-        [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
-        [AppPermissions.EDIT_COMPANY_VIEW]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_RECOVERY_RATE]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_REPOSSESSIONS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_CAMERA_CARS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_RECOVERY_AGENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_SPOTTERS]: advancedPlanValidator,
-        [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_COMMISSION_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_TASK_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_ACTIVITY_HISTORY_TAB]: allPlanValidator,
-        [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
-      }
-    },
-    [ROLES.manager]: {
+    [`${UserRoles.MANAGER_ROLE}-${UserTypes.INVESTIGATOR_TYPE}`]: {
       static: [
         AppPermissions.USER_DETAIL_VIEW,
       ],
       dynamic: {
         [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_AGENT_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_CARD_VIEW]: advancedPlanValidator,
+        [AppPermissions.OVERVIEW_MISSED_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_CAMERA_CARS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_RECOVERY_AGENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOP_SPOTTERS_CARD_VIEW]: advancedPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_ASSIGNMENTS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_RECOVERY_RATE_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_CARD_VIEW]: advancedOrBasicPlanValidator,
+        [AppPermissions.OVERVIEW_TOTAL_REPOSSESSIONS_DETAIL_VIEW]: advancedOrBasicPlanValidator,
+
         [AppPermissions.REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.AGENT_REPORTS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.ACTIVE_SHIFTS_VIEW]: advancedPlanValidator,
@@ -106,13 +164,6 @@ export const rules = {
         [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
         [AppPermissions.SYSTEM_VIEW]: advancedPlanValidator,
         [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_RECOVERY_RATE]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_REPOSSESSIONS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_CAMERA_CARS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_RECOVERY_AGENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_SPOTTERS]: advancedPlanValidator,
         [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
         [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
         [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
@@ -122,32 +173,9 @@ export const rules = {
         [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
       }
     },
-    [ROLES.driver]: {
-      static: [
-        AppPermissions.USER_DETAIL_VIEW,
-      ],
-      dynamic: {
-        [AppPermissions.OVERVIEW_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.MY_STATS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.DASHBOARD_VIEW]: advancedPlanValidator,
-        [AppPermissions.TASKS_VIEW]: advancedPlanValidator,
-        [AppPermissions.NOTIFICATIONS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.SETTINGS_VIEW]: advancedOrBasicPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_MISSED_REPOSSESSIONS]: advancedPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_ASSIGNMENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_RECOVERY_RATE]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOTAL_REPOSSESSIONS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_CAMERA_CARS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_RECOVERY_AGENTS]: allPlanValidator,
-        [AppPermissions.SHOW_OVERVIEW_TOP_SPOTTERS]: advancedPlanValidator,
-        [AppPermissions.SHOW_USERS_METRIC_CHART]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAIL_CHECKLIST]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_INFRACTION_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_COMMISSION_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_TASK_HISTORY_TAB]: advancedPlanValidator,
-        [AppPermissions.SHOW_USER_DETAil_ACTIVITY_HISTORY_TAB]: allPlanValidator,
-        [AppPermissions.SHOW_TOPNAV_START_SHIFT_BUTTON]: advancedPlanValidator,
-      }
-    }
+    [`${UserRoles.DRIVER_ROLE}-${UserTypes.SPOTTER_TYPE}`]: { ...defaultRulesDriver },
+    [`${UserRoles.DRIVER_ROLE}-${UserTypes.RECOVERY_AGENT_TYPE}`]: { ...defaultRulesDriver },
+    [`${UserRoles.DRIVER_ROLE}-${UserTypes.CAMERA_CAR_TYPE}`]: { ...defaultRulesDriver },
+    [`${UserRoles.DRIVER_ROLE}-${UserTypes.CUSTOMER_REP_TYPE}`]: { ...defaultRulesDriver },
   }
 };

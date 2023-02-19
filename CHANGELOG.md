@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - 
 ```
 
+## [Feb 18, 2023]
+
+- Updated permissions module (V2).
+
 ## **Dec 15, 2022**
 
 ### Changed:

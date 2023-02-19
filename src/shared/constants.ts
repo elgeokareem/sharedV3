@@ -126,13 +126,6 @@ export const PLANS = {
   advanced: 'advanced',
 };
 
-/* User Roles */
-export const ROLES = {
-  superAdmin: 'super_admin',
-  admin: 'admin',
-  manager: 'manager',
-  driver: 'driver',
-};
 
 export enum COMPANY_USER_STATUS {
   approved = 'approved',
@@ -157,3 +150,69 @@ export enum STRIPE_SUBSCRIPTION_STATUS {
   CANCELED = 'canceled',
   UNPAID = 'unpaid'
 };
+
+/* User Roles & Types */
+/**
+ * @deprecated This is replaced by UserRoles.
+ */
+export const ROLES = {
+  superAdmin: 'super_admin',
+  admin: 'admin',
+  manager: 'manager',
+  driver: 'driver',
+};
+export enum UserRoles {
+  // System Level
+  SYSTEM_ADMIN_ROLE = 'system_admin',
+  USER_ROLE = 'user',
+
+  // Company Level
+  SUPER_ADMIN_ROLE = 'super_admin',
+  ADMIN_ROLE = 'admin',
+  MANAGER_ROLE = 'manager',
+  DRIVER_ROLE = 'driver',
+}
+
+export enum UserTypes {
+  SYSTEM_ADMIN_TYPE = 'system_admin',
+  SUPER_ADMIN_TYPE = 'super_admin',
+  ADMINISTRATOR_TYPE = 'administrator',
+  /**
+   * @deprecated This is replaced by CUSTOMER_REP.
+   */
+  ADMIN_REP_TYPE = 'admin_rep',
+  CUSTOMER_REP_TYPE = 'customer_rep',
+  BRANCH_MANAGER_TYPE = 'branch_manager',
+  INVESTIGATOR_TYPE = 'investigator',
+  RECOVERY_AGENT_TYPE = 'recovery_agent',
+  SPOTTER_TYPE = 'spotter',
+  CAMERA_CAR_TYPE = 'camera_car'
+}
+
+export const ALL_SYSTEM_ROLES = [
+  UserRoles.SYSTEM_ADMIN_ROLE,
+  UserRoles.USER_ROLE,
+];
+
+export const ALL_COMPANY_ROLES = [
+  UserRoles.SUPER_ADMIN_ROLE,
+  UserRoles.ADMIN_ROLE,
+  UserRoles.MANAGER_ROLE,
+  UserRoles.DRIVER_ROLE,
+];
+
+export const ALL_USER_TYPES = [
+  UserTypes.SYSTEM_ADMIN_TYPE,
+  UserTypes.SUPER_ADMIN_TYPE,
+  UserTypes.ADMINISTRATOR_TYPE,
+  UserTypes.CUSTOMER_REP_TYPE,
+  UserTypes.BRANCH_MANAGER_TYPE,
+  UserTypes.INVESTIGATOR_TYPE,
+  UserTypes.RECOVERY_AGENT_TYPE,
+  UserTypes.SPOTTER_TYPE,
+  UserTypes.CAMERA_CAR_TYPE,
+];
+
+export const ADMIN_ROLES = [UserRoles.SUPER_ADMIN_ROLE, UserRoles.ADMIN_ROLE];
+
+export const MANAGER_ROLES = [UserRoles.SUPER_ADMIN_ROLE, UserRoles.MANAGER_ROLE, UserRoles.ADMIN_ROLE];
