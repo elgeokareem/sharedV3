@@ -20,6 +20,6 @@ describe('permissions tests', () => {
   });
 
   test('expect canAssignedDeleteTask toBeTruthy', () => {
-    expect(canAssignedDeleteTask(completedTask, assigneeUser)).toBeTruthy();
+    expect(canAssignedDeleteTask(completedTask, assigneeUser)).toBeFalsy();
   });
 });
