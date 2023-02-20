@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { DocumentNode } from 'graphql/language';
-import { ROLES } from './constants';
+import { UserRoles, UserTypes } from './constants';
 
 export enum CASE_STATUSES {
   open = 'Open',
@@ -414,4 +414,5 @@ export type TopCameraCardData = {
   };
 };
 
-export type RoleType = keyof typeof ROLES;
+export type UserRoleType = `${UserRoles}`
+export type UserPositionType = `${UserTypes}`
