@@ -4,7 +4,7 @@ import { TASK_STATUSES, TaskType } from './types';
 const isTaskEnded = (task: TaskType) =>
   task?.status === TASK_STATUSES.completed ||
   task?.status === TASK_STATUSES.closed ||
-  task.status === TASK_STATUSES.uncompleted;
+  task?.status === TASK_STATUSES.uncompleted;
 
 export const isAssigner = (task: TaskType, user: UserType) =>
   task?.assigner?.id === user?.id;
