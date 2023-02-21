@@ -1,5 +1,14 @@
 import { UserType } from "shared/types";
 
+export const MAX_IMAGE_SIZE = 1000000;
+
+export const validateAvatarFileSize = (fileSize: number) => {
+  if (fileSize > MAX_IMAGE_SIZE) {
+    return 'Please upload an image with size less than 1MB';
+  }
+  return '';
+};
+
 export const validateEmail = (email: string) => {
   if (email?.length === 0) {
     return false;
